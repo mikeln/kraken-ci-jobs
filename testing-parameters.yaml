@@ -1,0 +1,28 @@
+
+- parameter:
+    name: testing-params
+    parameters:
+      - string:
+          name: KRAKEN_REPO
+          default: git@github.com:samsung-ag/kraken
+          description: "kraken git repository"
+      - string:
+          name: KRAKEN_BRANCH
+          default: master
+          description: "kraken git repository branch"
+      - string:
+          name: KUBE_CONFORMANCE_BRANCH
+          default: release-1.1
+          description: "Kubernetes conformance tests branch.  Recommended possible values: conformance-test-v1, release-1.0, release-1.1, master"
+      - string:
+          name: KRAKEN_CLUSTER_NAME
+          default: kubernetes_conformance
+          description: "Used by kraken to name a few cluster resources: AWS resources, context name, DNS records, etc."
+      - bool:
+          name: REBUILD_TESTS
+          default: true
+          description: "Set this to false to disable test rebuilds.  NB: the rest of the job assumes the correct tests have been built, setting this to false may result in unpredictable behavior"
+      - bool:
+          name: DESTROY_CLUSTER
+          default: true
+          description: "Set this to false to leave the cluster around after the job finishes.  Re-use the cluster next time by using the same KRAKEN_CLUSTER_NAME"

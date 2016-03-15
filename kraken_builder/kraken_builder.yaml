@@ -1,6 +1,6 @@
 ---
 - job-template:
-    name: '{name}-builder'
+    name: '{name}-build'
     project-type: freestyle
     parameters:
       - string:

@@ -1,0 +1,41 @@
+---
+- job-template:
+  name: '{name}-run-k8s-tests'
+  project-type: freestyle
+  parameters:
+    - testing-params
+  properties:
+    - build-discarder:
+        days-to-keep: -1
+        num-to-keep: 100
+        artifact-days-to-keep: -1
+        artifact-num-to-keep: -1
+    - github:
+        url: https://github.com/Samsung-AG/kraken/
+    - slack:
+        notify-start: true
+        notify-success: true
+        notify-aborted: true
+        notify-failure: true
+  scm:
+    - git:
+        url: ${{KRAKEN_REPO}}
+        credentials-id: jenkins-ssh
+        branches:
+          - ${{KRAKEN_BRANCH}}
+        browser: auto
+  wrappers:
+    - workspace-cleanup
+    - mask-passwords
+  builders:
+    - shell: 
+        !include-raw-escape: include-raw001-kraken-run-k8s-tests.sh
+  publishers:
+    - junit:
+        results: output/**/junit*.xml
+        health-scale-factor: 1.0
+    - slack:
+        team-domain: '{slack_domain}'
+        auth-token: '{slack_api_token}'
+        room: '{slack_room}'
+        build-server-url: 'https://{ci_hostname}'
