@@ -44,11 +44,10 @@
       - junit:
           results: output/cucumber/junit/*
           health-scale-factor: 1.0
-      - postbuildscript:
-          script-only-if-succeeded: false
-          builders:
-              - shell:
-                  !include-raw-escape: include-raw002-kraken-build.sh
+      - trigger-parameterized-builds:
+        - project: '{name}-destroy'
+          current-parameters: true
+          condition: ALWAYS
       - slack:
           team-domain: '{slack_domain}'
           auth-token: '{slack_api_token}'

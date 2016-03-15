@@ -1,3 +1,4 @@
+#!/bin/bash
 POSTNAME=$(date +"%Y-%m-%d-Job-${KRAKEN_COMMIT}.md")
 TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
 
@@ -14,7 +15,7 @@ category:   jekyll
 
 ${TEST_RESULT}
 
-- Conformance test log: [Log File](http://s3-us-west-2.amazonaws.com/kraken-e2e-logs/conformance/kraken_${KRAKEN_COMMIT}_conformance.log)
+- ${TEST_KIND} test log: [Log File](${LOG_LINK})
 EOF
 
 git config user.email "maratoid+samsungjenkins@gmail.com"
