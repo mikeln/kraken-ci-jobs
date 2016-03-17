@@ -34,7 +34,7 @@
           name: Build
           condition: SUCCESSFUL
           projects:
-            - name: '{name}-build-k8-tests'
+            - name: '{name}-build-k8s-tests'
               current-parameters: true
               predefined-parameters: |
                 KUBE_TESTS_DIR=kubernetes_conformance
