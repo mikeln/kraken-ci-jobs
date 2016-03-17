@@ -1,0 +1,25 @@
+
+- parameter:
+    name: conformance-params
+    parameters:
+      - common-params
+      - string:
+          name: NUMBER_OF_NODES
+          default: "10"
+          description: "number of nodes in cluster"
+      - string:
+          name: MASTER_TYPE
+          default: "m3.xlarge"
+          description: "master node aws type"
+      - string:
+          name: API_SERVER_TYPE
+          default: "m3.large"
+          description: "apiserver node aws type"
+      - string:
+          name: ETCD_TYPE
+          default: "m3.xlarge"
+          description: "etcd node aws type"
+      - string:
+          name: NODE_TYPE
+          default: "m3.medium"
+          description: "regular node aws type"

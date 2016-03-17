@@ -1,9 +1,9 @@
 ---
 - job-template:
-  name: '{name}-k8-conformance'
+  name: '{name}-k8s-conformance'
   project-type: multijob
   parameters:
-    - testing-params
+    - conformance-params
   properties:
     - build-discarder:
         days-to-keep: -1
@@ -36,7 +36,8 @@
         projects:
           - name: '{name}-build-k8-tests'
             current-parameters: true
-            predefined-parameters: 'KUBE_CONFORMANCE_DIR=kubernetes_conformance'
+            predefined-parameters: |
+              KUBE_TESTS_DIR=kubernetes_conformance
             git-revision: true
           - name: '{name}-build-cluster'
             current-parameters: true
@@ -45,26 +46,21 @@
         name: Run
         condition: SUCCESSFUL
         projects:
-          - name: '{name}-run-k8s-tests'
+          - name: '{name}-run-k8s-conformance-tests'
             current-parameters: true
-            predefined-parameters: 'KUBE_CONFORMANCE_DIR=kubernetes_conformance'
+            predefined-parameters: |
+              KUBE_TESTS_DIR=kubernetes_conformance
+              KRAKEN_CLUSTER_NAME=kubernetes_conformance
             git-revision: true
-
   publishers:
     - trigger-parameterized-builds:
-      - project: '{name}-upload-conformance-to-s3'
-        current-parameters: true
-        predefined-parameters: |
-          KUBE_CONFORMANCE_DIR=kubernetes_conformance
-          KRAKEN_COMMIT=${{GIT_COMMIT}}
-        condition: ALWAYS
       - project: '{name}-update-github-pages'
         current-parameters: true
         predefined-parameters: |
           KRAKEN_COMMIT=${{GIT_COMMIT}}
           TEST_RESULT=Success!
-          TEST_KIND=Conformance
-          LOG_LINK='http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/kraken_${{GIT_COMMIT}}_conformance.log'
+          TEST_KIND=conformance
+          LOG_LINK='http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/kraken_${{GIT_COMMIT}}.log'
         condition: SUCCESS
       - project: '{name}-update-github-pages'
         current-parameters: true
@@ -72,10 +68,12 @@
           KRAKEN_COMMIT=${{GIT_COMMIT}}
           TEST_RESULT=Failure!
           TEST_KIND=Conformance
-          LOG_LINK='http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/kraken_${{GIT_COMMIT}}_conformance.log'
+          LOG_LINK='http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/kraken_${{GIT_COMMIT}}.log'
         condition: FAILED
       - project: '{name}-destroy'
         current-parameters: true
+        predefined-parameters: |
+          KRAKEN_CLUSTER_NAME=kubernetes_conformance
         condition: ALWAYS
     - slack:
         team-domain: '{slack_domain}'

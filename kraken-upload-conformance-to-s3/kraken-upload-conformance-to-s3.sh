@@ -1,2 +1,0 @@
-#!/bin/bash
-aws s3 cp --acl public-read --content-type text/plain --metadata-directive REPLACE /var/lib/docker/gobuild/${KUBE_CONFORMANCE_DIR}/kraken_${GIT_COMMIT}_conformance.log s3://kraken-e2e-logs/conformance/

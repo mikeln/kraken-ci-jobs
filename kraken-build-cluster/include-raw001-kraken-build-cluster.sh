@@ -5,8 +5,14 @@ aws_user_prefix="${KRAKEN_USER_PREFIX}"
 aws_access_key="${AWS_ACCESS_KEY_ID}"
 aws_secret_key="${AWS_SECRET_ACCESS_KEY}"
 asg_wait_single = 60
-asg_wait_total = 10
-node_type = "m3.medium"
+asg_wait_total = ${TOTAL_WAIT}
+kubernetes_binaries_uri = "${KUBERNETES_BINARIES_URI}"
+node_count = $((NUMBER_OF_NODES - 1))
+aws_node_type = "${NODE_TYPE}"
+aws_etcd_type = "${ETCD_TYPE}"
+aws_master_type = "${MASTER_TYPE}"
+apiserver_count = ${API_SERVER_COUNT}
+aws_apiserver_type = "${API_SERVER_TYPE}"
 EOF
 
 # start kraken-up

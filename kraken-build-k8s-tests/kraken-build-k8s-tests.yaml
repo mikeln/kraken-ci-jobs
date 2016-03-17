@@ -3,15 +3,7 @@
   name: '{name}-build-k8-tests'
   project-type: freestyle
   parameters:
-    - testing-params
-    - string:
-      name: KUBE_CONFORMANCE_REPO
-      default: git@github.com/kubernetes/kubernetes.git
-      description: "Kubernetes conformance tests repo"
-    - string:
-      name: KUBE_CONFORMANCE_DIR
-      default: kubernetes
-      description: "where to clone test repo to under /var/lib/docker/gobuild/KUBE_CONFORMANCE_DIR"
+    - common-params
   properties:
     - build-discarder:
         days-to-keep: -1
@@ -29,12 +21,8 @@
     - workspace-cleanup
     - mask-passwords
   builders:
-    - conditional-step:
-        condition-kind: boolean-expression
-        condition-expression: ${{REBUILD_TESTS}}
-        steps:
-          - shell: 
-              !include-raw-escape: include-raw001-kraken-build-k8-tests.sh
+    - shell: 
+        !include-raw-escape: include-raw001-kraken-build-k8-tests.sh
   publishers:
     - slack:
         team-domain: '{slack_domain}'

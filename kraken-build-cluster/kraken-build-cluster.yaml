@@ -3,7 +3,7 @@
   name: '{name}-build-cluster'
   project-type: freestyle
   parameters:
-    - testing-params
+    - conformance-params
   properties:
     - build-discarder:
         days-to-keep: -1

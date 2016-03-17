@@ -1,13 +1,17 @@
 ---
 - job-template:
-  name: '{name}-run-k8s-tests'
+  name: '{name}-upload-to-s3'
   project-type: freestyle
   parameters:
-    - testing-params
+    - common-params
+    - string:
+        name: LOG_FILE
+    - string:
+        name: TEST_KIND
   properties:
     - build-discarder:
         days-to-keep: -1
-        num-to-keep: 100
+        num-to-keep: 1
         artifact-days-to-keep: -1
         artifact-num-to-keep: -1
     - github:
@@ -20,20 +24,17 @@
   scm:
     - git:
         url: ${{KRAKEN_REPO}}
-        credentials-id: jenkins-ssh
+        credentials-id: jenkins-github
         branches:
-          - ${{KRAKEN_BRANCH}}
+          - gh-pages
         browser: auto
   wrappers:
     - workspace-cleanup
     - mask-passwords
   builders:
     - shell: 
-        !include-raw-escape: include-raw001-kraken-run-k8s-tests.sh
+        !include-raw-escape: include-raw001-kraken-upload-to-s3.sh
   publishers:
-    - junit:
-        results: output/**/junit*.xml
-        health-scale-factor: 1.0
     - slack:
         team-domain: '{slack_domain}'
         auth-token: '{slack_api_token}'

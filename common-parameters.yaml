@@ -1,0 +1,39 @@
+
+- parameter:
+    name: common-params
+    parameters:
+      - string:
+          name: KRAKEN_REPO
+          default: git@github.com:samsung-ag/kraken
+          description: "kraken git repository"
+      - string:
+          name: KRAKEN_BRANCH
+          default: master
+          description: "kraken git repository branch"
+      - string:
+          name: KRAKEN_CLUSTER_NAME
+          default: jenkins
+          description: "Used by kraken to name a few cluster resources: AWS resources, context name, DNS records, etc."
+      - string:
+          name: KUBE_TESTS_REPO
+          default: "https://github.com/kubernetes/kubernetes.git"
+          description: "Kubernetes tests repo"
+      - string:
+          name: KUBE_TESTS_BRANCH
+          default: release-1.1
+          description: "Kubernetes tests branch. Recommended possible values: conformance-test-v1, release-1.0, release-1.1, master"
+      - string:
+          name: KUBE_BINARIES_URI
+          default: "https://storage.googleapis.com/kubernetes-release/release/v1.1.7/bin/linux/amd64"
+          description: "Link to kubernetes binaries"
+      - string:
+          name: KUBE_TESTS_DIR
+          description: "subfolder of /var/lib/docker/gobuild to use for building this set of tests"
+      - string:
+          name: API_SERVER_COUNT
+          default: "1"
+          description: "number of api servers in cluster"
+      - string:
+          name: TOTAL_WAIT
+          default: "10"
+          description: "total number of 60 second waits"

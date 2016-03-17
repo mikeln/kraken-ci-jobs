@@ -3,7 +3,7 @@
   name: '{name}-update-github-pages'
   project-type: freestyle
   parameters:
-    - testing-params
+    - conformance-params
     - string:
         name: TEST_KIND
     - string:

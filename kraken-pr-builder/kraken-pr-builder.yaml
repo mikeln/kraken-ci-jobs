@@ -1,6 +1,6 @@
 ---
 - job-template:
-    name: '{name}-build'
+    name: '{name}-pr-builder'
     project-type: freestyle
     parameters:
       - string:
@@ -8,7 +8,7 @@
           description: "Commit Id"
       - string:
           name: KRAKEN_CLUSTER_NAME
-          default: kraken_builder
+          default: kraken_pr_builder
           description: "Used by kraken to name a few cluster resources: AWS resources, context name, DNS records, etc."
     properties:
       - build-discarder:

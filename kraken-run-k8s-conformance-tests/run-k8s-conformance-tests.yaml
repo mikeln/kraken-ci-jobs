@@ -1,17 +1,13 @@
 ---
 - job-template:
-  name: '{name}-upload-conformance-to-s3'
+  name: '{name}-run-k8s-conformance-tests'
   project-type: freestyle
   parameters:
-    - testing-params
-    - string:
-        name: KUBE_CONFORMANCE_DIR
-    - string:
-        name: KRAKEN_COMMIT
+    - common-params
   properties:
     - build-discarder:
         days-to-keep: -1
-        num-to-keep: 1
+        num-to-keep: 100
         artifact-days-to-keep: -1
         artifact-num-to-keep: -1
     - github:
@@ -24,17 +20,27 @@
   scm:
     - git:
         url: ${{KRAKEN_REPO}}
-        credentials-id: jenkins-github
+        credentials-id: jenkins-ssh
         branches:
-          - gh-pages
+          - ${{KRAKEN_BRANCH}}
         browser: auto
   wrappers:
     - workspace-cleanup
     - mask-passwords
   builders:
     - shell: 
-        !include-raw-escape: include-raw001-kraken-upload-conformance-to-s3.sh
+        !include-raw-escape: include-raw001-kraken-run-k8s-conformance-tests.sh
   publishers:
+    - trigger-parameterized-builds:
+      - project: '{name}-upload-to-s3'
+        current-parameters: true
+        predefined-parameters: |
+          TEST_KIND=conformance
+          LOG_FILE='${{WORKSPACE}}/kraken_${{GIT_COMMIT}}.log'
+        condition: ALWAYS
+    - junit:
+        results: output/**/junit*.xml
+        health-scale-factor: 1.0
     - slack:
         team-domain: '{slack_domain}'
         auth-token: '{slack_api_token}'
