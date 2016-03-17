@@ -1,71 +1,71 @@
 ---
 - job-template:
-  name: '{name}-k8-density'
-  project-type: multijob
-  parameters:
-    - density-params
-  properties:
-    - build-discarder:
-        days-to-keep: -1
-        num-to-keep: 100
-        artifact-days-to-keep: -1
-        artifact-num-to-keep: -1
-    - github:
-        url: https://github.com/Samsung-AG/kraken/
-    - slack:
-        notify-start: true
-        notify-success: true
-        notify-aborted: true
-        notify-failure: true
-  scm:
-    - git:
-        url: ${{KRAKEN_REPO}}
-        credentials-id: jenkins-ssh
-        branches:
-          - ${{KRAKEN_BRANCH}}
-        browser: auto
-  wrappers:
-    - workspace-cleanup
-    - mask-passwords
-  builders:
-    - multijob:
-        name: Build
-        condition: SUCCESSFUL
-        projects:
-          - name: '{name}-build-k8-tests'
-            current-parameters: true
-            predefined-parameters: |
-              KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}
-            git-revision: true
-          - name: '{name}-build-cluster'
-            current-parameters: true
-            predefined-parameters: |
-              KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}
-            git-revision: true
-    - shell:
-        !include-raw-escape: include-raw001-kraken-k8s-density.sh
-    - trigger-builds:
-      - project: '{name}-run-k8s-density-tests'
-        current-parameters: true
-        predefined-parameters: |
-          KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}
-        svn-revision: true
-        parameter-factories:
-          - factory: filebuild
-            file-pattern: density_*.property
-            no-files-found-action: FAIL
-        block: true
+    name: '{name}-k8-density'
+    project-type: multijob
+    parameters:
+      - density-params
+    properties:
+      - build-discarder:
+          days-to-keep: -1
+          num-to-keep: 100
+          artifact-days-to-keep: -1
+          artifact-num-to-keep: -1
+      - github:
+          url: https://github.com/Samsung-AG/kraken/
+      - slack:
+          notify-start: true
+          notify-success: true
+          notify-aborted: true
+          notify-failure: true
+    scm:
+      - git:
+          url: ${{KRAKEN_REPO}}
+          credentials-id: jenkins-ssh
+          branches:
+            - ${{KRAKEN_BRANCH}}
+          browser: auto
+    wrappers:
+      - workspace-cleanup
+      - mask-passwords
+    builders:
+      - multijob:
+          name: Build
+          condition: SUCCESSFUL
+          projects:
+            - name: '{name}-build-k8-tests'
+              current-parameters: true
+              predefined-parameters: |
+                KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}
+              git-revision: true
+            - name: '{name}-build-cluster'
+              current-parameters: true
+              predefined-parameters: |
+                KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}
+              git-revision: true
+      - shell:
+          !include-raw-escape: include-raw001-kraken-k8s-density.sh
+      - trigger-builds:
+        - project: '{name}-run-k8s-density-tests'
+          current-parameters: true
+          predefined-parameters: |
+            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}
+          svn-revision: true
+          parameter-factories:
+            - factory: filebuild
+              file-pattern: density_*.property
+              no-files-found-action: FAIL
+          block: true
 
-  publishers:
-    - trigger-parameterized-builds:
-      - project: '{name}-destroy'
-        current-parameters: true
-        predefined-parameters: |
-          KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}
-        condition: ALWAYS
-    - slack:
-        team-domain: '{slack_domain}'
-        auth-token: '{slack_api_token}'
-        room: '{slack_room}'
-        build-server-url: 'https://{ci_hostname}'
+    publishers:
+      - trigger-parameterized-builds:
+        - project: '{name}-destroy'
+          current-parameters: true
+          predefined-parameters: |
+            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}
+          condition: ALWAYS
+      - slack:
+          team-domain: '{slack_domain}'
+          auth-token: '{slack_api_token}'
+          room: '{slack_room}'
+          build-server-url: 'https://{ci_hostname}'
 
