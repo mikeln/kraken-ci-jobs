@@ -1,6 +1,6 @@
 ---
 - job-template:
-    name: '{name}-k8-density'
+    name: '{name}-k8s-density'
     project-type: multijob
     parameters:
       - density-params
