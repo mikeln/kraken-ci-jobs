@@ -32,6 +32,8 @@
           branches:
             - gh-pages
           browser: auto
+          wipe-workspace: false
+          skip-tag: true
     wrappers:
       - workspace-cleanup
       - mask-passwords
