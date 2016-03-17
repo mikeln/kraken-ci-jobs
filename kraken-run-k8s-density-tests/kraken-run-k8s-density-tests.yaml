@@ -41,14 +41,14 @@
             TEST_KIND=density
             LOG_FILE='${{WORKSPACE}}/${{BUILD_TAG}}-${{DENSITY}}.log'
           condition: ALWAYS
-      - project: '{name}-update-github-pages'
-          current-parameters: true
-          predefined-parameters: |
-            KRAKEN_COMMIT=${{BUILD_TAG}}
-            TEST_RESULT=Success!
-            TEST_KIND=density
-            LOG_LINK='http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}.log'
-          condition: SUCCESS
+        - project: '{name}-update-github-pages'
+            current-parameters: true
+            predefined-parameters: |
+              KRAKEN_COMMIT=${{BUILD_TAG}}
+              TEST_RESULT=Success!
+              TEST_KIND=density
+              LOG_LINK='http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}.log'
+            condition: SUCCESS
         - project: '{name}-update-github-pages'
           current-parameters: true
           predefined-parameters: |
