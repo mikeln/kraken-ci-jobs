@@ -1,6 +1,6 @@
 ---
 - job-template:
-    name: '{name}-build-k8-tests'
+    name: '{name}-build-k8s-tests'
     project-type: freestyle
     parameters:
       - common-params
