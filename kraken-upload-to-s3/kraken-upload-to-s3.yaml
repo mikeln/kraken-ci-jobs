@@ -1,42 +1,42 @@
 ---
 - job-template:
-  name: '{name}-upload-to-s3'
-  project-type: freestyle
-  parameters:
-    - common-params
-    - string:
-        name: LOG_FILE
-    - string:
-        name: TEST_KIND
-  properties:
-    - build-discarder:
-        days-to-keep: -1
-        num-to-keep: 1
-        artifact-days-to-keep: -1
-        artifact-num-to-keep: -1
-    - github:
-        url: https://github.com/Samsung-AG/kraken/
-    - slack:
-        notify-start: true
-        notify-success: true
-        notify-aborted: true
-        notify-failure: true
-  scm:
-    - git:
-        url: ${{KRAKEN_REPO}}
-        credentials-id: jenkins-github
-        branches:
-          - gh-pages
-        browser: auto
-  wrappers:
-    - workspace-cleanup
-    - mask-passwords
-  builders:
-    - shell: 
-        !include-raw-escape: include-raw001-kraken-upload-to-s3.sh
-  publishers:
-    - slack:
-        team-domain: '{slack_domain}'
-        auth-token: '{slack_api_token}'
-        room: '{slack_room}'
-        build-server-url: 'https://{ci_hostname}'
+    name: '{name}-upload-to-s3'
+    project-type: freestyle
+    parameters:
+      - common-params
+      - string:
+          name: LOG_FILE
+      - string:
+          name: TEST_KIND
+    properties:
+      - build-discarder:
+          days-to-keep: -1
+          num-to-keep: 1
+          artifact-days-to-keep: -1
+          artifact-num-to-keep: -1
+      - github:
+          url: https://github.com/Samsung-AG/kraken/
+      - slack:
+          notify-start: true
+          notify-success: true
+          notify-aborted: true
+          notify-failure: true
+    scm:
+      - git:
+          url: ${{KRAKEN_REPO}}
+          credentials-id: jenkins-github
+          branches:
+            - gh-pages
+          browser: auto
+    wrappers:
+      - workspace-cleanup
+      - mask-passwords
+    builders:
+      - shell: 
+          !include-raw-escape: include-raw001-kraken-upload-to-s3.sh
+    publishers:
+      - slack:
+          team-domain: '{slack_domain}'
+          auth-token: '{slack_api_token}'
+          room: '{slack_room}'
+          build-server-url: 'https://{ci_hostname}'
