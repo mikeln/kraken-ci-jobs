@@ -21,13 +21,6 @@
           notify-success: true
           notify-aborted: true
           notify-failure: true
-    scm:
-      - git:
-          url: ${{KRAKEN_REPO}}
-          credentials-id: jenkins-github
-          branches:
-            - gh-pages
-          browser: auto
     wrappers:
       - workspace-cleanup
       - mask-passwords

@@ -24,6 +24,8 @@
           branches:
             - ${{KRAKEN_BRANCH}}
           browser: auto
+          wipe-workspace: false
+          skip-tag: true
     wrappers:
       - workspace-cleanup
       - mask-passwords

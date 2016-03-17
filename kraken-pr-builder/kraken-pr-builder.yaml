@@ -30,6 +30,8 @@
           branches:
             - ${{ghprbActualCommit}}
           browser: auto
+          wipe-workspace: false
+          skip-tag: true
     triggers:
       - github-pull-request:
           admin-list: '{obj:ci_admin_list}'
