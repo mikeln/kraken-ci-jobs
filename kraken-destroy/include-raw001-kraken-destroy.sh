@@ -1,3 +1,4 @@
+#!/bin/bash
 ${WORKSPACE}/bin/kraken-down.sh \
   --clustername "${KRAKEN_CLUSTER_NAME}" \
     --clustertype aws \

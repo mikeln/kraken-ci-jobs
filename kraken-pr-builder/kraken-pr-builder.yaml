@@ -1,0 +1,57 @@
+---
+- job-template:
+    name: '{name}-pr-builder'
+    project-type: freestyle
+    parameters:
+      - string:
+          name: ghprbActualCommit
+          description: "Commit Id"
+      - string:
+          name: KRAKEN_CLUSTER_NAME
+          default: kraken_pr_builder
+          description: "Used by kraken to name a few cluster resources: AWS resources, context name, DNS records, etc."
+    properties:
+      - build-discarder:
+          days-to-keep: -1
+          num-to-keep: 100
+          artifact-days-to-keep: -1
+          artifact-num-to-keep: -1
+      - github:
+          url: https://github.com/Samsung-AG/kraken/
+      - slack:
+          notify-start: true
+          notify-success: true
+          notify-aborted: true
+          notify-failure: true
+    scm:
+      - git:
+          url: git@github.com:Samsung-AG/kraken.git
+          credentials-id: jenkins-ssh
+          branches:
+            - ${{ghprbActualCommit}}
+          browser: auto
+    triggers:
+      - github-pull-request:
+          admin-list: '{obj:ci_admin_list}'
+          github-hooks: true
+    wrappers:
+      - workspace-cleanup
+      - mask-passwords
+    builders:
+      - shell:
+         !include-raw-escape: include-raw001-kraken-build.sh
+    publishers:
+      - junit:
+          results: output/cucumber/junit/*
+          health-scale-factor: 1.0
+      - trigger-parameterized-builds:
+        - project: '{name}-destroy'
+          current-parameters: true
+          condition: ALWAYS
+      - slack:
+          team-domain: '{slack_domain}'
+          auth-token: '{slack_api_token}'
+          room: '{slack_room}'
+          build-server-url: 'https://{ci_hostname}'
+
+
