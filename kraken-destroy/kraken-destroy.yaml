@@ -3,7 +3,7 @@
     name: '{name}-destroy'
     project-type: freestyle
     parameters:
-      - conformance-params
+      - common-params
     properties:
       - build-discarder:
           days-to-keep: -1
