@@ -2,17 +2,14 @@
 - job-template:
     name: '{name}-run-k8s-density-tests'
     project-type: freestyle
+    logrotate:
+      numToKeep: 100
     parameters:
       - density-params
       - string:
           name: DENSITY
           description: "which pod density to use"
     properties:
-      - build-discarder:
-          days-to-keep: -1
-          num-to-keep: 100
-          artifact-days-to-keep: -1
-          artifact-num-to-keep: -1
       - github:
           url: https://github.com/Samsung-AG/kraken/
       - slack:

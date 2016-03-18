@@ -2,14 +2,11 @@
 - job-template:
     name: '{name}-build-cluster'
     project-type: freestyle
+    logrotate:
+      numToKeep: 100
     parameters:
       - conformance-params
     properties:
-      - build-discarder:
-          days-to-keep: -1
-          num-to-keep: 100
-          artifact-days-to-keep: -1
-          artifact-num-to-keep: -1
       - github:
           url: https://github.com/Samsung-AG/kraken/
       - slack:

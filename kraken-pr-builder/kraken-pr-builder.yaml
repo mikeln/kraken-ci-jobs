@@ -2,6 +2,8 @@
 - job-template:
     name: '{name}-pr-builder'
     project-type: freestyle
+    logrotate:
+      numToKeep: 100
     parameters:
       - string:
           name: ghprbActualCommit
@@ -11,11 +13,6 @@
           default: kraken_pr_builder-${{BUILD_NUMBER}}
           description: "Used by kraken to name a few cluster resources: AWS resources, context name, DNS records, etc."
     properties:
-      - build-discarder:
-          days-to-keep: -1
-          num-to-keep: 100
-          artifact-days-to-keep: -1
-          artifact-num-to-keep: -1
       - github:
           url: https://github.com/Samsung-AG/kraken/
       - slack:
