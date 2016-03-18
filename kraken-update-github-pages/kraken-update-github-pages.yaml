@@ -2,6 +2,8 @@
 - job-template:
     name: '{name}-update-github-pages'
     project-type: freestyle
+    logrotate:
+      numToKeep: 1
     parameters:
       - conformance-params
       - string:
@@ -13,11 +15,6 @@
       - string:
           name: LOG_LINK
     properties:
-      - build-discarder:
-          days-to-keep: -1
-          num-to-keep: 1
-          artifact-days-to-keep: -1
-          artifact-num-to-keep: -1
       - github:
           url: https://github.com/Samsung-AG/kraken/
       - slack:
