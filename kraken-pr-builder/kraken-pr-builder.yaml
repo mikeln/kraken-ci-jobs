@@ -8,7 +8,7 @@
           description: "Commit Id"
       - string:
           name: KRAKEN_CLUSTER_NAME
-          default: kraken_pr_builder
+          default: kraken_pr_builder-${{BUILD_NUMBER}}
           description: "Used by kraken to name a few cluster resources: AWS resources, context name, DNS records, etc."
     properties:
       - build-discarder:
@@ -49,6 +49,8 @@
       - trigger-parameterized-builds:
         - project: '{name}-destroy'
           current-parameters: true
+          predefined-parameters: |
+            KRAKEN_CLUSTER_NAME=kraken_pr_builder-${{BUILD_NUMBER}}
           condition: ALWAYS
       - slack:
           team-domain: '{slack_domain}'

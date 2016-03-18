@@ -42,7 +42,7 @@
             - name: '{name}-build-cluster'
               current-parameters: true
               predefined-parameters: |
-                KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}
+                KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
               git-revision: true
       - shell:
           !include-raw-escape: include-raw001-kraken-k8s-density.sh
@@ -63,7 +63,7 @@
         - project: '{name}-destroy'
           current-parameters: true
           predefined-parameters: |
-            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}
+            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
           condition: ALWAYS
       - slack:
           team-domain: '{slack_domain}'

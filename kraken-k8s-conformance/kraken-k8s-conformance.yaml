@@ -52,7 +52,7 @@
               current-parameters: true
               predefined-parameters: |
                 KUBE_TESTS_DIR=kubernetes_conformance
-                KRAKEN_CLUSTER_NAME=kubernetes_conformance
+                KRAKEN_CLUSTER_NAME=kubernetes_conformance-${{BUILD_NUMBER}}
               git-revision: true
     publishers:
       - trigger-parameterized-builds:
@@ -75,7 +75,7 @@
         - project: '{name}-destroy'
           current-parameters: true
           predefined-parameters: |
-            KRAKEN_CLUSTER_NAME=kubernetes_conformance
+            KRAKEN_CLUSTER_NAME=kubernetes_conformance-${{BUILD_NUMBER}}
           condition: ALWAYS
       - slack:
           team-domain: '{slack_domain}'
