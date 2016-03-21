@@ -40,6 +40,8 @@
               git-revision: true
             - name: '{name}-build-cluster'
               current-parameters: true
+              predefined-parameters: |
+                KRAKEN_CLUSTER_NAME=kubernetes_conformance-${{BUILD_NUMBER}}
               git-revision: true
       - multijob:
           name: Run
