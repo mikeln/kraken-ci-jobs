@@ -5,7 +5,7 @@ cat > terraform/aws/${KRAKEN_CLUSTER_NAME}/terraform.tfvars << EOF
 aws_user_prefix="${KRAKEN_USER_PREFIX}"
 aws_access_key="${AWS_ACCESS_KEY_ID}"
 aws_secret_key="${AWS_SECRET_ACCESS_KEY}"
-kubernetes_binaries_uri = "https://storage.googleapis.com/kubernetes-release/release/v1.1.7/bin/linux/amd64"
+kubernetes_binaries_uri = "${KUBE_BINARIES_URI}"
 asg_wait_single = 60
 asg_wait_total = 10
 kraken_repo.commit_sha = "${ghprbActualCommit}"
