@@ -1,0 +1,8 @@
+---
+- parameter:
+    name: clustername-params
+    parameters:
+      - string:
+          name: KRAKEN_CLUSTER_NAME
+          default: jenkins
+          description: "Used by kraken to name a few cluster resources: AWS resources, context name, DNS records, etc."
