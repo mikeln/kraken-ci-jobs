@@ -11,10 +11,6 @@
           default: master
           description: "kraken git repository branch"
       - string:
-          name: KRAKEN_CLUSTER_NAME
-          default: jenkins
-          description: "Used by kraken to name a few cluster resources: AWS resources, context name, DNS records, etc."
-      - string:
           name: KUBE_TESTS_REPO
           default: "https://github.com/kubernetes/kubernetes.git"
           description: "Kubernetes tests repo"

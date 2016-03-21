@@ -5,6 +5,7 @@
     logrotate:
       numToKeep: 100
     parameters:
+      - clustername-params
       - density-params
       - string:
           name: DENSITY
