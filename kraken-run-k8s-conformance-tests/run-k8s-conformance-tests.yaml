@@ -8,6 +8,7 @@
     parameters:
       - clustername-params
       - common-params
+      - kubetestdir-params
     properties:
       - github:
           url: https://github.com/Samsung-AG/kraken/

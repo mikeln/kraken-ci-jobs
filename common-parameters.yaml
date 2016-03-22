@@ -23,9 +23,6 @@
           default: "https://storage.googleapis.com/kubernetes-release/release/v1.2.0/bin/linux/amd64"
           description: "Link to kubernetes binaries"
       - string:
-          name: KUBE_TESTS_DIR
-          description: "subfolder of /var/lib/docker/gobuild to use for building this set of tests"
-      - string:
           name: API_SERVER_COUNT
           default: "1"
           description: "number of api servers in cluster"

@@ -78,7 +78,8 @@
             KRAKEN_CLUSTER_NAME=kubernetes_conformance-${{BUILD_NUMBER}}
           condition: ALWAYS
         - project: '{name}-cleanup-tests'
-          current-parameters: true
+          predefined-parameters: |
+            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
           condition: ALWAYS
       - slack:
           team-domain: '{slack_domain}'
