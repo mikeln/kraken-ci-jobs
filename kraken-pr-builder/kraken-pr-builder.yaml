@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-pr-builder'
+    concurrent: true
     project-type: freestyle
     logrotate:
       numToKeep: 100

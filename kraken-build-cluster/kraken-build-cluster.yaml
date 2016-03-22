@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-build-cluster'
+    concurrent: true
     project-type: freestyle
     logrotate:
       numToKeep: 100

@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-k8s-conformance'
+    concurrent: true
     project-type: multijob
     logrotate:
       numToKeep: 100
@@ -36,7 +37,7 @@
             - name: '{name}-build-k8s-tests'
               current-parameters: true
               predefined-parameters: |
-                KUBE_TESTS_DIR=kubernetes_conformance
+                KUBE_TESTS_DIR=kubernetes_conformance-${{BUILD_NUMBER}}
               git-revision: true
             - name: '{name}-build-cluster'
               current-parameters: true
@@ -50,7 +51,7 @@
             - name: '{name}-run-k8s-conformance-tests'
               current-parameters: true
               predefined-parameters: |
-                KUBE_TESTS_DIR=kubernetes_conformance
+                KUBE_TESTS_DIR=kubernetes_conformance-${{BUILD_NUMBER}}
                 KRAKEN_CLUSTER_NAME=kubernetes_conformance-${{BUILD_NUMBER}}
               git-revision: true
     publishers:
@@ -75,6 +76,9 @@
           current-parameters: true
           predefined-parameters: |
             KRAKEN_CLUSTER_NAME=kubernetes_conformance-${{BUILD_NUMBER}}
+          condition: ALWAYS
+        - project: '{name}-cleanup-tests'
+          current-parameters: true
           condition: ALWAYS
       - slack:
           team-domain: '{slack_domain}'

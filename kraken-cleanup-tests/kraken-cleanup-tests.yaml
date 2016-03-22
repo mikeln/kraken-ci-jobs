@@ -1,12 +1,11 @@
 ---
 - job-template:
-    name: '{name}-destroy'
+    name: '{name}-cleanup-tests'
     concurrent: true
     project-type: freestyle
     logrotate:
-      numToKeep: 100
+      numToKeep: 1
     parameters:
-      - clustername-params
       - common-params
     properties:
       - github:
@@ -16,21 +15,11 @@
           notify-success: true
           notify-aborted: true
           notify-failure: true
-    scm:
-      - git:
-          url: ${{KRAKEN_REPO}}
-          credentials-id: jenkins-ssh
-          branches:
-            - ${{KRAKEN_BRANCH}}
-          browser: auto
-          wipe-workspace: false
-          skip-tag: true
     wrappers:
       - workspace-cleanup
-      - mask-passwords
     builders:
       - shell: 
-          !include-raw-escape: include-raw001-kraken-destroy.sh
+          !include-raw-escape: include-raw001-kraken-cleanup-tests.sh
     publishers:
       - slack:
           team-domain: '{slack_domain}'

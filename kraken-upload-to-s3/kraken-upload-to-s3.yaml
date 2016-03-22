@@ -2,6 +2,7 @@
 - job-template:
     name: '{name}-upload-to-s3'
     project-type: freestyle
+    concurrent: true
     logrotate:
       numToKeep: 1
     parameters:

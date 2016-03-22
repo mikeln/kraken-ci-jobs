@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-run-k8s-conformance-tests'
+    concurrent: true
     project-type: freestyle
     logrotate:
       numToKeep: 100
