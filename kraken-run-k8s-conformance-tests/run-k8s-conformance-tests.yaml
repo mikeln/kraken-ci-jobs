@@ -15,6 +15,8 @@
           notify-success: true
           notify-aborted: true
           notify-failure: true
+      - copyartifact:
+          projects: kraken*
     scm:
       - git:
           url: ${{KRAKEN_REPO}}
@@ -31,12 +33,16 @@
       - shell: 
           !include-raw-escape: include-raw001-kraken-run-k8s-conformance-tests.sh
     publishers:
+      - archive:
+          artifacts: kraken_${{GIT_COMMIT}}.log
       - trigger-parameterized-builds:
         - project: '{name}-upload-to-s3'
           current-parameters: true
           predefined-parameters: |
             TEST_KIND=conformance
-            LOG_FILE='${{WORKSPACE}}/kraken_${{GIT_COMMIT}}.log'
+            PROJECT_NAME=${{JOB_NAME}}
+            PROJECT_BUILD=${{BUILD_NUMBER}}
+            PROJECT_ARTIFACT=kraken_${{GIT_COMMIT}}.log
           condition: ALWAYS
       - junit:
           results: output/**/junit*.xml

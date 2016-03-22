@@ -7,7 +7,11 @@
     parameters:
       - common-params
       - string:
-          name: LOG_FILE
+          name: PROJECT_NAME
+      - string:
+          name: PROJECT_BUILD
+      - string:
+          name: PROJECT_ARTIFACT
       - string:
           name: TEST_KIND
     properties:
@@ -22,6 +26,11 @@
       - workspace-cleanup
       - mask-passwords
     builders:
+      - copyartifact:
+          project: ${{PROJECT_NAME}}
+          which-build: specific-build
+          build-number: ${{PROJECT_BUILD}}
+          filter: ${{PROJECT_ARTIFACT}}
       - shell: 
           !include-raw-escape: include-raw001-kraken-upload-to-s3.sh
     publishers:

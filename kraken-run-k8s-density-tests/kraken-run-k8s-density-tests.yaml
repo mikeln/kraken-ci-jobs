@@ -18,6 +18,8 @@
           notify-success: true
           notify-aborted: true
           notify-failure: true
+      - copyartifact:
+          projects: kraken*
     scm:
       - git:
           url: ${{KRAKEN_REPO}}
@@ -34,12 +36,16 @@
       - shell: 
           !include-raw-escape: include-raw001-kraken-run-k8s-density-tests.sh
     publishers:
+      - archive:
+          artifacts: ${{BUILD_TAG}}-${{DENSITY}}.log
       - trigger-parameterized-builds:
         - project: '{name}-upload-to-s3'
           current-parameters: true
           predefined-parameters: |
             TEST_KIND=density
-            LOG_FILE='${{WORKSPACE}}/${{BUILD_TAG}}-${{DENSITY}}.log'
+            PROJECT_NAME=${{JOB_NAME}}
+            PROJECT_BUILD=${{BUILD_NUMBER}}
+            PROJECT_ARTIFACT=${{BUILD_TAG}}-${{DENSITY}}.log
           condition: ALWAYS
         - project: '{name}-update-github-pages'
           current-parameters: true
