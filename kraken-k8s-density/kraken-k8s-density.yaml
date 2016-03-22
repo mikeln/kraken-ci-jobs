@@ -63,7 +63,7 @@
           predefined-parameters: |
             KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
           condition: ALWAYS
-      - project: '{name}-cleanup-tests'
+        - project: '{name}-cleanup-tests'
           current-parameters: true
           condition: ALWAYS
       - slack:
