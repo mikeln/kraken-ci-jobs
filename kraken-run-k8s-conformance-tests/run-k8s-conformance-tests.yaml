@@ -33,6 +33,8 @@
       - shell: 
           !include-raw-escape: include-raw001-kraken-run-k8s-conformance-tests.sh
     publishers:
+      - archive:
+          artifacts: kraken_${{GIT_COMMIT}}.log
       - trigger-parameterized-builds:
         - project: '{name}-upload-to-s3'
           current-parameters: true
