@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-k8s-density'
+    concurrent: true
     project-type: multijob
     logrotate:
       numToKeep: 100
@@ -34,7 +35,7 @@
             - name: '{name}-build-k8s-tests'
               current-parameters: true
               predefined-parameters: |
-                KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}
+                KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
               git-revision: true
             - name: '{name}-build-cluster'
               current-parameters: true
@@ -47,7 +48,7 @@
         - project: '{name}-run-k8s-density-tests'
           current-parameters: true
           predefined-parameters: |
-            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}
+            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
           svn-revision: true
           parameter-factories:
             - factory: filebuild
@@ -61,6 +62,9 @@
           current-parameters: true
           predefined-parameters: |
             KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+          condition: ALWAYS
+      - project: '{name}-cleanup-tests'
+          current-parameters: true
           condition: ALWAYS
       - slack:
           team-domain: '{slack_domain}'
