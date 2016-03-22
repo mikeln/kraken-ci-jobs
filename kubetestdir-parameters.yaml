@@ -1,0 +1,7 @@
+---
+- parameter:
+    name: kubetestdir-params
+    parameters:
+      - string:
+          name: KUBE_TESTS_DIR
+          description: "subfolder of /var/lib/docker/gobuild to use for building this set of tests"

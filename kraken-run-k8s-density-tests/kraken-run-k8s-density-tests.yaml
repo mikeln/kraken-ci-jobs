@@ -8,6 +8,7 @@
     parameters:
       - clustername-params
       - density-params
+      - kubetestdir-params
       - string:
           name: DENSITY
           description: "which pod density to use"
