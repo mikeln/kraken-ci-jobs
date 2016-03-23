@@ -10,19 +10,10 @@
     properties:
       - github:
           url: https://github.com/Samsung-AG/kraken/
-      - slack:
-          notify-start: true
-          notify-success: true
-          notify-aborted: true
-          notify-failure: true
     wrappers:
       - workspace-cleanup
     builders:
       - shell: 
           !include-raw-escape: include-raw001-kraken-cleanup-tests.sh
     publishers:
-      - slack:
-          team-domain: '{slack_domain}'
-          auth-token: '{slack_api_token}'
-          room: '{slack_room}'
-          build-server-url: 'https://{ci_hostname}'
+      - slack-publisher
