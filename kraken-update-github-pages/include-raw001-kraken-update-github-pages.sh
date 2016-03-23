@@ -7,9 +7,9 @@ mkdir -p ${WORKSPACE}/_posts
 cat > ${WORKSPACE}/_posts/${POSTNAME} <<EOF
 ---
 layout:     post
-title:      Commit/Build tag ${KRAKEN_COMMIT}
+title:      ${TEST_KIND} commit/build tag ${KRAKEN_COMMIT}
 date:       ${TIMESTAMP}
-summary:    Conformance test log for commit/build tag ${KRAKEN_COMMIT}.
+summary:    ${TEST_KIND} test log for commit/build tag ${KRAKEN_COMMIT}.
 category:   jekyll
 ---
 
