@@ -15,7 +15,7 @@ KUBE_DENSITY_LOG=${WORKSPACE}/${BUILD_TAG}-${DENSITY}.log
 
 # TODO: unclear what part of k8s scripts require USER to be set
 # TODO: should we just drop test build functionality
-REBUILD_TESTS=false USER=jenkins hack/density.sh ${KUBE_TESTS_BRANCH} $i | tee ${KUBE_DENSITY_LOG}
+REBUILD_TESTS=false USER=jenkins hack/density.sh ${KUBE_TESTS_BRANCH} ${DENSITY} | tee ${KUBE_DENSITY_LOG}
 
 ${WORKSPACE}/hack/namespace_cleanup.sh --etcd etcd --config ${WORKSPACE}/bin/clusters/${KRAKEN_CLUSTER_NAME}/ssh_config --key ${WORKSPACE}/bin/clusters/${KRAKEN_CLUSTER_NAME}/id_rsa
 

@@ -30,7 +30,7 @@
       - workspace-cleanup
       - mask-passwords
     builders:
-      - shell: 
+      - shell:
           !include-raw-escape: include-raw001-kraken-run-k8s-density-tests.sh
     publishers:
       - archive:
@@ -47,19 +47,19 @@
         - project: '{name}-update-github-pages'
           current-parameters: true
           predefined-parameters: |
-            KRAKEN_COMMIT=${{BUILD_TAG}}
+            KRAKEN_COMMIT=${{BUILD_TAG}}-${{DENSITY}}
             TEST_RESULT=Success!
             TEST_KIND=density
-            LOG_LINK='http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}.log'
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}.log
           condition: SUCCESS
         - project: '{name}-update-github-pages'
           current-parameters: true
           predefined-parameters: |
-            KRAKEN_COMMIT=${{BUILD_TAG}}
+            KRAKEN_COMMIT=${{BUILD_TAG}}-${{DENSITY}}
             TEST_RESULT=Failure!
             TEST_KIND=density
-            LOG_LINK='http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}.log'
-          condition: FAILED
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}.log
+          condition: UNSTABLE_OR_WORSE
       - junit:
           results: output/**/junit*.xml
           health-scale-factor: 1.0
