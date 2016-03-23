@@ -49,6 +49,7 @@
           current-parameters: true
           predefined-parameters: |
             KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
           svn-revision: true
           parameter-factories:
             - factory: filebuild
