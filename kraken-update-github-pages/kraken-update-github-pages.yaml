@@ -2,7 +2,6 @@
 - job-template:
     name: '{name}-update-github-pages'
     project-type: freestyle
-    concurrent: true
     logrotate:
       numToKeep: 1
     parameters:
@@ -36,7 +35,7 @@
       - workspace-cleanup
       - mask-passwords
     builders:
-      - shell: 
+      - shell:
           !include-raw-escape: include-raw001-kraken-update-github-pages.sh
     publishers:
       - git:
