@@ -1,0 +1,24 @@
+---
+- publisher:
+    name: slack-publisher
+    publishers:
+      - raw:
+          xml: |
+            <jenkins.plugins.slack.SlackNotifier plugin="slack@2.0.1">
+              <teamDomain>{slack_domain}</teamDomain>
+              <authToken>{slack_api_token}</authToken>
+              <buildServerUrl>https://{ci_hostname}/</buildServerUrl>
+              <room>{slack_room}</room>
+              <startNotification>true</startNotification>
+              <notifySuccess>true</notifySuccess>
+              <notifyAborted>true</notifyAborted>
+              <notifyNotBuilt>false</notifyNotBuilt>
+              <notifyUnstable>true</notifyUnstable>
+              <notifyFailure>true</notifyFailure>
+              <notifyBackToNormal>false</notifyBackToNormal>
+              <notifyRepeatedFailure>true</notifyRepeatedFailure>
+              <includeTestSummary>false</includeTestSummary>
+              <commitInfoChoice>AUTHORS_AND_TITLES</commitInfoChoice>
+              <includeCustomMessage>false</includeCustomMessage>
+              <customMessage></customMessage>
+            </jenkins.plugins.slack.SlackNotifier>

@@ -17,11 +17,6 @@
     properties:
       - github:
           url: https://github.com/Samsung-AG/kraken/
-      - slack:
-          notify-start: true
-          notify-success: true
-          notify-aborted: true
-          notify-failure: true
     scm:
       - git:
           url: ${{KRAKEN_REPO}}
@@ -45,8 +40,8 @@
               - branch:
                   remote: origin
                   name: gh-pages
-      - slack:
-          team-domain: '{slack_domain}'
-          auth-token: '{slack_api_token}'
-          room: '{slack_room}'
-          build-server-url: 'https://{ci_hostname}'
+      - slack-publisher:
+          slack_domain: '{slack_domain}'
+          slack_api_token: '{slack_api_token}'
+          ci_hostname: '{ci_hostname}'
+          slack_room: '{slack_room}'
