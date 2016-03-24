@@ -17,6 +17,7 @@
       - git:
           url: git@github.com:Samsung-AG/kraken.git
           credentials-id: jenkins-ssh
+          refspec: "+refs/pull/*:refs/remotes/origin/pr/*"
           branches:
             - ${{ghprbActualCommit}}
           browser: auto
