@@ -63,4 +63,8 @@
       - junit:
           results: output/**/junit*.xml
           health-scale-factor: 1.0
-      - slack-publisher
+      - slack-publisher:
+          slack_domain: '{slack_domain}'
+          slack_api_token: '{slack_api_token}'
+          ci_hostname: '{ci_hostname}'
+          slack_room: '{slack_room}'
