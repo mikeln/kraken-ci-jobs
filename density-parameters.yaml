@@ -8,10 +8,6 @@
           default: "100"
           description: "number of nodes in cluster"
       - string:
-          name: DENSITIES
-          default: "3 30"
-          description: "space-delimited density values"
-      - string:
           name: API_SERVER_COUNT
           default: "1"
           description: "number of api servers in cluster"

@@ -37,21 +37,23 @@
               predefined-parameters: |
                 KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
               git-revision: true
-      - shell:
-          !include-raw-escape: include-raw001-kraken-k8s-density.sh
       - trigger-builds:
         - project: '{name}-run-k8s-density-tests'
           current-parameters: true
           predefined-parameters: |
             KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
             KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+            DENSITY=3
           svn-revision: true
-          parameter-factories:
-            - factory: filebuild
-              file-pattern: density_*.property
-              no-files-found-action: FAIL
           block: true
-
+        - project: '{name}-run-k8s-density-tests'
+          current-parameters: true
+          predefined-parameters: |
+            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+            DENSITY=30
+          svn-revision: true
+          block: true
     publishers:
       - trigger-parameterized-builds:
         - project: '{name}-destroy'
