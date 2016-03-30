@@ -10,7 +10,7 @@
           url: https://github.com/Samsung-AG/kraken/
     scm:
       - git:
-          url: git@github.com:Samsung-AG/kraken.git
+          url: https://github.com/Samsung-AG/kraken.git
           credentials-id: jenkins-ssh
           branches:
             - master
