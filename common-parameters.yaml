@@ -4,7 +4,7 @@
     parameters:
       - string:
           name: KRAKEN_REPO
-          default: git@github.com:samsung-ag/kraken
+          default: git@github.com:Samsung-AG/kraken.git
           description: "kraken git repository"
       - string:
           name: KRAKEN_BRANCH
