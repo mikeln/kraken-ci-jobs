@@ -19,8 +19,6 @@
           browser: auto
           wipe-workspace: false
           skip-tag: true
-    triggers:
-      - github
     wrappers:
       - workspace-cleanup
       - mask-passwords

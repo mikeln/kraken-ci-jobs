@@ -1,0 +1,35 @@
+---
+- job-template:
+    name: '{name}-pr-conformance'
+    concurrent: false
+    project-type: freestyle
+    logrotate:
+      numToKeep: 100
+    properties:
+      - github:
+          url: https://github.com/Samsung-AG/kraken/
+    scm:
+      - git:
+          url: git@github.com:samsung-ag/kraken
+          credentials-id: jenkins-ssh
+          branches:
+            - master
+          browser: auto
+          wipe-workspace: false
+          skip-tag: true
+    triggers:
+      - github
+    wrappers:
+      - workspace-cleanup
+    builders:
+      - trigger-builds:
+        - project: '{name}-k8s-conformance'
+          svn-revision: true
+          block: true
+    publishers:
+      - slack-publisher:
+          slack_domain: '{slack_domain}'
+          slack_api_token: '{slack_api_token}'
+          ci_hostname: '{ci_hostname}'
+          slack_room: '{slack_room}'
+

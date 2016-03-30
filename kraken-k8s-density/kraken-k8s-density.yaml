@@ -1,7 +1,7 @@
 ---
 - job-template:
     name: '{name}-k8s-density'
-    concurrent: true
+    concurrent: false
     project-type: multijob
     logrotate:
       numToKeep: 100
