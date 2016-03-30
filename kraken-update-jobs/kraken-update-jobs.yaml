@@ -1,0 +1,31 @@
+---
+- job-template:
+    name: '{name}-update-jobs'
+    project-type: freestyle
+    logrotate:
+      numToKeep: 100
+    properties:
+      - github:
+          url: https://github.com/Samsung-AG/kraken-ci-jobs/
+    scm:
+      - git:
+          url: git@github.com:samsung-ag/kraken
+          credentials-id: jenkins-ssh
+          branches:
+            - master
+          browser: auto
+          wipe-workspace: false
+          skip-tag: true
+    wrappers:
+      - workspace-cleanup
+    triggers:
+      - github
+    builders:
+      - shell: 
+          !include-raw-escape: include-raw001-kraken-update-jobs.sh
+    publishers:
+      - slack-publisher:
+          slack_domain: '{slack_domain}'
+          slack_api_token: '{slack_api_token}'
+          ci_hostname: '{ci_hostname}'
+          slack_room: '{slack_room}'
