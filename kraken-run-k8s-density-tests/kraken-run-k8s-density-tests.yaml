@@ -1,7 +1,7 @@
 ---
 - job-template:
     name: '{name}-run-k8s-density-tests'
-    concurrent: true
+    concurrent: false
     project-type: freestyle
     logrotate:
       numToKeep: 100
