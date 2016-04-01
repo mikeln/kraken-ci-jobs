@@ -9,6 +9,7 @@ asg_wait_total = ${TOTAL_WAIT}
 kubernetes_binaries_uri = "${KUBE_BINARIES_URI}"
 node_count = $((NUMBER_OF_NODES - 1))
 aws_node_type = "${NODE_TYPE}"
+aws_special_node_type = "${SPECIAL_NODE_TYPE}"
 aws_etcd_type = "${ETCD_TYPE}"
 aws_master_type = "${MASTER_TYPE}"
 apiserver_count = ${API_SERVER_COUNT}

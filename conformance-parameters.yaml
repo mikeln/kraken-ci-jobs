@@ -23,3 +23,7 @@
           name: NODE_TYPE
           default: "m3.medium"
           description: "regular node aws type"
+      - string:
+          name: SPECIAL_NODE_TYPE
+          default: "m3.xlarge"
+          description: "special node aws type"
