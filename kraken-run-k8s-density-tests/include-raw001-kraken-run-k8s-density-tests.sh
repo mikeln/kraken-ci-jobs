@@ -25,5 +25,9 @@ REBUILD_TESTS=false USER=jenkins hack/density.sh ${KUBE_TESTS_BRANCH} ${DENSITY}
 
 ${WORKSPACE}/hack/namespace_cleanup.sh --etcd etcd --config ${WORKSPACE}/bin/clusters/${KRAKEN_CLUSTER_NAME}/ssh_config --key ${WORKSPACE}/bin/clusters/${KRAKEN_CLUSTER_NAME}/id_rsa
 
+# mark node-001 as schedulable
+kubectl --kubeconfig=${KUBE_DENSITY_KUBECONFIG} --cluster=${KRAKEN_CLUSTER_NAME} \
+  patch nodes ${locked_node} -p '{"spec": {"unschedulable": false}}'
+
 # tee isn't exiting >0 as expected, so use the exit status of the script directly
 exit ${PIPESTATUS[0]}
