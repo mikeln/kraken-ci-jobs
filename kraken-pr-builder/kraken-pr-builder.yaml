@@ -42,7 +42,8 @@
           current-parameters: true
           predefined-parameters: |
             KRAKEN_CLUSTER_NAME=kraken_pr_builder-${{BUILD_NUMBER}}
-          condition: ALWAYS
+          svn-revision: true
+          condition: UNSTABLE_OR_WORSE
       - slack-publisher:
           slack_domain: '{slack_domain}'
           slack_api_token: '{slack_api_token}'
