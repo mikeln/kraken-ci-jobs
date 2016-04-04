@@ -7,6 +7,10 @@
       numToKeep: 100
     parameters:
       - string:
+          name: ghprbActualCommit
+          default: master
+          description: "kraken commit to use; name is symptom of the fact that we're using ghprb on a job we'd also like to manually trigger"
+      - string:
           name: KUBE_BINARIES_URI
           default: "https://storage.googleapis.com/kubernetes-release/release/v1.2.0/bin/linux/amd64"
           description: "Link to kubernetes binaries"
