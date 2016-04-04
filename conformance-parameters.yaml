@@ -8,6 +8,10 @@
           default: "10"
           description: "number of nodes in cluster"
       - string:
+          name: API_SERVER_COUNT
+          default: "1"
+          description: "number of api servers in cluster"
+      - string:
           name: MASTER_TYPE
           default: "m3.xlarge"
           description: "master node aws type"
@@ -20,10 +24,10 @@
           default: "m3.xlarge"
           description: "etcd node aws type"
       - string:
-          name: NODE_TYPE
-          default: "m3.medium"
-          description: "regular node aws type"
-      - string:
           name: SPECIAL_NODE_TYPE
           default: "m3.xlarge"
           description: "special node aws type"
+      - string:
+          name: NODE_TYPE
+          default: "m3.medium"
+          description: "regular node aws type"

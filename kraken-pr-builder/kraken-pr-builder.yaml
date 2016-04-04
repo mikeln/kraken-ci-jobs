@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-pr-builder'
+    description: 'Do not edit this job through the web! On an open github PR, runs all the jobs to create a kubernetes cluster, run some cucumber/aruba tests on it and then destroy it.'
     concurrent: true
     project-type: freestyle
     logrotate:

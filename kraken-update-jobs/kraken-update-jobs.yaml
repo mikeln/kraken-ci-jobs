@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-update-jobs'
+    description: 'Do not edit this job through the web! On a merged kraken-ci-jobs PR, run jenkins job builder to update the current jenkins jobs.'
     project-type: freestyle
     logrotate:
       numToKeep: 100

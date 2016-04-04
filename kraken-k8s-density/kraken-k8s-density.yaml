@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-k8s-density'
+    description: 'Do not edit this job through the web! Runs all the jobs required to run 3 and 30 kubernetes density test'
     concurrent: true
     project-type: multijob
     logrotate:

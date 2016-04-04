@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-k8s-conformance'
+    description: 'Do not edit this job through the web! Runs all the jobs required to run a parameterized set of kubernetes conformance tests'
     concurrent: true
     project-type: multijob
     logrotate:

@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-upload-to-s3'
+    description: 'Do not edit this job through the web! Uplodad a parameter-specified test result file to S3'
     project-type: freestyle
     concurrent: true
     logrotate:

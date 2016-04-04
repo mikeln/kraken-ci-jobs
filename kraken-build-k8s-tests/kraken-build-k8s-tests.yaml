@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-build-k8s-tests'
+    description: 'Do not edit this job through the web! Builds a kubernetes tests in a parameter-specified subfolder of /var/lib/docker/gobuild'
     concurrent: true
     project-type: freestyle
     logrotate:

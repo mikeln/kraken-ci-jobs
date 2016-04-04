@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-update-github-pages'
+    description: 'Do not edit this job through the web! Update e2e.kubeme.io github page site with test results, based on parameters.'
     project-type: freestyle
     logrotate:
       numToKeep: 1

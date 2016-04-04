@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-build-cluster'
+    description: 'Do not edit this job through the web! Builds a parameter-named kraken cluster using kraken-up.sh'
     concurrent: true
     project-type: freestyle
     logrotate:

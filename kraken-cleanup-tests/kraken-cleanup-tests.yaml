@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-cleanup-tests'
+    description: 'Do not edit this job through the web! Removes parameter-specified subfolder of /var/lib/docker/gobuild'
     concurrent: true
     project-type: freestyle
     logrotate:
