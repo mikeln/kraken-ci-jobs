@@ -1,6 +1,7 @@
 ---
 - job-template:
     name: '{name}-destroy'
+    description: 'Do not edit this job through the web! Destroys a parameter-named cluster'
     concurrent: true
     project-type: freestyle
     logrotate:
