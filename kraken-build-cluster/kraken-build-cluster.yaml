@@ -7,6 +7,7 @@
       numToKeep: 100
     parameters:
       - clustername-params
+      - terraform-params
       - conformance-params
     properties:
       - github:
