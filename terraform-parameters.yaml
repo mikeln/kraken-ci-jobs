@@ -4,9 +4,9 @@
     parameters:
       - string:
           name: TERRAFORM_APPLY_RETRIES
-          default: 2
+          default: "2"
           description: "Retry terraform apply calls up to n times"
       - string:
           name: TERRAFORM_DESTROY_RETRIES
-          default: 10
+          default: "10"
           description: "Retry terraform destroy calls up to n times"
