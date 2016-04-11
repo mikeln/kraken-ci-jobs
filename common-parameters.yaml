@@ -2,28 +2,5 @@
 - parameter:
     name: common-params
     parameters:
-      - string:
-          name: KRAKEN_REPO
-          default: git@github.com:Samsung-AG/kraken.git
-          description: "kraken git repository"
-      - string:
-          name: KRAKEN_BRANCH
-          default: master
-          description: "kraken git repository branch"
-      - string:
-          name: KUBE_TESTS_REPO
-          default: "https://github.com/kubernetes/kubernetes.git"
-          description: "Kubernetes tests repo"
-      - string:
-          name: KUBE_TESTS_BRANCH
-          default: release-1.2
-          description: "Kubernetes tests branch. Recommended possible values: conformance-test-v1, release-1.1, release-1.2, master"
-      - string:
-          name: KUBE_BINARIES_URI
-          default: "https://storage.googleapis.com/kubernetes-release/release/v1.2.0/bin/linux/amd64"
-          description: "Link to kubernetes binaries"
-      - string:
-          name: TOTAL_WAIT
-          default: "10"
-          description: "total number of 60 second waits"
+      - kraken-params
       - coreos-params
