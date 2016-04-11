@@ -26,3 +26,4 @@
           name: TOTAL_WAIT
           default: "10"
           description: "total number of 60 second waits"
+      - coreos-params

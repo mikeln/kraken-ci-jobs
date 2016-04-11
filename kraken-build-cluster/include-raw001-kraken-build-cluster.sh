@@ -14,6 +14,9 @@ aws_etcd_type = "${ETCD_TYPE}"
 aws_master_type = "${MASTER_TYPE}"
 apiserver_count = ${API_SERVER_COUNT}
 aws_apiserver_type = "${API_SERVER_TYPE}"
+coreos_update_channel = "${COREOS_UPDATE_CHANNEL}"
+coreos_version = "${COREOS_VERSION}"
+coreos_reboot_strategy = "${COREOS_REBOOT_STRATEGY}"
 EOF
 
 # start kraken-up
