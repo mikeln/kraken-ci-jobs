@@ -9,10 +9,6 @@
     parameters:
       - clustername-params
       - common-params
-      - bool:
-          name: DESTROY_CLUSTER
-          default: true
-          description: "true if the cluster should be destroyed, false if this step should be skipped."
     properties:
       - github:
           url: https://github.com/Samsung-AG/kraken/
