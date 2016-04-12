@@ -3,4 +3,5 @@
     name: common-params
     parameters:
       - kraken-params
+      - terraform-params
       - coreos-params
