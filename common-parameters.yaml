@@ -5,3 +5,4 @@
       - kraken-params
       - terraform-params
       - coreos-params
+      - destroy-params
