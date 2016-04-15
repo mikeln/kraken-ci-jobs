@@ -11,3 +11,4 @@
 - '{name}-update-github-pages'
 - '{name}-upload-to-s3'
 - '{name}-update-jobs'
+- '{name}-ci-jobs-pr'
