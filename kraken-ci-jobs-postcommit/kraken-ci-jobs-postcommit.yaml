@@ -1,6 +1,6 @@
 ---
 - job-template:
-    name: '{name}-update-jobs'
+    name: '{name}-ci-jobs-postcommit'
     description: 'Do not edit this job through the web! On a merged kraken-ci-jobs PR, run jenkins job builder to update the current jenkins jobs.'
     project-type: freestyle
     logrotate:
@@ -23,7 +23,7 @@
       - github
     builders:
       - shell: 
-          !include-raw-escape: include-raw001-kraken-update-jobs.sh
+          !include-raw-escape: include-raw001-kraken-ci-jobs-postcommit.sh
     publishers:
       - slack-publisher:
           slack_domain: '{slack_domain}'
