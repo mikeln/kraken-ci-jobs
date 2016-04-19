@@ -20,6 +20,7 @@
           skip-tag: true
     wrappers:
       - workspace-cleanup
+      - mask-passwords
     triggers:
       - github-pull-request:
           admin-list: '{obj:ci_admin_list}'
