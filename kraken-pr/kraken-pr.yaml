@@ -43,7 +43,7 @@
           results: output/cucumber/junit/*
           health-scale-factor: 1.0
       - trigger-parameterized-builds:
-        - project: '{name}-destroy'
+        - project: '{name}-destroy-cluster'
           current-parameters: true
           predefined-parameters: |
             KRAKEN_CLUSTER_NAME=kraken_pr-${{BUILD_NUMBER}}

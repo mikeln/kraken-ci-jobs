@@ -5,7 +5,7 @@
 - '{name}-build-cluster'
 - '{name}-build-k8s-tests'
 - '{name}-cleanup-tests'
-- '{name}-destroy'
+- '{name}-destroy-cluster'
 - '{name}-k8s-conformance'
 - '{name}-k8s-density'
 - '{name}-run-k8s-conformance-tests'
