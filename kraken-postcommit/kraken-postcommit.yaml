@@ -1,7 +1,7 @@
 ---
 - job-template:
-    name: '{name}-pr-conformance'
-    description: 'Do not edit this job through the web! On a merged kraken PR, run all the jobs required to create a kraken cluster, run kubernetes conformance tests and then destroy it.'
+    name: '{name}-postcommit'
+    description: 'Do not edit this job through the web! Runs on post-commit to kraken, kicks off conformance tests'
     concurrent: false
     project-type: freestyle
     logrotate:

@@ -1,6 +1,6 @@
 ---
 - job-template:
-    name: '{name}-pr-builder'
+    name: '{name}-pr'
     description: 'Do not edit this job through the web! On an open github PR, runs all the jobs to create a kubernetes cluster, run some cucumber/aruba tests on it and then destroy it.'
     concurrent: true
     project-type: freestyle
@@ -37,7 +37,7 @@
       - mask-passwords
     builders:
       - shell:
-         !include-raw-escape: include-raw001-kraken-build.sh
+         !include-raw-escape: include-raw001-kraken-pr.sh
     publishers:
       - junit:
           results: output/cucumber/junit/*
@@ -46,7 +46,7 @@
         - project: '{name}-destroy'
           current-parameters: true
           predefined-parameters: |
-            KRAKEN_CLUSTER_NAME=kraken_pr_builder-${{BUILD_NUMBER}}
+            KRAKEN_CLUSTER_NAME=kraken_pr-${{BUILD_NUMBER}}
           svn-revision: true
           condition: UNSTABLE_OR_WORSE
       - slack-publisher:
