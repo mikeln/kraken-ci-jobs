@@ -1,6 +1,6 @@
 ---
 - job-template:
-    name: '{name}-destroy'
+    name: '{name}-destroy-cluster'
     description: 'Do not edit this job through the web! Destroys a parameter-named cluster'
     concurrent: true
     project-type: freestyle
@@ -26,7 +26,7 @@
       - mask-passwords
     builders:
       - shell: 
-          !include-raw-escape: include-raw001-kraken-destroy.sh
+          !include-raw-escape: include-raw001-kraken-destroy-cluster.sh
     publishers:
       - slack-publisher:
           slack_domain: '{slack_domain}'

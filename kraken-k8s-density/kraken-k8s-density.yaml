@@ -57,7 +57,7 @@
           block: true
     publishers:
       - trigger-parameterized-builds:
-        - project: '{name}-destroy'
+        - project: '{name}-destroy-cluster'
           current-parameters: true
           predefined-parameters: |
             KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}

@@ -66,7 +66,7 @@
             TEST_KIND=Conformance
             LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/kraken_${{GIT_COMMIT}}.log
           condition: UNSTABLE_OR_WORSE
-        - project: '{name}-destroy'
+        - project: '{name}-destroy-cluster'
           current-parameters: true
           predefined-parameters: |
             KRAKEN_CLUSTER_NAME=kubernetes_conformance-${{BUILD_NUMBER}}
