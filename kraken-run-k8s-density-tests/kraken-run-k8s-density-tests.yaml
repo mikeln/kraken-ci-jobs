@@ -37,7 +37,7 @@
       - archive:
           artifacts: ${{BUILD_TAG}}-${{DENSITY}}.log
       - trigger-parameterized-builds:
-        - project: '{name}-upload-to-s3'
+        - project: '{name}-upload-to-s3-kraken-e2e-logs'
           current-parameters: true
           predefined-parameters: |
             TEST_KIND=density

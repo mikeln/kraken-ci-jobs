@@ -1,6 +1,6 @@
 ---
 - job-template:
-    name: '{name}-upload-to-s3'
+    name: '{name}-upload-to-s3-kraken-e2e-logs'
     description: 'Do not edit this job through the web! Uplodad a parameter-specified test result file to S3'
     project-type: freestyle
     concurrent: true
@@ -29,7 +29,7 @@
           build-number: ${{PROJECT_BUILD}}
           filter: ${{PROJECT_ARTIFACT}}
       - shell: 
-          !include-raw-escape: include-raw001-kraken-upload-to-s3.sh
+          !include-raw-escape: include-raw001-kraken-upload-to-s3-kraken-e2e-logs.sh
     publishers:
       - slack-publisher:
           slack_domain: '{slack_domain}'
