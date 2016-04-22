@@ -1,0 +1,5 @@
+---
+- defaults:
+    name: global
+    kubernetes_build_dir: /var/lib/docker/gobuild
+    project_type: freestyle
