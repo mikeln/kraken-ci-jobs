@@ -1,23 +1,21 @@
 ---
 - job-template:
-    name: '{name}-build-k8s-tests'
-    description: 'Do not edit this job through the web! Builds a kubernetes tests in a parameter-specified subfolder of /var/lib/docker/gobuild'
+    name: '{name}-clean-kubernetes'
+    description: 'Do not edit this job through the web! Removes parameter-specified subfolder of {kubernetes_build_dir}'
     concurrent: true
     project-type: freestyle
     logrotate:
-      numToKeep: 100
+      numToKeep: 1
     parameters:
-      - common-params
       - kubetestdir-params
     properties:
       - github:
           url: https://github.com/Samsung-AG/kraken/
     wrappers:
       - workspace-cleanup
-      - mask-passwords
     builders:
       - shell: 
-          !include-raw-escape: include-raw001-kraken-build-k8-tests.sh
+          !include-raw-escape: include-raw001-kraken-clean-kubernetes.sh
     publishers:
       - slack-publisher:
           slack_domain: '{slack_domain}'
