@@ -11,4 +11,4 @@
 - '{name}-run-k8s-conformance-tests'
 - '{name}-run-k8s-density-tests'
 - '{name}-update-github-pages'
-- '{name}-upload-to-s3'
+- '{name}-upload-to-s3-kraken-e2e-logs'
