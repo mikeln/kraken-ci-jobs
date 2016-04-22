@@ -15,7 +15,7 @@
           description: "which pod density to use"
     properties:
       - github:
-          url: https://github.com/Samsung-AG/kraken/
+          url: https://github.com/samsung-cnct/kraken/
       - copyartifact:
           projects: kraken*
     scm:

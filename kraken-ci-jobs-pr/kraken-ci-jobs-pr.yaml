@@ -7,10 +7,10 @@
       numToKeep: 100
     properties:
       - github:
-          url: https://github.com/Samsung-AG/kraken-ci-jobs/
+          url: https://github.com/samsung-cnct/kraken-ci-jobs/
     scm:
       - git:
-          url: git@github.com:Samsung-AG/kraken-ci-jobs.git
+          url: git@github.com:samsung-cnct/kraken-ci-jobs.git
           credentials-id: jenkins-ssh
           refspec: "+refs/pull/*:refs/remotes/origin/pr/*"
           branches:

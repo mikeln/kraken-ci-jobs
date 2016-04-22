@@ -10,7 +10,7 @@
       - density-params
     properties:
       - github:
-          url: https://github.com/Samsung-AG/kraken/
+          url: https://github.com/samsung-cnct/kraken/
     scm:
       - git:
           url: ${{KRAKEN_REPO}}
