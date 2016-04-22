@@ -8,10 +8,10 @@
       numToKeep: 100
     properties:
       - github:
-          url: https://github.com/Samsung-AG/kraken/
+          url: https://github.com/samsung-cnct/kraken/
     scm:
       - git:
-          url: https://github.com/Samsung-AG/kraken.git
+          url: https://github.com/samsung-cnct/kraken.git
           credentials-id: jenkins-ssh
           branches:
             - master

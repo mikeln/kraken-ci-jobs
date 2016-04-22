@@ -10,7 +10,7 @@
       - kubetestdir-params
     properties:
       - github:
-          url: https://github.com/Samsung-AG/kraken/
+          url: https://github.com/samsung-cnct/kraken/
     wrappers:
       - workspace-cleanup
     builders:
