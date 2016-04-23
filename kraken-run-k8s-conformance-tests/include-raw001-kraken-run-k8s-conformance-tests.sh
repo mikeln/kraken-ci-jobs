@@ -9,6 +9,9 @@ export KUBE_ROOT=/var/lib/docker/gobuild/${KUBE_TESTS_DIR}
 export KUBE_CONFORMANCE_KUBECONFIG=${WORKSPACE}/bin/clusters/${KRAKEN_CLUSTER_NAME}/kube_config
 export KUBE_CONFORMANCE_OUTPUT_DIR=${WORKSPACE}/output/conformance
 
+export KUBE_SSH_USER="core"
+export KUBE_SSH_KEY="${KRAKEN_CLUSTER_DIR}/id_rsa"
+
 KUBE_CONFORMANCE_LOG=${WORKSPACE}/kraken_${GIT_COMMIT}.log
 # TODO: unclear what part of k8s scripts require USER to be set
 USER=jenkins ./hack/conformance.sh ${KUBE_TESTS_BRANCH} | tee ${KUBE_CONFORMANCE_LOG}
