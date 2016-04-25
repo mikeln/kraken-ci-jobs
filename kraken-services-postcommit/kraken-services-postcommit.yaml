@@ -1,0 +1,33 @@
+---
+- job-template:
+    name: '{name}-services-postcommit'
+    description: 'Do not edit this job through the web! Runs on post-commit to kraken, kicks off conformance tests'
+    concurrent: false
+    project-type: freestyle
+    logrotate:
+      numToKeep: 100
+    properties:
+      - github:
+          url: https://github.com/samsung-cnct/kraken-services/
+    scm:
+      - git:
+          url: https://github.com/samsung-cnct/kraken-services.git
+          credentials-id: jenkins-ssh
+          branches:
+            - master
+          browser: auto
+          wipe-workspace: false
+          skip-tag: true
+    triggers:
+      - github
+    wrappers:
+      - workspace-cleanup
+    builders:
+      - shell: ./build.sh --repo quay.io/samsung_cnct --tag latest --push .
+    publishers:
+      - slack-publisher:
+          slack_domain: '{slack_domain}'
+          slack_api_token: '{slack_api_token}'
+          ci_hostname: '{ci_hostname}'
+          slack_room: '{slack_room}'
+

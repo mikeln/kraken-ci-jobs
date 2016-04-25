@@ -2,6 +2,8 @@
 - '{name}-postcommit'
 - '{name}-ci-jobs-pr'
 - '{name}-ci-jobs-postcommit'
+- '{name}-services-pr'
+- '{name}-services-postcommit'
 - '{name}-build-cluster'
 - '{name}-build-kubernetes'
 - '{name}-clean-kubernetes'

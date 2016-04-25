@@ -1,0 +1,35 @@
+---
+- job-template:
+    name: '{name}-services-pr'
+    description: 'Do not edit this job through the web! Runs against pull requests made against kraken-services'
+    project-type: freestyle
+    logrotate:
+      numToKeep: 100
+    properties:
+      - github:
+          url: https://github.com/samsung-cnct/kraken-services/
+    scm:
+      - git:
+          url: git@github.com:samsung-cnct/kraken-services.git
+          credentials-id: jenkins-ssh
+          refspec: "+refs/pull/*:refs/remotes/origin/pr/*"
+          branches:
+            - ${{ghprbActualCommit}}
+          browser: auto
+          wipe-workspace: false
+          skip-tag: true
+    wrappers:
+      - workspace-cleanup
+      - mask-passwords
+    triggers:
+      - github-pull-request:
+          admin-list: '{obj:ci_admin_list}'
+          github-hooks: true
+    builders:
+      - shell: ./build.sh --repo quay.io/samsung_cnct --tag ${{ghprbActualCommit}} .
+    publishers:
+      - slack-publisher:
+          slack_domain: '{slack_domain}'
+          slack_api_token: '{slack_api_token}'
+          ci_hostname: '{ci_hostname}'
+          slack_room: '{slack_room}'
