@@ -31,3 +31,15 @@
           name: NODE_TYPE
           default: "m3.medium"
           description: "regular node aws type"
+      - string:
+          name: COREOS_UPDATE_CHANNEL
+          default: "alpha"
+          description: "Core OS update channel. Alpha, beta, stable or some custom value"
+      - string:
+          name: COREOS_VERSION
+          default: "1010.1.0"
+          description: "Core OS version. current or version number."
+      - string:
+          name: COREOS_REBOOT_STRATEGY
+          default: "off"
+          description: "Core OS reboot strategy"
