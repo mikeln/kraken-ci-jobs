@@ -28,7 +28,7 @@
           name: Build
           condition: SUCCESSFUL
           projects:
-            - name: '{name}-build-k8s-tests'
+            - name: '{name}-build-kubernetes'
               current-parameters: true
               predefined-parameters: |
                 KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
