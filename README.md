@@ -11,7 +11,7 @@ Jenkins Job Builder definitions for kraken-ci.
 2) Edit the [job-list.yaml.inc](job-list.yaml.inc) file:
 
         - '{name}-build-cluster'
-        - '{name}-build-k8s-tests'
+        - '{name}-build-kubernetes'
         ...
         - '{name}-your-job'
 
