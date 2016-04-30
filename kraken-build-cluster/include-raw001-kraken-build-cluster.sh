@@ -20,7 +20,7 @@ coreos_reboot_strategy = "${COREOS_REBOOT_STRATEGY}"
 EOF
 
 # start kraken-up
-${WORKSPACE}/bin/kraken-up.sh \
+KRAKEN_VERBOSE=true ${WORKSPACE}/bin/kraken-up.sh \
   --clustername "${KRAKEN_CLUSTER_NAME}" \
   --clustertype aws \
   --terraform_retries ${TERRAFORM_APPLY_RETRIES} \
