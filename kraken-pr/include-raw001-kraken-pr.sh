@@ -13,12 +13,16 @@ kraken_repo.commit_sha = "${ghprbActualCommit}"
 EOF
 
 # start kraken-up
-${WORKSPACE}/bin/kraken-up.sh \
+KRAKEN_VERBOSE=true ${WORKSPACE}/bin/kraken-up.sh \
   --clustername "${KRAKEN_CLUSTER_NAME}" \
   --clustertype aws \
-    --dmopts "--driver amazonec2 --amazonec2-region ${AWS_DEFAULT_REGION} \
-      --amazonec2-vpc-id ${KRAKEN_DEFAULT_VPC} --amazonec2-access-key ${AWS_ACCESS_KEY_ID} \
-      --amazonec2-secret-key ${AWS_SECRET_ACCESS_KEY}" \
+    --dmopts "\
+      --driver amazonec2 \
+      --amazonec2-access-key ${AWS_ACCESS_KEY_ID} \
+      --amazonec2-instance-type m4.xlarge
+      --amazonec2-region ${AWS_DEFAULT_REGION} \
+      --amazonec2-secret-key ${AWS_SECRET_ACCESS_KEY} \
+      --amazonec2-vpc-id ${KRAKEN_DEFAULT_VPC}" \
     --dmname "${PIPELET_DOCKERMACHINE}" \
     --dmshell bash
 
