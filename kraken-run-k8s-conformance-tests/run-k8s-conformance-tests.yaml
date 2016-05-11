@@ -32,7 +32,7 @@
           !include-raw-escape: include-raw001-kraken-run-k8s-conformance-tests.sh
     publishers:
       - archive:
-          artifacts: kraken_${{GIT_COMMIT}}.log
+          artifacts: kraken_${{GIT_COMMIT}}
       - trigger-parameterized-builds:
         - project: '{name}-upload-to-s3-kraken-e2e-logs'
           current-parameters: true
@@ -40,7 +40,7 @@
             TEST_KIND=conformance
             PROJECT_NAME=${{JOB_NAME}}
             PROJECT_BUILD=${{BUILD_NUMBER}}
-            PROJECT_ARTIFACT=kraken_${{GIT_COMMIT}}.log
+            PROJECT_ARTIFACT=kraken_${{GIT_COMMIT}}
           condition: ALWAYS
       - junit:
           results: output/**/junit*.xml

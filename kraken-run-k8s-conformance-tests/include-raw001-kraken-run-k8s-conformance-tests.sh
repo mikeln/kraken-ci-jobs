@@ -1,4 +1,7 @@
 #!/bin/bash
+
+KRAKEN_ROOT=${KRAKEN_ROOT:-${WORKSPACE}}
+
 ${WORKSPACE}/bin/kraken-connect.sh \
   --clustername "${KRAKEN_CLUSTER_NAME}" \
   --clustertype aws \
@@ -12,8 +15,14 @@ export KUBE_CONFORMANCE_OUTPUT_DIR=${WORKSPACE}/output/conformance
 export KUBE_SSH_USER="core"
 export KUBE_SSH_KEY="${KRAKEN_CLUSTER_DIR}/id_rsa"
 
-KUBE_CONFORMANCE_LOG=${WORKSPACE}/kraken_${GIT_COMMIT}.log
+# setup logging
+KUBE_CONFORMANCE_LOG_DIR=${KRAKEN_ROOT}/kraken_${GIT_COMMIT}/
+KUBE_CONFORMANCE_LOG=${KUBE_CONFORMANCE_LOG_DIR}/build-log.txt
+
 # TODO: unclear what part of k8s scripts require USER to be set
 USER=jenkins ./hack/conformance.sh ${KUBE_TESTS_BRANCH} | tee ${KUBE_CONFORMANCE_LOG}
 # tee isn't exiting >0 as expected, so use the exit status of the script directly
 exit ${PIPESTATUS[0]}
+
+# save logs
+${KRAKEN_ROOT}/hack/log-dump.sh --clustername ${KRAKEN_CLUSTER_NAME} --log-directory ${KUBE_CONFORMANCE_LOG_DIR}/artifacts
