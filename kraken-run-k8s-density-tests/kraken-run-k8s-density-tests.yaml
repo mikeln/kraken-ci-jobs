@@ -43,7 +43,7 @@
             TEST_KIND=density
             PROJECT_NAME=${{JOB_NAME}}
             PROJECT_BUILD=${{BUILD_NUMBER}}
-            PROJECT_ARTIFACT=${{BUILD_TAG}}-${{DENSITY}}.log
+            PROJECT_ARTIFACT=${{BUILD_TAG}}-${{DENSITY}}
           condition: ALWAYS
         - project: '{name}-update-github-pages'
           current-parameters: true
@@ -51,7 +51,7 @@
             KRAKEN_COMMIT=${{BUILD_TAG}}-${{DENSITY}}
             TEST_RESULT=Success!
             TEST_KIND=density
-            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}.log
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}/build-log.txt
           condition: SUCCESS
         - project: '{name}-update-github-pages'
           current-parameters: true
@@ -59,7 +59,7 @@
             KRAKEN_COMMIT=${{BUILD_TAG}}-${{DENSITY}}
             TEST_RESULT=Failure!
             TEST_KIND=density
-            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}.log
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}/build-log.txt
           condition: UNSTABLE_OR_WORSE
       - junit:
           results: output/**/junit*.xml
