@@ -28,12 +28,9 @@ KUBECONFIG=${KUBECONFIG} ${KRAKEN_ROOT}/hack/terminate-namespace.sh density
 
 ## run
 
-# setup logging
-KUBE_DENSITY_LOG_DIR=${KRAKEN_ROOT}/${BUILD_TAG}-${DENSITY}/
-KUBE_DENSITY_LOG=${KUBE_DENSITY_LOG_DIR}/build-log.txt
-
 # TODO: unclear what part of k8s scripts require USER to be set
 # TODO: should we just drop test build functionality
+KUBE_DENSITY_LOG=${KRAKEN_ROOT}/${BUILD_TAG}-${DENSITY}.log
 export KUBE_ROOT=${KUBE_ROOT:-"/var/lib/docker/gobuild/${KUBE_TESTS_DIR}"}
 export KUBE_DENSITY_KUBECONFIG=${KUBECONFIG}
 export KUBE_DENSITY_NUM_NODES=${NUMBER_OF_NODES}
@@ -43,9 +40,6 @@ export KUBE_SSH_KEY="${KRAKEN_CLUSTER_DIR}/id_rsa"
 REBUILD_TESTS=false USER=jenkins ${KRAKEN_ROOT}/hack/density.sh ${KUBE_TESTS_BRANCH} ${DENSITY} | tee ${KUBE_DENSITY_LOG}
 # tee isn't exiting >0 as expected, so use the exit status of the script directly
 density_result=${PIPESTATUS[0]}
-
-# save logs
-${KRAKEN_ROOT}/hack/log-dump.sh --clustername ${KRAKEN_CLUSTER_NAME} --log-directory ${KRAKEN_ROOT}/${BUILD_TAG}-${DENSITY}/artifacts
 
 ## teardown
 
