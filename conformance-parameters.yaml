@@ -5,7 +5,7 @@
       - common-params
       - string:
           name: NUMBER_OF_NODES
-          default: "10"
+          default: "3"
           description: "number of nodes in cluster"
       - string:
           name: API_SERVER_COUNT
@@ -13,31 +13,31 @@
           description: "number of api servers in cluster"
       - string:
           name: MASTER_TYPE
-          default: "m3.xlarge"
+          default: "m4.large"
           description: "master node aws type"
       - string:
           name: API_SERVER_TYPE
-          default: "m3.large"
+          default: "m4.large"
           description: "apiserver node aws type"
       - string:
           name: ETCD_TYPE
-          default: "m3.xlarge"
+          default: "m4.large"
           description: "etcd node aws type"
       - string:
           name: SPECIAL_NODE_TYPE
-          default: "m3.xlarge"
+          default: "m4.large"
           description: "special node aws type"
       - string:
           name: NODE_TYPE
-          default: "m3.medium"
+          default: "m4.large"
           description: "regular node aws type"
       - string:
           name: COREOS_UPDATE_CHANNEL
-          default: "beta"
+          default: "alpha"
           description: "Core OS update channel. Alpha, beta, stable or some custom value"
       - string:
           name: COREOS_VERSION
-          default: "991.2.0"
+          default: "1010.1.0"
           description: "Core OS version. current or version number."
       - string:
           name: COREOS_REBOOT_STRATEGY
