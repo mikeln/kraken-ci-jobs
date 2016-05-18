@@ -18,6 +18,7 @@ export KUBE_SSH_KEY="${KRAKEN_CLUSTER_DIR}/id_rsa"
 # setup logging
 KUBE_CONFORMANCE_LOG_DIR=${KRAKEN_ROOT}/kraken_${GIT_COMMIT}/
 KUBE_CONFORMANCE_LOG=${KUBE_CONFORMANCE_LOG_DIR}/build-log.txt
+mkdir -p ${KUBE_CONFORMANCE_LOG_DIR}
 
 # TODO: unclear what part of k8s scripts require USER to be set
 USER=jenkins ./hack/conformance.sh ${KUBE_TESTS_BRANCH} | tee ${KUBE_CONFORMANCE_LOG}
