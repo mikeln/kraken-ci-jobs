@@ -31,6 +31,7 @@ KUBECONFIG=${KUBECONFIG} ${KRAKEN_ROOT}/hack/terminate-namespace.sh density
 # setup logging
 KUBE_DENSITY_LOG_DIR=${KRAKEN_ROOT}/${BUILD_TAG}-${DENSITY}/
 KUBE_DENSITY_LOG=${KUBE_DENSITY_LOG_DIR}/build-log.txt
+mkdir -p ${KUBE_DENSITY_LOG_DIR}
 
 # TODO: unclear what part of k8s scripts require USER to be set
 # TODO: should we just drop test build functionality
