@@ -27,7 +27,7 @@
           project: ${{PROJECT_NAME}}
           which-build: specific-build
           build-number: ${{PROJECT_BUILD}}
-          filter: ${{PROJECT_ARTIFACT}}
+          filter: ${{PROJECT_ARTIFACT}}/**/*
       - shell: 
           !include-raw-escape: include-raw001-kraken-upload-to-s3-kraken-e2e-logs.sh
     publishers:
