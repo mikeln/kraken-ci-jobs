@@ -50,22 +50,6 @@
               git-revision: true
     publishers:
       - trigger-parameterized-builds:
-        - project: '{name}-update-github-pages'
-          current-parameters: true
-          predefined-parameters: |
-            KRAKEN_COMMIT=${{GIT_COMMIT}}
-            TEST_RESULT=Success!
-            TEST_KIND=conformance
-            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/kraken_${{GIT_COMMIT}}.log
-          condition: SUCCESS
-        - project: '{name}-update-github-pages'
-          current-parameters: true
-          predefined-parameters: |
-            KRAKEN_COMMIT=${{GIT_COMMIT}}
-            TEST_RESULT=Failure!
-            TEST_KIND=Conformance
-            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/kraken_${{GIT_COMMIT}}.log
-          condition: UNSTABLE_OR_WORSE
         - project: '{name}-destroy-cluster'
           current-parameters: true
           predefined-parameters: |
