@@ -42,6 +42,22 @@
             PROJECT_BUILD=${{BUILD_NUMBER}}
             PROJECT_ARTIFACT=kraken_${{GIT_COMMIT}}
           condition: ALWAYS
+        - project: '{name}-update-github-pages'
+          current-parameters: true
+          predefined-parameters: |
+            KRAKEN_COMMIT=${{GIT_COMMIT}}
+            TEST_RESULT=Success!
+            TEST_KIND=conformance
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/kraken_${{GIT_COMMIT}}/build-log.txt
+          condition: SUCCESS
+        - project: '{name}-update-github-pages'
+          current-parameters: true
+          predefined-parameters: |
+            KRAKEN_COMMIT=${{GIT_COMMIT}}
+            TEST_RESULT=Failure!
+            TEST_KIND=Conformance
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/kraken_${{GIT_COMMIT}}/build-log.txt
+          condition: UNSTABLE_OR_WORSE
       - junit:
           results: output/**/junit*.xml
           health-scale-factor: 1.0
