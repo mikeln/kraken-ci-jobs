@@ -21,7 +21,7 @@ KUBE_CONFORMANCE_LOG=${KUBE_CONFORMANCE_LOG_DIR}/build-log.txt
 mkdir -p ${KUBE_CONFORMANCE_LOG_DIR}
 
 # TODO: unclear what part of k8s scripts require USER to be set
-USER=jenkins ./hack/conformance.sh ${KUBE_TESTS_BRANCH} | tee ${KUBE_CONFORMANCE_LOG}
+USER=jenkins ./hack/parallel-conformance.sh ${KUBE_ROOT} | tee ${KUBE_CONFORMANCE_LOG}
 # tee isn't exiting >0 as expected, so use the exit status of the script directly
 exit ${PIPESTATUS[0]}
 
