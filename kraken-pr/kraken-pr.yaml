@@ -50,10 +50,4 @@
             KRAKEN_CLUSTER_NAME=kraken_pr-${{BUILD_NUMBER}}
           svn-revision: true
           condition: UNSTABLE_OR_WORSE
-      - slack-publisher:
-          slack_domain: '{slack_domain}'
-          slack_api_token: '{slack_api_token}'
-          ci_hostname: '{ci_hostname}'
-          slack_room: '{slack_room}'
-
-
+      - slack-publisher
