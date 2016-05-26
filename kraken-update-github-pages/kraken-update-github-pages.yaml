@@ -41,8 +41,4 @@
               - branch:
                   remote: origin
                   name: gh-pages
-      - slack-publisher:
-          slack_domain: '{slack_domain}'
-          slack_api_token: '{slack_api_token}'
-          ci_hostname: '{ci_hostname}'
-          slack_room: '{slack_room}'
+      - slack-publisher

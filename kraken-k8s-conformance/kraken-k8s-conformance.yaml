@@ -59,9 +59,4 @@
           predefined-parameters: |
             KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
           condition: ALWAYS
-      - slack-publisher:
-          slack_domain: '{slack_domain}'
-          slack_api_token: '{slack_api_token}'
-          ci_hostname: '{ci_hostname}'
-          slack_room: '{slack_room}'
-
+      - slack-publisher

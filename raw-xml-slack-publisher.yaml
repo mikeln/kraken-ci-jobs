@@ -1,6 +1,6 @@
 ---
 - publisher:
-    name: slack-publisher
+    name: raw-xml-slack-publisher
     publishers:
       - raw:
           xml: |

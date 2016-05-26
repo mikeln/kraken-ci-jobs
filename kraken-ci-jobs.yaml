@@ -1,0 +1,32 @@
+---
+- project:
+    name: kraken
+    ci_admin_list:
+      - countspongebob
+      - l337ch
+      - maratoid
+      - mikeln
+      - richardkaufmann
+      - Rick-Lindberg
+      - SamsungAGJenkinsBot
+      - spiffxp
+      - davidewatson
+      - cwazy1
+    test_bucket: "kraken-e2e-logs"
+    jobs:
+      - '{name}-pr'
+      - '{name}-postcommit'
+      - '{name}-ci-jobs-pr'
+      - '{name}-ci-jobs-postcommit'
+      - '{name}-services-pr'
+      - '{name}-services-postcommit'
+      - '{name}-build-cluster'
+      - '{name}-build-kubernetes'
+      - '{name}-clean-kubernetes'
+      - '{name}-destroy-cluster'
+      - '{name}-k8s-conformance'
+      - '{name}-k8s-density'
+      - '{name}-run-k8s-conformance-tests'
+      - '{name}-run-k8s-density-tests'
+      - '{name}-update-github-pages'
+      - '{name}-upload-to-s3-kraken-e2e-logs'

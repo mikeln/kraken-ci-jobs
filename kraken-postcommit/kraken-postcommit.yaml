@@ -28,9 +28,4 @@
           svn-revision: true
           block: true
     publishers:
-      - slack-publisher:
-          slack_domain: '{slack_domain}'
-          slack_api_token: '{slack_api_token}'
-          ci_hostname: '{ci_hostname}'
-          slack_room: '{slack_room}'
-
+      - slack-publisher

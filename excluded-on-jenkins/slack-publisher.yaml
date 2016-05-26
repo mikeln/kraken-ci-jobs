@@ -1,0 +1,8 @@
+- publisher:
+    name: slack-publisher
+    publishers:
+      - raw-xml-slack-publisher:
+          slack_domain: dev_slack_domain
+          slack_api_token: dev_slack_api_token
+          ci_hostname: dev_ci_hostname
+          slack_room: dev_slack_room
