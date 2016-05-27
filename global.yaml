@@ -4,3 +4,8 @@
     description: ''
     kubernetes_build_dir: /var/lib/docker/gobuild
     project_type: freestyle
+    wrappers:
+      - workspace-cleanup
+      - mask-passwords
+    publishers:
+      - slack-publisher

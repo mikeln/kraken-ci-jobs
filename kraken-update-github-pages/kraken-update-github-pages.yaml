@@ -2,7 +2,6 @@
 - job-template:
     name: '{name}-update-github-pages'
     description: 'Do not edit this job through the web! Update e2e.kubeme.io github page site with test results, based on parameters.'
-    project-type: freestyle
     logrotate:
       numToKeep: 1
     parameters:
@@ -27,9 +26,6 @@
           browser: auto
           wipe-workspace: false
           skip-tag: true
-    wrappers:
-      - workspace-cleanup
-      - mask-passwords
     builders:
       - shell:
           !include-raw-escape: include-raw001-kraken-update-github-pages.sh

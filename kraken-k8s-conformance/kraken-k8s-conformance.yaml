@@ -20,9 +20,6 @@
           browser: auto
           wipe-workspace: false
           skip-tag: true
-    wrappers:
-      - workspace-cleanup
-      - mask-passwords
     builders:
       - multijob:
           name: Build
