@@ -3,7 +3,6 @@
     name: '{name}-pr'
     description: 'Do not edit this job through the web! On an open github PR, runs all the jobs to create a kubernetes cluster, run some cucumber/aruba tests on it and then destroy it.'
     concurrent: true
-    project-type: freestyle
     logrotate:
       numToKeep: 100
     parameters:
@@ -32,9 +31,6 @@
       - github-pull-request:
           admin-list: '{obj:ci_admin_list}'
           github-hooks: true
-    wrappers:
-      - workspace-cleanup
-      - mask-passwords
     builders:
       - shell:
          !include-raw-escape: include-raw001-kraken-pr.sh

@@ -2,7 +2,6 @@
 - job-template:
     name: '{name}-ci-jobs-pr'
     description: 'Do not edit this job through the web! Runs against pull requests made against kraken-ci-jobs'
-    project-type: freestyle
     logrotate:
       numToKeep: 100
     properties:
@@ -18,9 +17,6 @@
           browser: auto
           wipe-workspace: false
           skip-tag: true
-    wrappers:
-      - workspace-cleanup
-      - mask-passwords
     triggers:
       - github-pull-request:
           admin-list: '{obj:ci_admin_list}'
@@ -28,5 +24,3 @@
     builders:
       - shell: 
           !include-raw-escape: include-raw001-kraken-ci-jobs-pr.sh
-    publishers:
-      - slack-publisher

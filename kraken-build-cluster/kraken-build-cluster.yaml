@@ -3,7 +3,6 @@
     name: '{name}-build-cluster'
     description: 'Do not edit this job through the web! Builds a parameter-named kraken cluster using kraken-up.sh'
     concurrent: true
-    project-type: freestyle
     logrotate:
       numToKeep: 100
     parameters:
@@ -21,11 +20,6 @@
           browser: auto
           wipe-workspace: false
           skip-tag: true
-    wrappers:
-      - workspace-cleanup
-      - mask-passwords
     builders:
       - shell: 
           !include-raw-escape: include-raw001-kraken-build-cluster.sh
-    publishers:
-      - slack-publisher

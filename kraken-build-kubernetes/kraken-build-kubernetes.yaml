@@ -3,7 +3,6 @@
     name: '{name}-build-kubernetes'
     description: 'Do not edit this job through the web! Builds a kubernetes tests in a parameter-specified subfolder of {kubernetes_build_dir}'
     concurrent: true
-    project-type: freestyle
     logrotate:
       numToKeep: 100
     parameters:
@@ -12,11 +11,6 @@
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/
-    wrappers:
-      - workspace-cleanup
-      - mask-passwords
     builders:
       - shell: 
           !include-raw-escape: include-raw001-kraken-build-kubernetes.sh
-    publishers:
-      - slack-publisher

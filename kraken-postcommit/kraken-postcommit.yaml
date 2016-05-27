@@ -3,7 +3,6 @@
     name: '{name}-postcommit'
     description: 'Do not edit this job through the web! Runs on post-commit to kraken, kicks off conformance tests'
     concurrent: false
-    project-type: freestyle
     logrotate:
       numToKeep: 100
     properties:
@@ -20,12 +19,8 @@
           skip-tag: true
     triggers:
       - github
-    wrappers:
-      - workspace-cleanup
     builders:
       - trigger-builds:
         - project: '{name}-k8s-conformance'
           svn-revision: true
           block: true
-    publishers:
-      - slack-publisher

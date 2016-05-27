@@ -3,7 +3,6 @@
     name: '{name}-clean-kubernetes'
     description: 'Do not edit this job through the web! Removes parameter-specified subfolder of {kubernetes_build_dir}'
     concurrent: true
-    project-type: freestyle
     logrotate:
       numToKeep: 1
     parameters:
@@ -11,10 +10,6 @@
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/
-    wrappers:
-      - workspace-cleanup
     builders:
       - shell: 
           !include-raw-escape: include-raw001-kraken-clean-kubernetes.sh
-    publishers:
-      - slack-publisher

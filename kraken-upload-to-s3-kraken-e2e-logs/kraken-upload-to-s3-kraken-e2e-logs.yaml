@@ -2,7 +2,6 @@
 - job-template:
     name: '{name}-upload-to-s3-kraken-e2e-logs'
     description: 'Do not edit this job through the web! Uplodad a parameter-specified test result file to S3'
-    project-type: freestyle
     concurrent: true
     logrotate:
       numToKeep: 1
@@ -19,9 +18,6 @@
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/
-    wrappers:
-      - workspace-cleanup
-      - mask-passwords
     builders:
       - copyartifact:
           project: ${{PROJECT_NAME}}
@@ -30,5 +26,3 @@
           filter: ${{PROJECT_ARTIFACT}}/**/*
       - shell: 
           !include-raw-escape: include-raw001-kraken-upload-to-s3-kraken-e2e-logs.sh
-    publishers:
-      - slack-publisher
