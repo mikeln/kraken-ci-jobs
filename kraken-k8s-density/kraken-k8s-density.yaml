@@ -59,7 +59,7 @@
           predefined-parameters: |
             KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
           condition: ALWAYS
-        - project: '{name}-cleanup-tests'
+        - project: '{name}-clean-kubernetes'
           predefined-parameters: |
             KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
           condition: ALWAYS
