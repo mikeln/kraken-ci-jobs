@@ -49,10 +49,10 @@ KUBECONFIG="${WORKSPACE}/bin/clusters/${KRAKEN_CLUSTER_NAME}/kube_config"
 
 for res in $(kubectl --kubeconfig="${DIR}/kube_config" get 2>&1 | grep '*' | awk '{print $2}'); do
   echo "=== $r ==="; echo;
-  kubectl --kubeconfig=$DIR/kube_config get $r --all-namespaces;
+  kubectl --kubeconfig=${KUBECONFIG} get $r --all-namespaces;
 done
 
 for res in componentstatuses namespaces nodes; do
   echo "=== $r ==="; echo;
-  kubectl --kubeconfig=$DIR/kube_config get $r;
+  kubectl --kubeconfig=${KUBECONFIG} get $r;
 done
