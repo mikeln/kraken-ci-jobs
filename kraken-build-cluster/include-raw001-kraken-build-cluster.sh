@@ -36,3 +36,23 @@ KRAKEN_VERBOSE=true ${WORKSPACE}/bin/kraken-up.sh \
       --amazonec2-vpc-id ${KRAKEN_DEFAULT_VPC}" \
     --dmname "${PIPELET_DOCKERMACHINE}" \
     --dmshell bash
+
+# sanity check, show what was launched
+
+${WORKSPACE}/bin/kraken-connect.sh \
+  --clustername "${KRAKEN_CLUSTER_NAME}" \
+  --clustertype aws \
+    --dmname "${PIPELET_DOCKERMACHINE}" \
+    --dmshell bash
+
+KUBECONFIG="${WORKSPACE}/bin/clusters/${KRAKEN_CLUSTER_NAME}/kube_config"
+
+for res in $(kubectl --kubeconfig="${DIR}/kube_config" get 2>&1 | grep '*' | awk '{print $2}'); do
+  echo "=== $r ==="; echo;
+  kubectl --kubeconfig=$DIR/kube_config get $r --all-namespaces;
+done
+
+for res in componentstatuses namespaces nodes; do
+  echo "=== $r ==="; echo;
+  kubectl --kubeconfig=$DIR/kube_config get $r;
+done
