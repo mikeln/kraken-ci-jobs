@@ -47,12 +47,12 @@ ${WORKSPACE}/bin/kraken-connect.sh \
 
 KUBECONFIG="${WORKSPACE}/bin/clusters/${KRAKEN_CLUSTER_NAME}/kube_config"
 
-for res in $(kubectl --kubeconfig="${DIR}/kube_config" get 2>&1 | grep '*' | awk '{print $2}'); do
-  echo "=== $r ==="; echo;
-  kubectl --kubeconfig=${KUBECONFIG} get $r --all-namespaces;
+for res in $(kubectl --kubeconfig="${KUBECONFIG}" get 2>&1 | grep '*' | awk '{print $2}'); do
+  echo "=== ${res} ==="; echo;
+  kubectl --kubeconfig=${KUBECONFIG} get "${res}" --all-namespaces;
 done
 
 for res in componentstatuses namespaces nodes; do
-  echo "=== $r ==="; echo;
-  kubectl --kubeconfig=${KUBECONFIG} get $r;
+  echo "=== ${res} ==="; echo;
+  kubectl --kubeconfig=${KUBECONFIG} get "${res}";
 done
