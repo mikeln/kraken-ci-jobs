@@ -11,6 +11,18 @@
           default: master
           description: "kraken git repository branch"
       - string:
+          name: KRAKEN_SERVICES_REPO
+          default: git@github.com:samsung-cnct/kraken-services.git
+          description: "kraken-services git repository"
+      - string:
+          name: KRAKEN_SERVICES_BRANCH
+          default: master
+          description: "kraken-services git repository branch"
+      - string:
+          name: KRAKEN_SERVICES_DIRS
+          default: "skydns cluster-monitoring kubedash prometheus"
+          description: "kraken-services directories to render and deploy on startup"
+      - string:
           name: KUBE_TESTS_REPO
           default: "https://github.com/kubernetes/kubernetes.git"
           description: "Kubernetes tests repo"
