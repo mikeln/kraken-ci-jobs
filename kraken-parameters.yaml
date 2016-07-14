@@ -12,7 +12,7 @@
           description: "kraken git repository branch"
       - string:
           name: KRAKEN_SERVICES_REPO
-          default: git@github.com:samsung-cnct/kraken-services.git
+          default: https://github.com/samsung-cnct/kraken-services.git
           description: "kraken-services git repository"
       - string:
           name: KRAKEN_SERVICES_BRANCH
