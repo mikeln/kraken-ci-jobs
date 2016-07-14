@@ -20,7 +20,7 @@
           description: "kraken-services git repository branch"
       - string:
           name: KRAKEN_SERVICES_DIRS
-          default: "skydns cluster-monitoring kubedash prometheus"
+          default: "kubedns cluster-monitoring kubedash prometheus"
           description: "kraken-services directories to render and deploy on startup"
       - string:
           name: KUBE_TESTS_REPO
