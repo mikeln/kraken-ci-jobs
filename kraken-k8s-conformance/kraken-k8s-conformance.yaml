@@ -54,6 +54,6 @@
           condition: ALWAYS
         - project: '{name}-clean-kubernetes'
           predefined-parameters: |
-            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+            KUBE_TESTS_DIR=kubernetes_conformance_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
           condition: ALWAYS
       - slack-publisher
