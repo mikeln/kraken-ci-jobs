@@ -21,5 +21,7 @@
       - github-pull-request:
           admin-list: '{obj:ci_admin_list}'
           github-hooks: true
+          white-list-target-branches:
+            - master
     builders:
       - shell: ./build.sh --repo quay.io/samsung_cnct --tag ${{ghprbActualCommit}} .
