@@ -21,6 +21,8 @@
       - github-pull-request:
           admin-list: '{obj:ci_admin_list}'
           github-hooks: true
+          white-list-target-branches:
+            - master
     builders:
       - shell: 
           !include-raw-escape: include-raw001-kraken-ci-jobs-pr.sh
