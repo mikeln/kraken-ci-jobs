@@ -32,4 +32,3 @@
       - '{name}-services-postcommit'
       - '{name}-services-pr'
       - '{name}-update-github-pages'
-      - '{name}-upload-to-s3-kraken-e2e-logs'
