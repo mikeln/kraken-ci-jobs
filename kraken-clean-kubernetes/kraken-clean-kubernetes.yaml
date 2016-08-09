@@ -11,5 +11,7 @@
       - github:
           url: https://github.com/samsung-cnct/kraken/
     builders:
-      - shell: 
-          !include-raw-escape: include-raw001-kraken-clean-kubernetes.sh
+      - shell: |
+          set -u
+          target_dir="/var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}"
+          rm -rf "${{target_dir}}"

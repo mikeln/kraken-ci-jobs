@@ -12,5 +12,9 @@
       - github:
           url: https://github.com/samsung-cnct/kraken/
     builders:
-      - shell: 
-          !include-raw-escape: include-raw001-kraken-build-kubernetes.sh
+      - shell: |
+          # build the tests
+          target_dir="/var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}"
+          git clone -b "${{KUBE_TESTS_BRANCH}}" "${{KUBE_TESTS_REPO}}" "${{target_dir}}"
+          cd "${{target_dir}}"
+          KUBE_SKIP_CONFIRMATIONS=y build/run.sh hack/build-go.sh
