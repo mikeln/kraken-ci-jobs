@@ -40,7 +40,7 @@ export KUBE_DENSITY_SSH_KEY="${KRAKEN_CLUSTER_DIR}/id_rsa"
 export KUBE_DENSITY_OUTPUT_DIR="${OUTPUT_DIR}/artifacts"
 export KUBE_DENSITY_NUM_NODES=${NUMBER_OF_NODES}
 # TODO: unclear what part of k8s scripts require USER to be set
-USER=jenkins ${KRAKEN_ROOT}/hack/density.sh ${KUBE_ROOT} ${DENSITY} | tee ${BUILD_LOG}/build-log.txt
+USER=jenkins ${KRAKEN_ROOT}/hack/density.sh ${KUBE_ROOT} ${DENSITY} | tee ${OUTPUT_DIR}/build-log.txt
 # tee isn't exiting >0 as expected, so use the exit status of the script directly
 density_result=${PIPESTATUS[0]}
 
