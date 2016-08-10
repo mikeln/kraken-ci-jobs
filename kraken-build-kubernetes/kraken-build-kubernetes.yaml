@@ -1,4 +1,16 @@
 ---
+- parameter:
+    name: kraken-build-kubernetes-params
+    parameters:
+      - string:
+          name: KUBE_TESTS_REPO
+          default: "https://github.com/kubernetes/kubernetes.git"
+          description: "Kubernetes tests repo"
+      - string:
+          name: KUBE_TESTS_BRANCH
+          default: release-1.3
+          description: "Kubernetes tests branch. Recommended possible values: release-1.1, release-1.2, release-1.3, master"
+
 - job-template:
     name: '{name}-build-kubernetes'
     description: 'Do not edit this job through the web! Builds a kubernetes tests in a parameter-specified subfolder of {kubernetes_build_dir}'
@@ -8,12 +20,12 @@
     parameters:
       - common-params
       - kubetestdir-params
+      - kraken-build-kubernetes-params
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/
     builders:
       - shell: |
-          # build the tests
           target_dir="/var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}"
           git clone -b "${{KUBE_TESTS_BRANCH}}" "${{KUBE_TESTS_REPO}}" "${{target_dir}}"
           cd "${{target_dir}}"

@@ -8,6 +8,7 @@
       numToKeep: 100
     parameters:
       - conformance-params
+      - kraken-fetch-kubernetes-params
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/
@@ -25,11 +26,10 @@
           name: Build
           condition: SUCCESSFUL
           projects:
-            - name: '{name}-build-kubernetes'
-              current-parameters: true
+            - name: '{name}-fetch-kubernetes'
               predefined-parameters: |
                 KUBE_TESTS_DIR=kubernetes_conformance-${{BUILD_NUMBER}}
-              git-revision: true
+                KUBERNETES_RELEASE_VERSION=${{KUBERNETES_RELEASE_VERSION}}
             - name: '{name}-build-cluster'
               current-parameters: true
               predefined-parameters: |
