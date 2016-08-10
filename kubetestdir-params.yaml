@@ -4,4 +4,4 @@
     parameters:
       - string:
           name: KUBE_TESTS_DIR
-          description: "subfolder of /var/lib/docker/gobuild to use for building this set of tests"
+          description: "subfolder of /var/lib/docker/gobuild that will contain tests"

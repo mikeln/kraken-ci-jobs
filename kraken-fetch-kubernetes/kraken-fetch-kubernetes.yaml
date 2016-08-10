@@ -1,0 +1,36 @@
+---
+- parameter:
+    name: kraken-fetch-kubernetes-params
+    parameters:
+      - string:
+          name: KUBERNETES_RELEASE_VERSION
+          description: "released version of kuberntes to fetch, eg: v1.1.8, v1.3.1-beta.3, v1.4.0-alpha.0"
+          default: v1.3.3
+
+- job-template:
+    name: '{name}-fetch-kubernetes'
+    description: 'Fetches and extracts kubernetes release tarballs to {kubernetes_build_dir}'
+    concurrent: true
+    logrotate:
+      numToKeep: 100
+    parameters:
+      - kubetestdir-params
+      - kraken-fetch-kubernetes-params
+    builders:
+      - shell: |
+          #!/bin/bash -l
+          set -x
+          cache_dir="/var/lib/docker/gobuild/kubernetes/${{KUBERNETES_RELEASE_VERSION}}"
+          if [[ -f "${{cache_dir}}/kubernetes.tar.gz" ]] && [[ -f "${{cache_dir}}/kubernetes-test.tar.gz" ]]; then
+            echo "Skipping fetch from gs://kubernetes-release, using cached copy at ${{cache_dir}}"
+          else
+            mkdir -p "${{cache_dir}}"
+            pushd "${{cache_dir}}"
+            gsutil -mq cp "gs://kubernetes-release/release/${{KUBERNETES_RELEASE_VERSION}}/kubernetes.tar.gz" .
+            gsutil -mq cp "gs://kubernetes-release/release/${{KUBERNETES_RELEASE_VERSION}}/kubernetes-test.tar.gz" .
+            popd
+          fi
+          target_dir="/var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}"
+          mkdir -p "${{target_dir}}"
+          tar --strip-components 1 -C "${{target_dir}}" -xzf "${{cache_dir}}/kubernetes.tar.gz"
+          tar --strip-components 1 -C "${{target_dir}}" -xzf "${{cache_dir}}/kubernetes-test.tar.gz"

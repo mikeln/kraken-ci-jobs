@@ -9,3 +9,37 @@
       - mask-passwords
     publishers:
       - slack-publisher
+
+- builder:
+    name: upload-to-s3-builder
+    builders:
+      - shell: |
+          set -x
+          find . -type f | grep -v \.git
+          aws s3 cp \
+            --recursive \
+            --acl public-read \
+            --content-type text/plain \
+            --metadata-directive REPLACE \
+            {source} \
+            {destination}
+
+# copy-pasta for the script, jjb didn't like my attempt to
+# delegate to the prior macro
+- publisher:
+    name: upload-to-s3-publisher
+    publishers:
+      - postbuildscript:
+          builders:
+            - shell: |
+                set -x
+                find . -type f | grep -v \.git
+                aws s3 cp \
+                  --recursive \
+                  --acl public-read \
+                  --content-type text/plain \
+                  --metadata-directive REPLACE \
+                  {source} \
+                  {destination}
+          script-only-if-succeeded: False
+          script-only-if-failed: False
