@@ -5,7 +5,7 @@ KRAKEN_ROOT=${KRAKEN_ROOT:-${WORKSPACE}}
 ## setup
 
 # setup output dir
-OUTPUT_DIR="${KRAKEN_ROOT}/kraken_${GIT_COMMIT}"
+OUTPUT_DIR="${KRAKEN_ROOT}/output"
 mkdir -p "${OUTPUT_DIR}/artifacts"
 
 # ensure we have access to a kraken cluster

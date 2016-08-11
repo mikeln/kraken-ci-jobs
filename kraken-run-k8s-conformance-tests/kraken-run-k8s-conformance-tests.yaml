@@ -28,9 +28,9 @@
           !include-raw-escape: include-raw001-kraken-run-k8s-conformance-tests.sh
     publishers:
       - archive:
-          artifacts: kraken_${{GIT_COMMIT}}/build-log.txt, kraken_${{GIT_COMMIT}}/artifacts/**/*
+          artifacts: output/build-log.txt, output/artifacts/**/*
       - upload-to-s3-publisher:
-          source: kraken_${{GIT_COMMIT}}
+          source: output
           destination: s3://kraken-e2e-logs/conformance/kraken_${{GIT_COMMIT}}
       - trigger-parameterized-builds:
         - project: '{name}-update-github-pages'

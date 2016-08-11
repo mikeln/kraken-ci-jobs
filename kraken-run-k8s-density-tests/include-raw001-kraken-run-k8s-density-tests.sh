@@ -5,7 +5,7 @@ KRAKEN_ROOT=${KRAKEN_ROOT:-${WORKSPACE}}
 ## setup
 
 # setup output dir
-OUTPUT_DIR="${KRAKEN_ROOT}/${BUILD_TAG}-${DENSITY}"
+OUTPUT_DIR="${KRAKEN_ROOT}/output"
 mkdir -p "${OUTPUT_DIR}/artifacts"
 
 # ensure we have access to a kraken cluster

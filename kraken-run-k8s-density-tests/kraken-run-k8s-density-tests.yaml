@@ -31,9 +31,9 @@
           !include-raw-escape: include-raw001-kraken-run-k8s-density-tests.sh
     publishers:
       - archive:
-          artifacts: ${{BUILD_TAG}}-${{DENSITY}}/build-log.txt, ${{BUILD_TAG}}-${{DENSITY}}/artifacts/**/*
+          artifacts: output/build-log.txt, output/artifacts/**/*
       - upload-to-s3-publisher:
-          source: ${{BUILD_TAG}}-${{DENSITY}}
+          source: output
           destination: s3://kraken-e2e-logs/density/${{BUILD_TAG}}-${{DENSITY}}
       - trigger-parameterized-builds:
         - project: '{name}-update-github-pages'
