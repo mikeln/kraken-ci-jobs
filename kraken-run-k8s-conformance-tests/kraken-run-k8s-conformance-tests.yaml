@@ -31,7 +31,7 @@
           artifacts: output/build-log.txt, output/artifacts/**/*
       - upload-to-s3-publisher:
           source: output
-          destination: s3://kraken-e2e-logs/conformance/kraken_${{GIT_COMMIT}}
+          destination: s3://kraken-e2e-logs/conformance/${{BUILD_NUMBER}}
       - trigger-parameterized-builds:
         - project: '{name}-update-github-pages'
           current-parameters: true
@@ -39,7 +39,7 @@
             KRAKEN_COMMIT=${{GIT_COMMIT}}
             TEST_RESULT=Success!
             TEST_KIND=conformance
-            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/kraken_${{GIT_COMMIT}}/build-log.txt
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/${{BUILD_NUMBER}}/build-log.txt
           condition: SUCCESS
         - project: '{name}-update-github-pages'
           current-parameters: true
@@ -47,7 +47,7 @@
             KRAKEN_COMMIT=${{GIT_COMMIT}}
             TEST_RESULT=Failure!
             TEST_KIND=Conformance
-            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/kraken_${{GIT_COMMIT}}/build-log.txt
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/${{BUILD_NUMBER}}/build-log.txt
           condition: UNSTABLE_OR_WORSE
       - junit:
           results: output/**/junit*.xml
