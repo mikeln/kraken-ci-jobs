@@ -5,7 +5,7 @@
       - string:
           name: KUBERNETES_RELEASE_VERSION
           description: "released version of kuberntes to fetch, eg: v1.1.8, v1.3.1-beta.3, v1.4.0-alpha.0"
-          default: v1.3.3
+          default: v1.3.4
 
 - job-template:
     name: '{name}-fetch-kubernetes'
