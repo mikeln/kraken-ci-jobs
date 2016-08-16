@@ -7,8 +7,8 @@
     logrotate:
       numToKeep: 100
     parameters:
-      - density-params
       - kraken-fetch-kubernetes-params
+      - density-params
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/

@@ -33,13 +33,18 @@
           description: "regular node aws type"
       - string:
           name: COREOS_UPDATE_CHANNEL
-          default: "alpha"
+          default: "beta"
           description: "Core OS update channel. Alpha, beta, stable or some custom value"
       - string:
           name: COREOS_VERSION
-          default: "1010.1.0"
+          default: "1081.5.0"
           description: "Core OS version. current or version number."
       - string:
           name: COREOS_REBOOT_STRATEGY
           default: "off"
           description: "Core OS reboot strategy"
+      - string:
+          name: KUBERNETES_RELEASE_VERSION
+          default: "v1.3.5"
+          description: "released version of kuberntes to fetch, eg: v1.1.8, v1.3.1-beta.3, v1.4.0-alpha.0."
+
