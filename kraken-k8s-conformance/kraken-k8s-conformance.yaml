@@ -7,8 +7,8 @@
     logrotate:
       numToKeep: 100
     parameters:
-      - conformance-params
       - kraken-fetch-kubernetes-params
+      - conformance-params
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/
