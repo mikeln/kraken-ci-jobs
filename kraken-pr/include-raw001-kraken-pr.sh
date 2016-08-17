@@ -18,22 +18,11 @@ EOF
 # start kraken-up
 KRAKEN_VERBOSE=true ${WORKSPACE}/bin/kraken-up.sh \
   --clustername "${KRAKEN_CLUSTER_NAME}" \
-  --clustertype aws \
-    --dmopts "\
-      --driver amazonec2 \
-      --amazonec2-access-key ${AWS_ACCESS_KEY_ID} \
-      --amazonec2-instance-type m4.xlarge
-      --amazonec2-region ${AWS_DEFAULT_REGION} \
-      --amazonec2-secret-key ${AWS_SECRET_ACCESS_KEY} \
-      --amazonec2-vpc-id ${KRAKEN_DEFAULT_VPC}" \
-    --dmname "${PIPELET_DOCKERMACHINE}" \
-    --dmshell bash
+  --clustertype aws
 
 ${WORKSPACE}/bin/kraken-connect.sh \
   --clustername "${KRAKEN_CLUSTER_NAME}" \
-  --clustertype aws \
-    --dmname "${PIPELET_DOCKERMACHINE}" \
-    --dmshell bash
+  --clustertype aws
 
 # run tests
 bundle install
@@ -43,6 +32,4 @@ bundle exec cucumber --format pretty --format junit --out output/cucumber/junit 
 # another destroy that will run only if build fails is done in the post build steps
 ${WORKSPACE}/bin/kraken-down.sh \
   --clustername "${KRAKEN_CLUSTER_NAME}" \
-    --clustertype aws \
-    --dmname "${PIPELET_DOCKERMACHINE}" \
-    --dmshell bash
+    --clustertype aws

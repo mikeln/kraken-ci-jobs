@@ -11,9 +11,7 @@ mkdir -p "${OUTPUT_DIR}/artifacts"
 # ensure we have access to a kraken cluster
 ${KRAKEN_ROOT}/bin/kraken-connect.sh \
   --clustername "${KRAKEN_CLUSTER_NAME}" \
-  --clustertype aws \
-    --dmname "${PIPELET_DOCKERMACHINE}" \
-    --dmshell bash
+  --clustertype aws
 
 # cluster access
 KRAKEN_CLUSTER_DIR="${KRAKEN_ROOT}/bin/clusters/${KRAKEN_CLUSTER_NAME}"
