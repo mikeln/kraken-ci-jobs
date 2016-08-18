@@ -3,14 +3,10 @@
 if [ "${DESTROY_CLUSTER}" = true ]; then
   ${WORKSPACE}/bin/kraken-connect.sh \
     --clustername "${KRAKEN_CLUSTER_NAME}" \
-    --clustertype aws \
-    --dmname "${PIPELET_DOCKERMACHINE}" \
-    --dmshell bash
+    --clustertype aws
  
   ${WORKSPACE}/bin/kraken-down.sh \
     --clustername "${KRAKEN_CLUSTER_NAME}" \
     --clustertype aws \
-    --terraform_retries ${TERRAFORM_DESTROY_RETRIES} \
-    --dmname "${PIPELET_DOCKERMACHINE}" \
-    --dmshell bash
+    --terraform_retries ${TERRAFORM_DESTROY_RETRIES}
 fi

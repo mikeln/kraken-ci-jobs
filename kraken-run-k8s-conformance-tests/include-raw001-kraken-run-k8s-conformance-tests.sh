@@ -11,9 +11,7 @@ mkdir -p "${OUTPUT_DIR}/artifacts"
 # ensure we have access to a kraken cluster
 ${WORKSPACE}/bin/kraken-connect.sh \
   --clustername "${KRAKEN_CLUSTER_NAME}" \
-  --clustertype aws \
-    --dmname "${PIPELET_DOCKERMACHINE}" \
-    --dmshell bash
+  --clustertype aws
 
 ## run
 export KUBE_ROOT=/var/lib/docker/gobuild/${KUBE_TESTS_DIR}
