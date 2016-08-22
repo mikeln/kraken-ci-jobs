@@ -24,6 +24,67 @@
             {source} \
             {destination}
 
+- builder:
+    name: generate-started-json-builder
+    builders:
+      - shell: |
+          set -x
+          pwd
+          mkdir -p {output_dir}
+          cat >{output_dir}/started.json <<EOS
+          {{
+            "version": "{version}",
+            "timestamp": $(date +%s),
+            "jenkins-node": ""
+          }}
+          EOS
+
+- publisher:
+    name: generate-finished-json-publisher
+    publishers:
+      - postbuildscript:
+          builders:
+            - conditional-step:
+                condition-kind: current-status
+                condition-worst: SUCCESS
+                condition-best: SUCCESS
+                steps:
+                  - inject:
+                      properties-content: JENKINS_BUILD_FINISHED=SUCCESS
+            - conditional-step:
+                condition-kind: current-status
+                condition-worst: UNSTABLE
+                condition-best: UNSTABLE
+                steps:
+                  - inject:
+                      properties-content: JENKINS_BUILD_FINISHED=UNSTABLE
+            - conditional-step:
+                condition-kind: current-status
+                condition-worst: FAILURE
+                condition-best: FAILURE
+                steps:
+                  - inject:
+                      properties-content: JENKINS_BUILD_FINISHED=FAILURE
+            - conditional-step:
+                condition-kind: current-status
+                condition-worst: ABORTED
+                condition-best: ABORTED
+                steps:
+                  - inject:
+                      properties-content: JENKINS_BUILD_FINISHED=ABORTED
+            - shell: |
+                set -x
+                pwd
+                mkdir -p {output_dir}
+                cat >{output_dir}/finished.json <<EOS
+                {{
+                  "result": "${{JENKINS_BUILD_FINISHED:-[UNSET]}}",
+                  "timestamp": $(date +%s)
+                }}
+                EOS
+          script-only-if-succeeded: False
+          script-only-if-failed: False
+
 # copy-pasta for the script, jjb didn't like my attempt to
 # delegate to the prior macro
 - publisher:

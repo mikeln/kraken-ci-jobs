@@ -27,11 +27,16 @@
           wipe-workspace: false
           skip-tag: true
     builders:
+      - generate-started-json-builder:
+          version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
+          output_dir: output
       - shell:
           !include-raw-escape: include-raw001-kraken-run-k8s-density-tests.sh
     publishers:
+      - generate-finished-json-publisher:
+          output_dir: output
       - archive:
-          artifacts: output/build-log.txt, output/artifacts/**/*
+          artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
       - upload-to-s3-publisher:
           source: output
           destination: s3://kraken-e2e-logs/density/${{BUILD_TAG}}-${{DENSITY}}
