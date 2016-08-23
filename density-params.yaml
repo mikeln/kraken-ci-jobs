@@ -37,7 +37,7 @@
           description: "Core OS update channel. Alpha, beta, stable or some custom value"
       - string:
           name: COREOS_VERSION
-          default: "1081.5.0"
+          default: "1122.1.0"
           description: "Core OS version. current or version number."
       - string:
           name: COREOS_REBOOT_STRATEGY
