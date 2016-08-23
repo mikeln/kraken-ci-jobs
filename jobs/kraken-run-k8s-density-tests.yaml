@@ -31,7 +31,7 @@
           version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
           output_dir: output
       - shell:
-          !include-raw-escape: include-raw001-kraken-run-k8s-density-tests.sh
+          !include-raw-escape: ../scripts/include-raw001-kraken-run-k8s-density-tests.sh
     publishers:
       - generate-finished-json-publisher:
           output_dir: output

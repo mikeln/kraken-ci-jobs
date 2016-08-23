@@ -22,4 +22,4 @@
           skip-tag: true
     builders:
       - shell: 
-          !include-raw-escape: include-raw001-kraken-build-cluster.sh
+          !include-raw-escape: ../scripts/include-raw001-kraken-build-cluster.sh

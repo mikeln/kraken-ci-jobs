@@ -28,7 +28,7 @@
           skip-tag: true
     builders:
       - shell:
-          !include-raw-escape: include-raw001-kraken-update-github-pages.sh
+          !include-raw-escape: ../scripts/include-raw001-kraken-update-github-pages.sh
     publishers:
       - git:
           push-merge: false

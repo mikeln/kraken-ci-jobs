@@ -35,7 +35,7 @@
             - master
     builders:
       - shell:
-         !include-raw-escape: include-raw001-kraken-pr.sh
+         !include-raw-escape: ../scripts/include-raw001-kraken-pr.sh
     publishers:
       - junit:
           results: output/cucumber/junit/*

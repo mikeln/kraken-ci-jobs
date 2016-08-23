@@ -28,4 +28,4 @@
             - master
     builders:
       - shell: 
-          !include-raw-escape: include-raw001-kraken-ci-jobs-pr.sh
+          !include-raw-escape: ../scripts/include-raw001-kraken-ci-jobs-pr.sh
