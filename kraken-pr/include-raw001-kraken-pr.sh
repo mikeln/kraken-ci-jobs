@@ -1,4 +1,4 @@
-KRAKEN_CLUSTER_NAME=kraken_pr_builder-${BUILD_NUMBER}
+KRAKEN_CLUSTER_NAME=kraken_pr-${BUILD_NUMBER}
 KUBECONFIG=${WORKSPACE}/bin/clusters/${KRAKEN_CLUSTER_NAME}/kube_config
 
 mkdir -p terraform/aws/${KRAKEN_CLUSTER_NAME}
