@@ -39,7 +39,7 @@
           artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
       - upload-to-s3-publisher:
           source: output
-          destination: s3://kraken-e2e-logs/density/${{BUILD_TAG}}-${{DENSITY}}
+          destination: s3://kraken-e2e-logs/${{KRAKEN_CI_HOSTNAME}}/density/${{BUILD_TAG}}-${{DENSITY}}
       - trigger-parameterized-builds:
         - project: '{name}-update-github-pages'
           current-parameters: true

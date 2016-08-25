@@ -36,7 +36,7 @@
           artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
       - upload-to-s3-publisher:
           source: output
-          destination: s3://kraken-e2e-logs/conformance/${{BUILD_NUMBER}}
+          destination: s3://kraken-e2e-logs/${{KRAKEN_CI_HOSTNAME}}/conformance/${{BUILD_NUMBER}}
       - trigger-parameterized-builds:
         - project: '{name}-update-github-pages'
           current-parameters: true
