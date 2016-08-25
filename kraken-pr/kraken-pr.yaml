@@ -26,6 +26,9 @@
           skip-tag: true
     triggers:
       - github-pull-request:
+          # XXX: env vars aren't expanded during triggered message, so avoid it
+          triggered-status: '--none--'
+          status-context: '${{KRAKEN_CI_HOSTNAME}}/{name}-pr'
           admin-list: '{obj:ci_admin_list}'
           github-hooks: true
           white-list-target-branches:
