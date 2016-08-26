@@ -1,34 +1,13 @@
 ---
 - project:
     name: kraken
-    ci_admin_list:
-      - Rick-Lindberg
-      - SamsungAGJenkinsBot
-      - alejandroEsc
-      - coffeepac
-      - countspongebob
-      - cwazy1
-      - davidewatson
-      - jooyeong
-      - l337ch
-      - maratoid
-      - mikeln
-      - richardkaufmann
-      - spiffxp
-      - venezia
     test_bucket: "kraken-e2e-logs"
     jobs:
       - '{name}-build-kubernetes'
-      - '{name}-ci-jobs-postcommit'
-      - '{name}-ci-jobs-pr'
       - '{name}-clean-kubernetes'
       - '{name}-fetch-kubernetes'
       - '{name}-k8s-conformance'
       - '{name}-k8s-density'
-      - '{name}-postcommit'
-      - '{name}-pr'
       - '{name}-run-k8s-conformance-tests'
       - '{name}-run-k8s-density-tests'
-      - '{name}-services-postcommit'
-      - '{name}-services-pr'
       - '{name}-update-github-pages'

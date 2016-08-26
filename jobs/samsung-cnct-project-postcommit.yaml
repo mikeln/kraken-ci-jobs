@@ -1,0 +1,53 @@
+---
+- job-template:
+    name: '{samsung-cnct-project}-postcommit'
+    description: '{description}'
+    logrotate:
+      numToKeep: 100
+    properties:
+      - github:
+          url: 'https://github.com/samsung-cnct/{samsung-cnct-project}/'
+    scm:
+      - git:
+          url: 'https://github.com/samsung-cnct/{samsung-cnct-project}.git'
+          credentials-id: jenkins-ssh
+          branches:
+            - master
+          browser: auto
+          wipe-workspace: false
+          skip-tag: true
+    triggers:
+      - github
+    builders:
+      - '{samsung-cnct-project}-postcommit-builder'
+
+- builder:
+    name: kraken-postcommit-builder
+    builders:
+      - trigger-builds:
+        - project: 'kraken-k8s-conformance'
+          svn-revision: true
+          block: true
+
+- builder:
+    name: kraken-ci-jobs-postcommit-builder
+    builders:
+      - shell: 
+          !include-raw-escape: ../scripts/include-raw001-kraken-ci-jobs-postcommit.sh
+
+- builder:
+    name: kraken-services-postcommit-builder
+    builders:
+      - shell: ./build.sh --repo quay.io/samsung_cnct --tag latest --push .
+
+- project:
+    name: samsung-cnct-project-postcommit
+    samsung-cnct-project:
+      - kraken:
+          description: 'Do not edit this job through the web! Runs on post-commit to kraken, kicks off conformance tests'
+      - kraken-ci-jobs:
+          description: 'Do not edit this job through the web! On a merged kraken-ci-jobs PR, run jenkins job builder to update the current jenkins jobs.'
+      - kraken-services:
+          description: 'Runs on post-commit to kraken-services'
+    jobs:
+      - '{samsung-cnct-project}-postcommit'

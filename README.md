@@ -21,7 +21,6 @@ Jenkins Job Builder definitions for kraken-ci.
 
 Following jenkins job builder {} variables will be replaced:
 
-    ci_admin_list - array of github admins
     slack_api_token - api token for slack notifier
     slack_room - slack room id for notifications
     slack_domain - slack domain for samsung-ag org
