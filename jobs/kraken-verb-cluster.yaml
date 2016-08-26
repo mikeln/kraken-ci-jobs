@@ -1,0 +1,49 @@
+---
+- job-template:
+    name: 'kraken-{verb}-cluster'
+    description: '{description}'
+    concurrent: true
+    logrotate:
+      numToKeep: 100
+    parameters:
+      - clustername-params
+      - common-params
+      # TODO: move these into kraken-params instead?
+      - conformance-params
+    properties:
+      - github:
+          url: https://github.com/samsung-cnct/kraken/
+    scm:
+      - git:
+          url: ${{KRAKEN_REPO}}
+          credentials-id: jenkins-ssh
+          branches:
+            - ${{KRAKEN_BRANCH}}
+          browser: auto
+          wipe-workspace: false
+          skip-tag: true
+    builders:
+      - 'kraken-{verb}-cluster-builder'
+
+# include-raw-escape won't interpolate filename
+- builder:
+    name: kraken-build-cluster-builder
+    builders:
+      - shell:
+          !include-raw: ../scripts/include-raw001-kraken-build-cluster.sh
+
+- builder:
+    name: kraken-destroy-cluster-builder
+    builders:
+      - shell:
+          !include-raw: ../scripts/include-raw001-kraken-destroy-cluster.sh
+
+- project:
+    name: kraken-verb-cluster
+    verb:
+      - build:
+          description: 'builds a kraken cluster'
+      - destroy:
+          description: 'destroys a kraken cluster'
+    jobs:
+      - 'kraken-{verb}-cluster'

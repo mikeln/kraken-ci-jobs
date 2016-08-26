@@ -18,12 +18,10 @@
       - venezia
     test_bucket: "kraken-e2e-logs"
     jobs:
-      - '{name}-build-cluster'
       - '{name}-build-kubernetes'
       - '{name}-ci-jobs-postcommit'
       - '{name}-ci-jobs-pr'
       - '{name}-clean-kubernetes'
-      - '{name}-destroy-cluster'
       - '{name}-fetch-kubernetes'
       - '{name}-k8s-conformance'
       - '{name}-k8s-density'
