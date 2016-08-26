@@ -1,8 +1,0 @@
----
-- parameter:
-    name: destroy-params
-    parameters:
-      - bool:
-          name: DESTROY_CLUSTER
-          default: true
-          description: "true if the cluster should be destroyed, false if this step should be skipped."

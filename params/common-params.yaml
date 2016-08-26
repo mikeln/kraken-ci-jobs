@@ -1,7 +1,0 @@
----
-- parameter:
-    name: common-params
-    parameters:
-      - kraken-params
-      - terraform-params
-      - destroy-params

@@ -8,7 +8,7 @@
       numToKeep: 100
     parameters:
       - kraken-fetch-kubernetes-params
-      - conformance-params
+      - default-kraken-params
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/

@@ -1,7 +1,7 @@
 ---
 - job-template:
     name: '{samsung-cnct-project}-pr'
-    description: 'Runs against pull requests made against {samsung-cnct-project}; {description}'
+    description: '{description}'
     concurrent: true
     logrotate:
       numToKeep: 100
@@ -104,10 +104,10 @@
     name: samsung-cnct-project-pr
     samsung-cnct-project:
       - kraken:
-          description: 'ensure kraken cluster comes up, passes smoke tests, and tears down'
+          description: 'Do not edit this job through the web! On an open github PR, runs all the jobs to create a kubernetes cluster, run some cucumber/aruba tests on it and then destroy it.'
       - kraken-ci-jobs:
-          description: 'ensure jjb configs render to valid xml, display diff vs master'
+          description: 'Do not edit this job through the web! Runs against pull requests made against kraken-ci-jobs'
       - kraken-services:
-          description: 'ensure all Dockerfiles within kraken-services can build'
+          description: 'Do not edit this job through the web! Runs against pull requests made against kraken-services'
     jobs:
       - '{samsung-cnct-project}-pr'

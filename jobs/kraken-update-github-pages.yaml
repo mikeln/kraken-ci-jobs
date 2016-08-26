@@ -5,7 +5,9 @@
     logrotate:
       numToKeep: 1
     parameters:
-      - conformance-params
+      # TODO: these params are just here to reduce diff output, remove them once done
+      - default-kraken-params
+      # end TODO
       - string:
           name: TEST_KIND
       - string:
@@ -19,7 +21,7 @@
           url: https://github.com/samsung-cnct/kraken/
     scm:
       - git:
-          url: ${{KRAKEN_REPO}}
+          url: https://github.com/samsung-cnct/kraken/
           credentials-id: jenkins-github
           branches:
             - gh-pages
@@ -34,7 +36,7 @@
           push-merge: false
           push-only-if-success: false
           branches:
-              - branch:
-                  remote: origin
-                  name: gh-pages
+            - branch:
+                remote: origin
+                name: gh-pages
       - slack-publisher

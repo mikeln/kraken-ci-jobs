@@ -5,11 +5,7 @@
     concurrent: true
     logrotate:
       numToKeep: 100
-    parameters:
-      - clustername-params
-      - common-params
-      # TODO: move these into kraken-params instead?
-      - conformance-params
+    parameters: '{obj:params}'
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/
@@ -42,8 +38,15 @@
     name: kraken-verb-cluster
     verb:
       - build:
-          description: 'builds a kraken cluster'
+          description: 'Do not edit this job through the web! Builds a parameter-named kraken cluster using kraken-up.sh'
+          params:
+            - clustername-params
+            - default-kraken-params
       - destroy:
-          description: 'destroys a kraken cluster'
+          description: 'Do not edit this job through the web! Destroys a parameter-named cluster'
+          params:
+            - clustername-params
+            - default-kraken-version-params
+            - default-kraken-terraform-params
     jobs:
       - 'kraken-{verb}-cluster'

@@ -18,7 +18,10 @@
     logrotate:
       numToKeep: 100
     parameters:
-      - common-params
+      # TODO: these params are just here to reduce diff output, remove them once done
+      - default-kraken-version-params
+      - default-kraken-terraform-params
+      # end TODO
       - kubetestdir-params
       - kraken-build-kubernetes-params
     properties:

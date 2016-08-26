@@ -8,7 +8,10 @@
       numToKeep: 100
     parameters:
       - kraken-fetch-kubernetes-params
-      - density-params
+      - density-kraken-params
+      # TODO:  these params are just here to reduce diff output, remove them once done
+      - kraken-fetch-kubernetes-params
+      # end TODO
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/
