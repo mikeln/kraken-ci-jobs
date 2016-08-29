@@ -1,14 +1,20 @@
 ---
 - job-template:
-    name: '{name}-run-k8s-conformance-tests'
-    description: 'Do not edit this job through the web! Run kuberntes conformance tests agains a parameter-named kraken cluster'
+    name: '{name}-run-k8s-density-tests'
     concurrent: true
+    description: 'Do not edit this job through the web! Run a parameter-specified density test against a parameter-named kraken cluster'
     logrotate:
       numToKeep: 100
     parameters:
       - clustername-params
-      - common-params
+      - density-kraken-params
+      # TODO: params are here to reduce diff output, remove when finished
+      - kraken-fetch-kubernetes-params
+      # end TODO
       - kubetestdir-params
+      - string:
+          name: DENSITY
+          description: "which pod density to use"
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/
@@ -27,8 +33,8 @@
       - generate-started-json-builder:
           version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
           output_dir: output
-      - shell: 
-          !include-raw-escape: include-raw001-kraken-run-k8s-conformance-tests.sh
+      - shell:
+          !include-raw-escape: ../scripts/include-raw001-kraken-run-k8s-density-tests.sh
     publishers:
       - generate-finished-json-publisher:
           output_dir: output
@@ -36,23 +42,23 @@
           artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
       - upload-to-s3-publisher:
           source: output
-          destination: s3://kraken-e2e-logs/${{KRAKEN_CI_HOSTNAME}}/conformance/${{BUILD_NUMBER}}
+          destination: s3://kraken-e2e-logs/${{KRAKEN_CI_HOSTNAME}}/density/${{BUILD_TAG}}-${{DENSITY}}
       - trigger-parameterized-builds:
         - project: '{name}-update-github-pages'
           current-parameters: true
           predefined-parameters: |
-            KRAKEN_COMMIT=${{GIT_COMMIT}}
+            KRAKEN_COMMIT=${{BUILD_TAG}}-${{DENSITY}}
             TEST_RESULT=Success!
-            TEST_KIND=conformance
-            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/${{BUILD_NUMBER}}/build-log.txt
+            TEST_KIND=density
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}/build-log.txt
           condition: SUCCESS
         - project: '{name}-update-github-pages'
           current-parameters: true
           predefined-parameters: |
-            KRAKEN_COMMIT=${{GIT_COMMIT}}
+            KRAKEN_COMMIT=${{BUILD_TAG}}-${{DENSITY}}
             TEST_RESULT=Failure!
-            TEST_KIND=Conformance
-            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/${{BUILD_NUMBER}}/build-log.txt
+            TEST_KIND=density
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}/build-log.txt
           condition: UNSTABLE_OR_WORSE
       - junit:
           results: output/**/junit*.xml

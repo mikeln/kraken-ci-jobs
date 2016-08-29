@@ -1,0 +1,164 @@
+---
+- parameter:
+    name: kraken-version-params
+    parameters:
+      - string:
+          name: KRAKEN_REPO
+          default: '{kraken-repo}'
+          description: "kraken git repository"
+      - string:
+          name: KRAKEN_BRANCH
+          default: '{kraken-branch}'
+          description: "kraken git repository branch"
+      - string:
+          name: KRAKEN_SERVICES_REPO
+          default: '{kraken-services-repo}'
+          description: "kraken-services git repository"
+      - string:
+          name: KRAKEN_SERVICES_BRANCH
+          default: '{kraken-services-branch}'
+          description: "kraken-services git repository branch"
+      - string:
+          name: KRAKEN_SERVICES_DIRS
+          default: '{kraken-services-dirs}'
+          description: "kraken-services directories to render and deploy on startup"
+      - string:
+          name: KUBE_BINARIES_URI
+          default: '{kube-binaries-uri}'
+          description: "Link to kubernetes binaries"
+
+# TODO: would like to fold these into kraken-version params, breaking out for now
+#       to preserve original param order for ease of review
+- parameter:
+    name: kraken-coreos-params
+    parameters:
+      - string:
+          name: COREOS_UPDATE_CHANNEL
+          default: '{coreos-update-channel}'
+          description: "Core OS update channel. Alpha, beta, stable or some custom value"
+      - string:
+          name: COREOS_VERSION
+          default: '{coreos-version}'
+          description: "Core OS version. current or version number."
+      - string:
+          name: COREOS_REBOOT_STRATEGY
+          default: '{coreos-reboot-strategy}'
+          description: "Core OS reboot strategy"
+
+- parameter:
+    name: kraken-cluster-topology-params
+    parameters:
+      - string:
+          name: NUMBER_OF_NODES
+          default: '{number-of-nodes}'
+          description: "number of nodes in cluster"
+      - string:
+          name: API_SERVER_COUNT
+          default: '{api-server-count}'
+          description: "number of api servers in cluster"
+      - string:
+          name: MASTER_TYPE
+          default: '{master-type}'
+          description: "master node aws type"
+      - string:
+          name: API_SERVER_TYPE
+          default: '{api-server-type}'
+          description: "apiserver node aws type"
+      - string:
+          name: ETCD_TYPE
+          default: '{etcd-type}'
+          description: "etcd node aws type"
+      - string:
+          name: SPECIAL_NODE_TYPE
+          default: '{special-node-type}'
+          description: "special node aws type"
+      - string:
+          name: NODE_TYPE
+          default: '{node-type}'
+          description: "regular node aws type"
+
+- parameter:
+    name: kraken-terraform-params
+    parameters:
+      - string:
+          name: TOTAL_WAIT
+          default: '{total-wait}'
+          description: "total number of 60 second waits"
+      - string:
+          name: TERRAFORM_APPLY_RETRIES
+          default: '{terraform-apply-retries}'
+          description: "Retry terraform apply calls up to n times"
+      - string:
+          name: TERRAFORM_DESTROY_RETRIES
+          default: '{terraform-destroy-retries}'
+          description: "Retry terraform destroy calls up to n times"
+      # TODO: this one sorta doesn't fit as it's more jenkins-job specific, not kraken-specific
+      - bool:
+          name: DESTROY_CLUSTER
+          default: '{destroy-cluster}'
+          description: "true if the cluster should be destroyed, false if this step should be skipped."
+
+- parameter:
+    name: default-kraken-version-params
+    parameters:
+      - kraken-version-params:
+          kraken-repo: git@github.com:samsung-cnct/kraken.git
+          kraken-branch: master
+          kraken-services-repo: https://github.com/samsung-cnct/kraken-services.git
+          kraken-services-branch: master
+          kraken-services-dirs: kubedns cluster-monitoring kubedash prometheus
+          kube-binaries-uri: https://storage.googleapis.com/kubernetes-release/release/v1.3.5/bin/linux/amd64
+
+- parameter:
+    name: default-kraken-coreos-params
+    parameters:
+      - kraken-coreos-params:
+          coreos-update-channel: beta
+          coreos-version: 1122.1.0
+          # NB: explicitly quote to interet as a string instead of a bool,
+          #     so it's rendered as "off" insteaad of "False"
+          coreos-reboot-strategy: "off"
+
+- parameter:
+    name: default-kraken-terraform-params
+    parameters:
+      - kraken-terraform-params:
+          total-wait: 10
+          terraform-apply-retries: 2
+          terraform-destroy-retries: 10
+          destroy-cluster: true
+
+- parameter:
+    name: default-kraken-cluster-topology-params
+    parameters:
+      - kraken-cluster-topology-params:
+          number-of-nodes: 3
+          api-server-count: 1
+          master-type: m4.large
+          api-server-type: m4.large
+          etcd-type: m4.large
+          special-node-type: m4.large
+          node-type: m4.large
+
+- parameter:
+    name: default-kraken-params
+    parameters:
+      - default-kraken-version-params
+      - default-kraken-terraform-params
+      - default-kraken-cluster-topology-params
+      - default-kraken-coreos-params
+
+- parameter:
+    name: density-kraken-params
+    parameters:
+      - default-kraken-version-params
+      - default-kraken-terraform-params
+      - kraken-cluster-topology-params:
+          number-of-nodes: 100
+          api-server-count: 1
+          master-type: m4.4xlarge
+          api-server-type: m4.2xlarge
+          etcd-type: m4.2xlarge
+          special-node-type: m3.xlarge
+          node-type: m3.medium
+      - default-kraken-coreos-params

@@ -1,0 +1,113 @@
+---
+- job-template:
+    name: '{samsung-cnct-project}-pr'
+    description: '{description}'
+    concurrent: true
+    logrotate:
+      numToKeep: 100
+    properties:
+      - github:
+          url: 'https://github.com/samsung-cnct/{samsung-cnct-project}/'
+    scm:
+      - git:
+          url: 'git@github.com:samsung-cnct/{samsung-cnct-project}.git'
+          credentials-id: jenkins-ssh
+          refspec: "+refs/pull/*:refs/remotes/origin/pr/*"
+          branches:
+            - ${{ghprbActualCommit}}
+          browser: auto
+          wipe-workspace: false
+          skip-tag: true
+    triggers:
+      - github-pull-request:
+          # XXX: env vars aren't expanded during triggered message, so avoid it
+          triggered-status: '--none--'
+          status-context: '${{KRAKEN_CI_HOSTNAME}}/{samsung-cnct-project}-pr'
+          admin-list:
+            - Rick-Lindberg
+            - SamsungAGJenkinsBot
+            - alejandroEsc
+            - coffeepac
+            - countspongebob
+            - cwazy1
+            - davidewatson
+            - jooyeong
+            - l337ch
+            - maratoid
+            - mikeln
+            - richardkaufmann
+            - spiffxp
+            - venezia
+          github-hooks: true
+          white-list-target-branches:
+            - master
+    builders:
+      - '{samsung-cnct-project}-pr-builder'
+    publishers:
+      - '{samsung-cnct-project}-pr-publisher'
+      - slack-publisher
+
+- builder:
+    name: kraken-pr-builder
+    builders:
+      - shell:
+          !include-raw: ../scripts/include-raw001-kraken-pr.sh
+
+- publisher:
+    name: kraken-pr-publisher
+    publishers:
+      - junit:
+          results: output/cucumber/junit/*
+          health-scale-factor: 1.0
+      - trigger-parameterized-builds:
+        - project: 'kraken-destroy-cluster'
+          current-parameters: true
+          predefined-parameters: |
+            KRAKEN_BRANCH=${ghprbActualCommit}
+            KRAKEN_CLUSTER_NAME=kraken_pr-${BUILD_NUMBER}
+          svn-revision: true
+          condition: UNSTABLE_OR_WORSE
+
+- builder:
+    name: kraken-ci-jobs-pr-builder
+    builders:
+      - shell: |
+          #!/bin/bash
+          git checkout origin/master
+          jenkins-jobs test --recursive . > jjb_output.master
+          master_result=$?
+
+          git checkout ${ghprbActualCommit}
+          jenkins-jobs test --recursive . > jjb_output.pr
+          pr_result=$?
+
+          # don't fail if diff finds a difference
+          diff jjb_output.{master,pr} || true
+
+          # fail if either of the jjb runs failed
+          exit $(( ${master_result} || ${pr_result} ))
+
+- publisher:
+    name: kraken-ci-jobs-pr-publisher
+    publishers: []
+
+- builder:
+    name: kraken-services-pr-builder
+    builders:
+      - shell: ./build.sh --repo quay.io/samsung_cnct --tag ${ghprbActualCommit} .
+
+- publisher:
+    name: kraken-services-pr-publisher
+    publishers: []
+
+- project:
+    name: samsung-cnct-project-pr
+    samsung-cnct-project:
+      - kraken:
+          description: 'Do not edit this job through the web! On an open github PR, runs all the jobs to create a kubernetes cluster, run some cucumber/aruba tests on it and then destroy it.'
+      - kraken-ci-jobs:
+          description: 'Do not edit this job through the web! Runs against pull requests made against kraken-ci-jobs'
+      - kraken-services:
+          description: 'Do not edit this job through the web! Runs against pull requests made against kraken-services'
+    jobs:
+      - '{samsung-cnct-project}-pr'
