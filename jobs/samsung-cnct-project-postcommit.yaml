@@ -32,8 +32,11 @@
 - builder:
     name: kraken-ci-jobs-postcommit-builder
     builders:
-      - shell: 
-          !include-raw-escape: ../scripts/include-raw001-kraken-ci-jobs-postcommit.sh
+      - shell: |
+          #!/bin/bash
+          cp /etc/jenkins_jobs/jenkins_jobs.ini .
+          cp /etc/jenkins_jobs/slack-publisher.yaml .
+          jenkins-jobs update --delete-old --recursive --exclude excluded-on-jenkins .
 
 - builder:
     name: kraken-services-postcommit-builder
