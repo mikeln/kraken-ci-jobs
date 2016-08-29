@@ -49,6 +49,10 @@
     name: kraken-cluster-topology-params
     parameters:
       - string:
+          name: AWS_REGION
+          default: '{aws-region}'
+          description: "aws region for the cluster"
+      - string:
           name: NUMBER_OF_NODES
           default: '{number-of-nodes}'
           description: "number of nodes in cluster"
@@ -139,6 +143,7 @@
           etcd-type: m4.large
           special-node-type: m4.large
           node-type: m4.large
+          aws-region: us-east-1
 
 - parameter:
     name: default-kraken-params
@@ -161,4 +166,5 @@
           etcd-type: m4.2xlarge
           special-node-type: m3.xlarge
           node-type: m3.medium
+          aws-region: us-east-1
       - default-kraken-coreos-params
