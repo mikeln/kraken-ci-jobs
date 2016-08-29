@@ -8,9 +8,6 @@
     parameters:
       - clustername-params
       - density-kraken-params
-      # TODO: params are here to reduce diff output, remove when finished
-      - kraken-fetch-kubernetes-params
-      # end TODO
       - kubetestdir-params
       - string:
           name: DENSITY
