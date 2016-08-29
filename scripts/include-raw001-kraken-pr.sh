@@ -6,13 +6,9 @@ cat > terraform/aws/${KRAKEN_CLUSTER_NAME}/terraform.tfvars << EOF
 aws_user_prefix = "${KRAKEN_USER_PREFIX}"
 aws_access_key = "${AWS_ACCESS_KEY_ID}"
 aws_secret_key = "${AWS_SECRET_ACCESS_KEY}"
-kubernetes_binaries_uri = "${KUBE_BINARIES_URI}"
 asg_wait_single = 60
 asg_wait_total = 10
 kraken_repo.commit_sha = "${ghprbActualCommit}"
-kraken_services_repo = "${KRAKEN_SERVICES_REPO}"
-kraken_services_branch = "${KRAKEN_SERVICES_BRANCH}"
-kraken_services_dirs = "${KRAKEN_SERVICES_DIRS}"
 EOF
 
 # start kraken-up
