@@ -5,9 +5,6 @@
     logrotate:
       numToKeep: 1
     parameters:
-      # TODO: these params are just here to reduce diff output, remove them once done
-      - default-kraken-params
-      # end TODO
       - string:
           name: TEST_KIND
       - string:

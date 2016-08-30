@@ -27,8 +27,6 @@
           default: '{kube-binaries-uri}'
           description: "Link to kubernetes binaries"
 
-# TODO: would like to fold these into kraken-version params, breaking out for now
-#       to preserve original param order for ease of review
 - parameter:
     name: kraken-coreos-params
     parameters:

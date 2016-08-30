@@ -26,7 +26,6 @@
     builders:
       - trigger-builds:
         - project: 'kraken-k8s-conformance'
-          svn-revision: true
           block: true
 
 - builder:

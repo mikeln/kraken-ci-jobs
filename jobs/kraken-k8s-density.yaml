@@ -9,9 +9,6 @@
     parameters:
       - kraken-fetch-kubernetes-params
       - density-kraken-params
-      # TODO:  these params are just here to reduce diff output, remove them once done
-      - kraken-fetch-kubernetes-params
-      # end TODO
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/
@@ -25,45 +22,98 @@
           wipe-workspace: false
           skip-tag: true
     builders:
-      - multijob:
-          name: Build
-          condition: SUCCESSFUL
-          projects:
-            - name: '{name}-fetch-kubernetes'
-              predefined-parameters: |
-                KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-                KUBERNETES_RELEASE_VERSION=${{KUBERNETES_RELEASE_VERSION}}
-            - name: '{name}-build-cluster'
-              current-parameters: true
-              predefined-parameters: |
-                KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-              git-revision: true
+      - inject:
+          properties-content: |
+            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+      - kraken-fetch-kubernetes-builder:
+          kubernetes_release_version: '${{KUBERNETES_RELEASE_VERSION}}'
+          kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+      - kraken-build-cluster-builder
       - trigger-builds:
         - project: '{name}-run-k8s-density-tests'
           current-parameters: true
           predefined-parameters: |
-            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+            KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
+            KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
             DENSITY=3
-          svn-revision: true
           block: true
         - project: '{name}-run-k8s-density-tests'
           current-parameters: true
           predefined-parameters: |
-            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+            KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
+            KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
             DENSITY=30
-          svn-revision: true
           block: true
     publishers:
+      - postbuildscript:
+          builders:
+            - kraken-clean-kubernetes-builder:
+                kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+            - kraken-destroy-cluster-builder
+          script-only-if-succeeded: False
+          script-only-if-failed: False
+      - slack-publisher
+
+- job-template:
+    name: '{name}-run-k8s-density-tests'
+    concurrent: true
+    description: 'runs a parameter-specified density test against a parameter-named kraken cluster'
+    logrotate:
+      numToKeep: 100
+    parameters:
+      - clustername-params
+      - density-kraken-params
+      - kubetestdir-params
+      - string:
+          name: DENSITY
+          description: "which pod density to use"
+    properties:
+      - github:
+          url: https://github.com/samsung-cnct/kraken/
+      - copyartifact:
+          projects: kraken*
+    scm:
+      - git:
+          url: ${{KRAKEN_REPO}}
+          credentials-id: jenkins-ssh
+          branches:
+            - ${{KRAKEN_BRANCH}}
+          browser: auto
+          wipe-workspace: false
+          skip-tag: true
+    builders:
+      - generate-started-json-builder:
+          version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
+          output_dir: output
+      - shell:
+          !include-raw-escape: ../scripts/include-raw001-kraken-run-k8s-density-tests.sh
+    publishers:
+      - generate-finished-json-publisher:
+          output_dir: output
+      - archive:
+          artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
+      - upload-to-s3-publisher:
+          source: output
+          destination: s3://kraken-e2e-logs/${{KRAKEN_CI_HOSTNAME}}/density/${{BUILD_TAG}}-${{DENSITY}}
       - trigger-parameterized-builds:
-        - project: '{name}-destroy-cluster'
+        - project: '{name}-update-github-pages'
           current-parameters: true
           predefined-parameters: |
-            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-          condition: ALWAYS
-        - project: '{name}-clean-kubernetes'
+            KRAKEN_COMMIT=${{BUILD_TAG}}-${{DENSITY}}
+            TEST_RESULT=Success!
+            TEST_KIND=density
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}/build-log.txt
+          condition: SUCCESS
+        - project: '{name}-update-github-pages'
+          current-parameters: true
           predefined-parameters: |
-            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-          condition: ALWAYS
+            KRAKEN_COMMIT=${{BUILD_TAG}}-${{DENSITY}}
+            TEST_RESULT=Failure!
+            TEST_KIND=density
+            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/density/${{BUILD_TAG}}-${{DENSITY}}/build-log.txt
+          condition: UNSTABLE_OR_WORSE
+      - junit:
+          results: output/**/junit*.xml
+          health-scale-factor: 1.0
       - slack-publisher

@@ -31,19 +31,27 @@
 - builder:
     name: kraken-destroy-cluster-builder
     builders:
-      - shell:
-          !include-raw: ../scripts/include-raw001-kraken-destroy-cluster.sh
+      - shell: |
+          if [ "${DESTROY_CLUSTER}" = true ]; then
+            ${WORKSPACE}/bin/kraken-connect.sh \
+              --clustername "${KRAKEN_CLUSTER_NAME}" \
+              --clustertype aws
+            ${WORKSPACE}/bin/kraken-down.sh \
+              --clustername "${KRAKEN_CLUSTER_NAME}" \
+              --clustertype aws \
+              --terraform_retries ${TERRAFORM_DESTROY_RETRIES}
+          fi
 
 - project:
     name: kraken-verb-cluster
     verb:
       - build:
-          description: 'Do not edit this job through the web! Builds a parameter-named kraken cluster using kraken-up.sh'
+          description: '[manual/deprecated] build a kraken cluster (these scripts are invoked directly in other jobs)'
           params:
             - clustername-params
             - default-kraken-params
       - destroy:
-          description: 'Do not edit this job through the web! Destroys a parameter-named cluster'
+          description: '[manual/deprecated] destroy a kraken cluster (these scripts are invoked directly in other jobs)'
           params:
             - clustername-params
             - default-kraken-version-params
