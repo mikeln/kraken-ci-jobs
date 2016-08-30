@@ -37,7 +37,6 @@
             KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
             KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
             DENSITY=3
-          svn-revision: true
           block: true
         - project: '{name}-run-k8s-density-tests'
           current-parameters: true
@@ -45,7 +44,6 @@
             KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
             KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
             DENSITY=30
-          svn-revision: true
           block: true
     publishers:
       - postbuildscript:
@@ -118,4 +116,4 @@
       - junit:
           results: output/**/junit*.xml
           health-scale-factor: 1.0
-      - slack-publishe
+      - slack-publisher
