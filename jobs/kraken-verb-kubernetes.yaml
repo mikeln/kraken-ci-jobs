@@ -1,0 +1,92 @@
+---
+- job-template:
+    name: 'kraken-{verb}-kubernetes'
+    description: '{description}'
+    concurrent: true
+    logrotate:
+      numToKeep: 100
+    parameters: '{obj:params}'
+    builders:
+      - 'kraken-{verb}-kubernetes-builder'
+
+- parameter:
+    name: kraken-build-kubernetes-params
+    parameters:
+      - string:
+          name: KUBE_TESTS_REPO
+          default: "https://github.com/kubernetes/kubernetes.git"
+          description: "Kubernetes tests repo"
+      - string:
+          name: KUBE_TESTS_BRANCH
+          default: release-1.3
+          description: "Kubernetes tests branch. Recommended possible values: release-1.1, release-1.2, release-1.3, master"
+
+- builder:
+    name: kraken-build-kubernetes-builder
+    builders:
+      - shell: |
+          target_dir="/var/lib/docker/gobuild/${KUBE_TESTS_DIR}"
+          git clone -b "${KUBE_TESTS_BRANCH}" "${KUBE_TESTS_REPO}" "${target_dir}"
+          cd "${target_dir}"
+          KUBE_SKIP_CONFIRMATIONS=y build/run.sh hack/build-go.sh
+
+- builder:
+    name: kraken-clean-kubernetes-builder
+    builders:
+      - shell: |
+          set -u
+          target_dir="/var/lib/docker/gobuild/${KUBE_TESTS_DIR}"
+          rm -rf "${target_dir}"
+
+- parameter:
+    name: kraken-fetch-kubernetes-params
+    parameters:
+      - string:
+          name: KUBERNETES_RELEASE_VERSION
+          description: "released version of kuberntes to fetch, eg: v1.1.8, v1.3.1-beta.3, v1.4.0-alpha.0"
+          default: v1.3.5
+
+- builder:
+    name: kraken-fetch-kubernetes-builder
+    builders:
+      - shell: |
+          #!/bin/bash -l
+          set -x
+          cache_dir="/var/lib/docker/gobuild/kubernetes/${KUBERNETES_RELEASE_VERSION}"
+          if [[ -f "${cache_dir}/kubernetes.tar.gz" ]] && [[ -f "${cache_dir}/kubernetes-test.tar.gz" ]]; then
+            echo "Skipping fetch from gs://kubernetes-release, using cached copy at ${cache_dir}"
+          else
+            mkdir -p "${cache_dir}"
+            pushd "${cache_dir}"
+            gsutil -mq cp "gs://kubernetes-release/release/${KUBERNETES_RELEASE_VERSION}/kubernetes.tar.gz" .
+            gsutil -mq cp "gs://kubernetes-release/release/${KUBERNETES_RELEASE_VERSION}/kubernetes-test.tar.gz" .
+            popd
+          fi
+          target_dir="/var/lib/docker/gobuild/${KUBE_TESTS_DIR}"
+          mkdir -p "${target_dir}"
+          tar --strip-components 1 -C "${target_dir}" -xzf "${cache_dir}/kubernetes.tar.gz"
+          tar --strip-components 1 -C "${target_dir}" -xzf "${cache_dir}/kubernetes-test.tar.gz"
+
+- project:
+    name: kraken-verb-kubernetes
+    verb:
+      - clean:
+          description: 'Do not edit this job through the web! Removes parameter-specified subfolder of {kubernetes_build_dir}'
+          params:
+            - kubetestdir-params
+      - fetch:
+          description: 'Fetches and extracts kubernetes release tarballs to {kubernetes_build_dir}'
+          params:
+            - kubetestdir-params
+            - kraken-fetch-kubernetes-params
+      - build:
+          description: 'Do not edit this job through the web! Builds a kubernetes tests in a parameter-specified subfolder of {kubernetes_build_dir}'
+          params:
+            # TODO: these params are just here to reduce diff output, remove them once done
+            - default-kraken-version-params
+            - default-kraken-terraform-params
+            # end TODO
+            - kubetestdir-params
+            - kraken-build-kubernetes-params
+    jobs:
+      - 'kraken-{verb}-kubernetes'
