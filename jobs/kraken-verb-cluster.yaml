@@ -46,12 +46,12 @@
     name: kraken-verb-cluster
     verb:
       - build:
-          description: 'build a kraken cluster'
+          description: '[manual/deprecated] build a kraken cluster (these scripts are invoked directly in other jobs)'
           params:
             - clustername-params
             - default-kraken-params
       - destroy:
-          description: 'destroy a kraken cluster'
+          description: '[manual/deprecated] destroy a kraken cluster (these scripts are invoked directly in other jobs)'
           params:
             - clustername-params
             - default-kraken-version-params
