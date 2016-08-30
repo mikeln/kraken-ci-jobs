@@ -3,6 +3,8 @@
     name: kraken
     test_bucket: "kraken-e2e-logs"
     jobs:
+      - '{name}-k8s-conformance'
       - '{name}-k8s-density'
+      - '{name}-run-k8s-conformance-tests'
       - '{name}-run-k8s-density-tests'
       - '{name}-update-github-pages'
