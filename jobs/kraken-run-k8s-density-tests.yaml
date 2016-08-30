@@ -2,7 +2,7 @@
 - job-template:
     name: '{name}-run-k8s-density-tests'
     concurrent: true
-    description: 'Do not edit this job through the web! Run a parameter-specified density test against a parameter-named kraken cluster'
+    description: 'runs a parameter-specified density test against a parameter-named kraken cluster'
     logrotate:
       numToKeep: 100
     parameters:

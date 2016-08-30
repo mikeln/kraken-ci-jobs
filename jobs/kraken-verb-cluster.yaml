@@ -46,12 +46,12 @@
     name: kraken-verb-cluster
     verb:
       - build:
-          description: 'Do not edit this job through the web! Builds a parameter-named kraken cluster using kraken-up.sh'
+          description: 'build a kraken cluster'
           params:
             - clustername-params
             - default-kraken-params
       - destroy:
-          description: 'Do not edit this job through the web! Destroys a parameter-named cluster'
+          description: 'destroy a kraken cluster'
           params:
             - clustername-params
             - default-kraken-version-params

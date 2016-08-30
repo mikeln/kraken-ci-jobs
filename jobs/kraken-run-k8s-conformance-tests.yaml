@@ -1,7 +1,7 @@
 ---
 - job-template:
     name: '{name}-run-k8s-conformance-tests'
-    description: 'Do not edit this job through the web! Run kuberntes conformance tests agains a parameter-named kraken cluster'
+    description: 'runs kuberntes conformance tests agains a parameter-named kraken cluster'
     concurrent: true
     logrotate:
       numToKeep: 100
