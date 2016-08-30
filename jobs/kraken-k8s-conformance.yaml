@@ -26,46 +26,25 @@
           properties-content: |
             KRAKEN_CLUSTER_NAME=kubernetes_conformance-${{BUILD_NUMBER}}
             KUBE_TESTS_DIR=kubernetes_conformance-${{BUILD_NUMBER}}
-      - multijob:
-          name: Build
-          condition: SUCCESSFUL
-          projects:
-            - name: '{name}-fetch-kubernetes'
-              predefined-parameters: |
-                KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
-                KUBERNETES_RELEASE_VERSION=${{KUBERNETES_RELEASE_VERSION}}
-            - name: '{name}-build-cluster'
-              # NB: only passing KRAKEN_CLUSTER_NAME explicitly since it's not
-              #     defined as a parameter of this job; the rest we're passing
-              #     implicitly since the majority of them are needed
-              predefined-parameters: |
-                KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
-              current-parameters: true
-              git-revision: true
-      - multijob:
-          name: Run
-          condition: SUCCESSFUL
-          projects:
-            - name: '{name}-run-k8s-conformance-tests'
-              predefined-parameters: |
-                KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
-                KRAKEN_REPO=${{KRAKEN_REPO}}
-                KRAKEN_BRANCH=${{KRAKEN_BRANCH}}
-                KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
-              git-revision: true
-    publishers:
-      - trigger-parameterized-builds:
-        - project: '{name}-destroy-cluster'
+      - kraken-fetch-kubernetes-builder:
+          kubernetes_release_version: '${{KUBERNETES_RELEASE_VERSION}}'
+          kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+      - kraken-build-cluster-builder
+      - trigger-builds:
+        - project: 'kraken-run-k8s-conformance-tests'
           predefined-parameters: |
             KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
             KRAKEN_REPO=${{KRAKEN_REPO}}
             KRAKEN_BRANCH=${{KRAKEN_BRANCH}}
-            TOTAL_WAIT=${{TOTAL_WAIT}}
-            TERRAFORM_APPLY_RETRIES=${{TERRAFORM_APPLY_RETRIES}}
-            TERRAFORM_DESTROY_RETRIES=${{TERRAFORM_DESTROY_RETRIES}}
-          condition: ALWAYS
-        - project: '{name}-clean-kubernetes'
-          predefined-parameters: |
             KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
-          condition: ALWAYS
+          git-revision: true
+          block: true
+    publishers:
+      - postbuildscript:
+          builders:
+            - kraken-clean-kubernetes-builder:
+                kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+            - kraken-destroy-cluster-builder
+          script-only-if-succeeded: False
+          script-only-if-failed: False
       - slack-publisher

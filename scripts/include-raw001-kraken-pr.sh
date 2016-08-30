@@ -23,9 +23,3 @@ ${WORKSPACE}/bin/kraken-connect.sh \
 # run tests
 bundle install
 bundle exec cucumber --format pretty --format junit --out output/cucumber/junit KUBECONFIG=${KUBECONFIG} CUKE_CLUSTER=${KRAKEN_CLUSTER_NAME} features/*_aws.feature
-
-# destroy cluster. destroy needs to succeed in the "build" step in order to fully verify everything.
-# another destroy that will run only if build fails is done in the post build steps
-${WORKSPACE}/bin/kraken-down.sh \
-  --clustername "${KRAKEN_CLUSTER_NAME}" \
-    --clustertype aws

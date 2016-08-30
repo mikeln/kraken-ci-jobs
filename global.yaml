@@ -24,6 +24,17 @@
             {source} \
             {destination}
 
+- publisher:
+    name: upload-to-s3-publisher
+    publishers:
+      - postbuildscript:
+          builders:
+            - upload-to-s3-builder:
+                source: '{source}'
+                destination: '{destination}'
+          script-only-if-succeeded: False
+          script-only-if-failed: False
+
 - builder:
     name: generate-started-json-builder
     builders:
@@ -82,25 +93,5 @@
                   "timestamp": $(date +%s)
                 }}
                 EOS
-          script-only-if-succeeded: False
-          script-only-if-failed: False
-
-# copy-pasta for the script, jjb didn't like my attempt to
-# delegate to the prior macro
-- publisher:
-    name: upload-to-s3-publisher
-    publishers:
-      - postbuildscript:
-          builders:
-            - shell: |
-                set -x
-                find . -type f | grep -v \.git
-                aws s3 cp \
-                  --recursive \
-                  --acl public-read \
-                  --content-type text/plain \
-                  --metadata-directive REPLACE \
-                  {source} \
-                  {destination}
           script-only-if-succeeded: False
           script-only-if-failed: False

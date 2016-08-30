@@ -22,45 +22,37 @@
           wipe-workspace: false
           skip-tag: true
     builders:
-      - multijob:
-          name: Build
-          condition: SUCCESSFUL
-          projects:
-            - name: '{name}-fetch-kubernetes'
-              predefined-parameters: |
-                KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-                KUBERNETES_RELEASE_VERSION=${{KUBERNETES_RELEASE_VERSION}}
-            - name: '{name}-build-cluster'
-              current-parameters: true
-              predefined-parameters: |
-                KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-              git-revision: true
+      - inject:
+          properties-content: |
+            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+      - kraken-fetch-kubernetes-builder:
+          kubernetes_release_version: '${{KUBERNETES_RELEASE_VERSION}}'
+          kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+      - kraken-build-cluster-builder
       - trigger-builds:
         - project: '{name}-run-k8s-density-tests'
           current-parameters: true
           predefined-parameters: |
-            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+            KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
+            KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
             DENSITY=3
           svn-revision: true
           block: true
         - project: '{name}-run-k8s-density-tests'
           current-parameters: true
           predefined-parameters: |
-            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
+            KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
+            KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
             DENSITY=30
           svn-revision: true
           block: true
     publishers:
-      - trigger-parameterized-builds:
-        - project: '{name}-destroy-cluster'
-          current-parameters: true
-          predefined-parameters: |
-            KRAKEN_CLUSTER_NAME=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-          condition: ALWAYS
-        - project: '{name}-clean-kubernetes'
-          predefined-parameters: |
-            KUBE_TESTS_DIR=kubernetes_density_${{NUMBER_OF_NODES}}-${{BUILD_NUMBER}}
-          condition: ALWAYS
+      - postbuildscript:
+          builders:
+            - kraken-clean-kubernetes-builder:
+                kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+            - kraken-destroy-cluster-builder
+          script-only-if-succeeded: False
+          script-only-if-failed: False
       - slack-publisher
