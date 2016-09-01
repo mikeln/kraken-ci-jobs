@@ -51,6 +51,8 @@
 - builder:
     name: kraken-pr-builder
     builders:
+      - inject:
+          properties-content: KRAKEN_CLUSTER_NAME=${JOB_NAME}-${BUILD_NUMBER}
       - shell:
           !include-raw: ../scripts/include-raw001-kraken-pr.sh
 
@@ -63,7 +65,9 @@
       - postbuildscript:
           builders:
             - inject:
-                properties-content: DESTROY_CLUSTER=true
+                properties-content: |
+                  DESTROY_CLUSTER=true
+                  TERRAFORM_DESTROY_RETRIES=10
             - kraken-destroy-cluster-builder
           script-only-if-succeeded: False
           script-only-if-failed: False
