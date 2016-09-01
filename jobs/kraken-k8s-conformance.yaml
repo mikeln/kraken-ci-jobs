@@ -25,6 +25,53 @@
 - project:
     name: kraken-k8s-conformance
     conformance-suffix:
+      - e2e-aws-k8s-conformance:
+          project-type: freestyle
+          parameters:
+            - kraken-fetch-kubernetes-params
+            - default-kraken-params
+          builders:
+            - inject:
+                properties-content: |
+                  KRAKEN_COMMIT=${{GIT_COMMIT}}
+                  KRAKEN_CLUSTER_NAME=${{JOB_NAME}}-${{BUILD_NUMBER}}
+                  KUBE_TESTS_DIR=${{KRAKEN_CLUSTER_NAME}}-kubernetes
+            - kraken-fetch-kubernetes-builder:
+                kubernetes_release_version: '${{KUBERNETES_RELEASE_VERSION}}'
+                kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+            - generate-started-json-builder:
+                version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
+                output_dir: output
+            - kraken-build-cluster-builder
+            - shell: 
+                !include-raw-escape: ../scripts/include-raw001-kraken-run-k8s-conformance-tests.sh
+          publishers:
+            - generate-finished-json-publisher:
+                output_dir: output
+            - postbuildscript:
+                builders:
+                  # - inject-jenkins-build-finished TODO: this is implicitly coming in from generate-finished-json-publisher
+                  - inject:
+                      properties-content: |
+                        S3_BUCKET=kraken-e2e-logs
+                        S3_PATH=${{S3_BUCKET}}/${{KRAKEN_CI_HOSTNAME}}/${{JOB_NAME}}/${{BUILD_NUMBER}}
+                        LOG_LINK=http://s3-us-west-2.amazonaws.com/${{S3_PATH}}/build-log.txt
+                  - kraken-update-github-pages-builder
+                  - upload-to-s3-builder:
+                      source: output
+                      destination: 's3://${{S3_PATH}}'
+                  - kraken-clean-kubernetes-builder:
+                      kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+                  - kraken-destroy-cluster-builder
+                script-only-if-succeeded: False
+                script-only-if-failed: False
+            - archive:
+                artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
+            - junit:
+                results: output/**/junit*.xml
+                health-scale-factor: 1.0
+            - slack-publisher
+      # deprecated
       - k8s-conformance:
           project-type: multijob
           description: '[deprecated] build a kraken cluster, run kubernetes conformance tests against it, destroy the kraken cluster'
@@ -58,6 +105,7 @@
                 script-only-if-succeeded: False
                 script-only-if-failed: False
             - slack-publisher
+      # deprecated
       - run-k8s-conformance-tests:
           project-type: freestyle
           description: 'runs kuberntes conformance tests agains a parameter-named kraken cluster'
@@ -65,6 +113,9 @@
             - clustername-params
             - kubetestdir-params
           builders:
+            - inject:
+                properties-content: |
+                  KRAKEN_COMMIT=${{GIT_COMMIT}}
             - generate-started-json-builder:
                 version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
                 output_dir: output
@@ -73,31 +124,26 @@
           publishers:
             - generate-finished-json-publisher:
                 output_dir: output
+            - postbuildscript:
+                builders:
+                  # - inject-jenkins-build-finished TODO: this is implicitly coming in from generate-finished-json-publisher
+                  - inject:
+                      properties-content: |
+                        S3_BUCKET=kraken-e2e-logs
+                        S3_PATH=${{S3_BUCKET}}/${{KRAKEN_CI_HOSTNAME}}/conformance/${{BUILD_NUMBER}}
+                        LOG_LINK=http://s3-us-west-2.amazonaws.com/${{S3_PATH}}/build-log.txt
+                  - kraken-update-github-pages-builder
+                  - upload-to-s3-builder:
+                      source: output
+                      destination: 's3://${{S3_PATH}}'
+                script-only-if-succeeded: False
+                script-only-if-failed: False
             - archive:
                 artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
-            - upload-to-s3-publisher:
-                source: output
-                destination: s3://kraken-e2e-logs/${{KRAKEN_CI_HOSTNAME}}/conformance/${{BUILD_NUMBER}}
-            - trigger-parameterized-builds:
-              - project: 'kraken-update-github-pages'
-                current-parameters: true
-                predefined-parameters: |
-                  KRAKEN_COMMIT=${{GIT_COMMIT}}
-                  TEST_RESULT=Success!
-                  TEST_KIND=conformance
-                  LOG_LINK=http://s3-us-west-2.amazonaws.com/kraken-e2e-logs/conformance/${{BUILD_NUMBER}}/build-log.txt
-                condition: SUCCESS
-              - project: 'kraken-update-github-pages'
-                current-parameters: true
-                predefined-parameters: |
-                  KRAKEN_COMMIT=${{GIT_COMMIT}}
-                  TEST_RESULT=Failure!
-                  TEST_KIND=Conformance
-                  LOG_LINK=http://s3-us-west-2.amazonaws.com/kraken-e2e-logs/conformance/${{BUILD_NUMBER}}/build-log.txt
-                condition: UNSTABLE_OR_WORSE
             - junit:
                 results: output/**/junit*.xml
                 health-scale-factor: 1.0
             - slack-publisher
     jobs:
       - 'kraken-{conformance-suffix}'
+

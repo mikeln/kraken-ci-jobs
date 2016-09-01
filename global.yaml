@@ -37,6 +37,12 @@
           script-only-if-failed: False
 
 - builder:
+    name: kraken-update-github-pages-builder
+    builders:
+      - shell:
+          !include-raw: ./scripts/include-raw001-kraken-update-github-pages.sh
+
+- builder:
     name: generate-started-json-builder
     builders:
       - shell: |
@@ -52,7 +58,7 @@
           EOS
 
 - publisher:
-    name: generate-finished-json-publisher
+    name: inject-jenkins-build-finished
     publishers:
       - postbuildscript:
           builders:
@@ -84,6 +90,15 @@
                 steps:
                   - inject:
                       properties-content: JENKINS_BUILD_FINISHED=ABORTED
+          script-only-if-succeeded: False
+          script-only-if-failed: False
+
+- publisher:
+    name: generate-finished-json-publisher
+    publishers:
+      - inject-jenkins-build-finished
+      - postbuildscript:
+          builders:
             - shell: |
                 set -x
                 pwd

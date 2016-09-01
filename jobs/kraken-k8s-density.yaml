@@ -25,6 +25,57 @@
 - project:
     name: kraken-k8s-density
     density-suffix:
+      - e2e-aws-k8s-density:
+          project-type: freestyle
+          parameters:
+            - kraken-fetch-kubernetes-params
+            - density-kraken-params
+            - string:
+                name: DENSITIES
+                description: "space delimited list of pod densities to use, eg: 3 30 50 95 100"
+                default: "3 30"
+          builders:
+            - inject:
+                properties-content: |
+                  KRAKEN_COMMIT=${{GIT_COMMIT}}
+                  KRAKEN_CLUSTER_NAME=${{JOB_NAME}}-${{BUILD_NUMBER}}
+                  KUBE_TESTS_DIR=${{KRAKEN_CLUSTER_NAME}}-kubernetes
+            - kraken-fetch-kubernetes-builder:
+                kubernetes_release_version: '${{KUBERNETES_RELEASE_VERSION}}'
+                kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+            - generate-started-json-builder:
+                version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
+                output_dir: output
+            - kraken-build-cluster-builder
+            - shell:
+                !include-raw-escape: ../scripts/include-raw001-kraken-run-k8s-density-tests.sh
+          publishers:
+            - generate-finished-json-publisher:
+                output_dir: output
+            - postbuildscript:
+                builders:
+                  # - inject-jenkins-build-finished TODO: this is implicitly coming in from generate-finished-json-publisher
+                  - inject:
+                      properties-content: |
+                        S3_BUCKET=kraken-e2e-logs
+                        S3_PATH=${{S3_BUCKET}}/${{KRAKEN_CI_HOSTNAME}}/${{JOB_NAME}}/${{BUILD_NUMBER}}
+                        LOG_LINK=http://s3-us-west-2.amazonaws.com/${{S3_PATH}}/build-log.txt
+                  - kraken-update-github-pages-builder
+                  - upload-to-s3-builder:
+                      source: output
+                      destination: 's3://${{S3_PATH}}'
+                  - kraken-clean-kubernetes-builder:
+                      kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+                  - kraken-destroy-cluster-builder
+                script-only-if-succeeded: False
+                script-only-if-failed: False
+            - archive:
+                artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
+            - junit:
+                results: output/**/junit*.xml
+                health-scale-factor: 1.0
+            - slack-publisher
+      # deprecated
       - k8s-density:
           project-type: multijob
           description: 'Do not edit this job through the web! Runs all the jobs required to run 3 and 30 kubernetes density test'
@@ -46,14 +97,14 @@
                 predefined-parameters: |
                   KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
                   KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
-                  DENSITY=3
+                  DENSITIES=3
                 block: true
               - project: 'kraken-run-k8s-density-tests'
                 current-parameters: true
                 predefined-parameters: |
                   KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
                   KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
-                  DENSITY=30
+                  DENSITIES=30
                 block: true
           publishers:
             - postbuildscript:
@@ -64,6 +115,7 @@
                 script-only-if-succeeded: False
                 script-only-if-failed: False
             - slack-publisher
+      # deprecated
       - run-k8s-density-tests:
           project-type: freestyle
           description: 'runs a parameter-specified density test against a parameter-named kraken cluster'
@@ -72,9 +124,12 @@
             - density-kraken-params
             - kubetestdir-params
             - string:
-                name: DENSITY
-                description: "which pod density to use"
+                name: DENSITIES
+                description: "which pod densities to use"
           builders:
+            - inject:
+                properties-content: |
+                  KRAKEN_COMMIT=${{GIT_COMMIT}}
             - generate-started-json-builder:
                 version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
                 output_dir: output
@@ -83,28 +138,22 @@
           publishers:
             - generate-finished-json-publisher:
                 output_dir: output
+            - postbuildscript:
+                builders:
+                  # - inject-jenkins-build-finished TODO: this is implicitly coming in from generate-finished-json-publisher
+                  - inject:
+                      properties-content: |
+                        S3_BUCKET=kraken-e2e-logs
+                        S3_PATH=${{S3_BUCKET}}/${{KRAKEN_CI_HOSTNAME}}/density/${{BUILD_TAG}}-${{DENSITIES}}
+                        LOG_LINK=http://s3-us-west-2.amazonaws.com/${{S3_PATH}}/build-log.txt
+                  - kraken-update-github-pages-builder
+                  - upload-to-s3-builder:
+                      source: output
+                      destination: 's3://${{S3_PATH}}'
+                script-only-if-succeeded: False
+                script-only-if-failed: False
             - archive:
                 artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
-            - upload-to-s3-publisher:
-                source: output
-                destination: s3://kraken-e2e-logs/${{KRAKEN_CI_HOSTNAME}}/density/${{BUILD_TAG}}-${{DENSITY}}
-            - trigger-parameterized-builds:
-              - project: 'kraken-update-github-pages'
-                current-parameters: true
-                predefined-parameters: |
-                  KRAKEN_COMMIT=${{BUILD_TAG}}-${{DENSITY}}
-                  TEST_RESULT=Success!
-                  TEST_KIND=density
-                  LOG_LINK=http://s3-us-west-2.amazonaws.com/kraken-e2e-logs/density/${{BUILD_TAG}}-${{DENSITY}}/build-log.txt
-                condition: SUCCESS
-              - project: 'kraken-update-github-pages'
-                current-parameters: true
-                predefined-parameters: |
-                  KRAKEN_COMMIT=${{BUILD_TAG}}-${{DENSITY}}
-                  TEST_RESULT=Failure!
-                  TEST_KIND=density
-                  LOG_LINK=http://s3-us-west-2.amazonaws.com/kraken-e2e-logs/density/${{BUILD_TAG}}-${{DENSITY}}/build-log.txt
-                condition: UNSTABLE_OR_WORSE
             - junit:
                 results: output/**/junit*.xml
                 health-scale-factor: 1.0

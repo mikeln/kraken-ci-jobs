@@ -1,6 +1,0 @@
----
-- project:
-    name: kraken
-    test_bucket: "kraken-e2e-logs"
-    jobs:
-      - '{name}-update-github-pages'
