@@ -62,6 +62,8 @@
           health-scale-factor: 1.0
       - postbuildscript:
           builders:
+            - inject:
+                properties-content: DESTROY_CLUSTER=true
             - kraken-destroy-cluster-builder
           script-only-if-succeeded: False
           script-only-if-failed: False
