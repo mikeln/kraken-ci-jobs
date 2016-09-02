@@ -3,6 +3,7 @@ KUBECONFIG=${WORKSPACE}/bin/clusters/${KRAKEN_CLUSTER_NAME}/kube_config
 mkdir -p terraform/aws/${KRAKEN_CLUSTER_NAME}
 cat > terraform/aws/${KRAKEN_CLUSTER_NAME}/terraform.tfvars << EOF
 aws_user_prefix = "${KRAKEN_USER_PREFIX}"
+aws_region = "${AWS_DEFAULT_REGION}"
 aws_access_key = "${AWS_ACCESS_KEY_ID}"
 aws_secret_key = "${AWS_SECRET_ACCESS_KEY}"
 asg_wait_single = 60
