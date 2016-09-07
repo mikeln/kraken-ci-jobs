@@ -27,6 +27,7 @@
     density-suffix:
       - e2e-aws-k8s-density:
           project-type: freestyle
+          description: 'build a kraken cluster, run kubernetes e2e density tests against it, destroy the kraken cluster'
           parameters:
             - kraken-fetch-kubernetes-params
             - density-kraken-params
@@ -78,7 +79,7 @@
       # deprecated
       - k8s-density:
           project-type: multijob
-          description: 'Do not edit this job through the web! Runs all the jobs required to run 3 and 30 kubernetes density test'
+          description: '[deprecated: prefer kraken-e2e-k8s-density] build a kraken cluster, invoke another job to run kubernetes density tests against it, destroy the kraken cluster'
           parameters:
             - kraken-fetch-kubernetes-params
             - density-kraken-params
@@ -118,7 +119,7 @@
       # deprecated
       - run-k8s-density-tests:
           project-type: freestyle
-          description: 'runs a parameter-specified density test against a parameter-named kraken cluster'
+          description: '[deprecated: prefer kraken-e2e-k8s-density] runs kubernetes density tests agains a parameter-named kraken cluster'
           parameters:
             - clustername-params
             - density-kraken-params

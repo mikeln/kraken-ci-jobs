@@ -108,10 +108,10 @@
     name: samsung-cnct-project-pr
     samsung-cnct-project:
       - kraken:
-          description: 'Do not edit this job through the web! On an open github PR, runs all the jobs to create a kubernetes cluster, run some cucumber/aruba tests on it and then destroy it.'
+          description: 'runs on PRs to kraken, builds a kraken cluster, runs some feature specs against it, tears down kraken cluster'
       - kraken-ci-jobs:
-          description: 'Do not edit this job through the web! Runs against pull requests made against kraken-ci-jobs'
+          description: 'runs on PRs to kraken-ci-jobs, ensures job xml renders and displays diff from master'
       - kraken-services:
-          description: 'Do not edit this job through the web! Runs against pull requests made against kraken-services'
+          description: 'runs on PRs to kraken-services, docker builds all Dockerfiles therein'
     jobs:
       - '{samsung-cnct-project}-pr'

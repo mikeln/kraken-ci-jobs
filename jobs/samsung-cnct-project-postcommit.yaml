@@ -46,10 +46,10 @@
     name: samsung-cnct-project-postcommit
     samsung-cnct-project:
       - kraken:
-          description: 'Do not edit this job through the web! Runs on post-commit to kraken, kicks off conformance tests'
+          description: 'runs on post-commit to kraken, kicks off conformance tests'
       - kraken-ci-jobs:
-          description: 'Do not edit this job through the web! On a merged kraken-ci-jobs PR, run jenkins job builder to update the current jenkins jobs.'
+          description: 'runs on post-commit to kraken-ci-jobs, runs jenkins job builder to update the current jenkins jobs.'
       - kraken-services:
-          description: 'Runs on post-commit to kraken-services'
+          description: 'runs on post-commit to kraken-services, docker builds/pushes all Dockerfiles therein'
     jobs:
       - '{samsung-cnct-project}-postcommit'

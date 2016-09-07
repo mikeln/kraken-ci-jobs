@@ -27,6 +27,7 @@
     conformance-suffix:
       - e2e-aws-k8s-conformance:
           project-type: freestyle
+          description: 'build a kraken cluster, run kubernetes e2e conformance tests against it, destroy the kraken cluster'
           parameters:
             - kraken-fetch-kubernetes-params
             - default-kraken-params
@@ -74,7 +75,7 @@
       # deprecated
       - k8s-conformance:
           project-type: multijob
-          description: '[deprecated] build a kraken cluster, run kubernetes conformance tests against it, destroy the kraken cluster'
+          description: '[deprecated: prefer kraken-e2e-k8s-conformance] build a kraken cluster, invoke another job to run kubernetes conformance tests against it, destroy the kraken cluster'
           parameters:
             - kraken-fetch-kubernetes-params
             - default-kraken-params
@@ -108,7 +109,7 @@
       # deprecated
       - run-k8s-conformance-tests:
           project-type: freestyle
-          description: 'runs kuberntes conformance tests agains a parameter-named kraken cluster'
+          description: '[deprecated: prefer kraken-e2e-aws-k8s-conformance] runs kuberntes conformance tests agains a parameter-named kraken cluster'
           parameters:
             - clustername-params
             - kubetestdir-params
