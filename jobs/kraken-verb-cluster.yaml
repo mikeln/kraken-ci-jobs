@@ -21,7 +21,6 @@
     builders:
       - 'kraken-{verb}-cluster-builder'
 
-# include-raw-escape won't interpolate filename
 - builder:
     name: kraken-build-cluster-builder
     builders:

@@ -1,14 +1,12 @@
 ---
 - job-template:
-    name: '{name}-k8s-conformance'
-    description: '[deprecated] build a kraken cluster, run kubernetes conformance tests against it, destroy the kraken cluster'
+    name: 'kraken-{conformance-suffix}'
+    description: '{description}'
     concurrent: true
-    project-type: multijob
+    project-type: '{project-type}'
     logrotate:
       numToKeep: 100
-    parameters:
-      - kraken-fetch-kubernetes-params
-      - default-kraken-params
+    parameters: '{obj:parameters}'
     properties:
       - github:
           url: https://github.com/samsung-cnct/kraken/
@@ -21,89 +19,132 @@
           browser: auto
           wipe-workspace: false
           skip-tag: true
-    builders:
-      - inject:
-          properties-content: |
-            KRAKEN_CLUSTER_NAME=kubernetes_conformance-${{BUILD_NUMBER}}
-            KUBE_TESTS_DIR=kubernetes_conformance-${{BUILD_NUMBER}}
-      - kraken-fetch-kubernetes-builder:
-          kubernetes_release_version: '${{KUBERNETES_RELEASE_VERSION}}'
-          kube_tests_dir: '${{KUBE_TESTS_DIR}}'
-      - kraken-build-cluster-builder
-      - trigger-builds:
-        - project: 'kraken-run-k8s-conformance-tests'
-          predefined-parameters: |
-            KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
-            KRAKEN_REPO=${{KRAKEN_REPO}}
-            KRAKEN_BRANCH=${{KRAKEN_BRANCH}}
-            KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
-          git-revision: true
-          block: true
-    publishers:
-      - postbuildscript:
-          builders:
-            - kraken-clean-kubernetes-builder:
-                kube_tests_dir: '${{KUBE_TESTS_DIR}}'
-            - kraken-destroy-cluster-builder
-          script-only-if-succeeded: False
-          script-only-if-failed: False
-      - slack-publisher
+    builders: '{obj:builders}'
+    publishers: '{obj:publishers}'
 
-- job-template:
-    name: '{name}-run-k8s-conformance-tests'
-    description: 'runs kuberntes conformance tests agains a parameter-named kraken cluster'
-    concurrent: true
-    logrotate:
-      numToKeep: 100
-    parameters:
-      - clustername-params
-      - kubetestdir-params
-    properties:
-      - github:
-          url: https://github.com/samsung-cnct/kraken/
-      - copyartifact:
-          projects: kraken*
-    scm:
-      - git:
-          url: ${{KRAKEN_REPO}}
-          credentials-id: jenkins-ssh
-          branches:
-            - ${{KRAKEN_BRANCH}}
-          browser: auto
-          wipe-workspace: false
-          skip-tag: true
-    builders:
-      - generate-started-json-builder:
-          version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
-          output_dir: output
-      - shell: 
-          !include-raw-escape: ../scripts/include-raw001-kraken-run-k8s-conformance-tests.sh
-    publishers:
-      - generate-finished-json-publisher:
-          output_dir: output
-      - archive:
-          artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
-      - upload-to-s3-publisher:
-          source: output
-          destination: s3://kraken-e2e-logs/${{KRAKEN_CI_HOSTNAME}}/conformance/${{BUILD_NUMBER}}
-      - trigger-parameterized-builds:
-        - project: '{name}-update-github-pages'
-          current-parameters: true
-          predefined-parameters: |
-            KRAKEN_COMMIT=${{GIT_COMMIT}}
-            TEST_RESULT=Success!
-            TEST_KIND=conformance
-            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/${{BUILD_NUMBER}}/build-log.txt
-          condition: SUCCESS
-        - project: '{name}-update-github-pages'
-          current-parameters: true
-          predefined-parameters: |
-            KRAKEN_COMMIT=${{GIT_COMMIT}}
-            TEST_RESULT=Failure!
-            TEST_KIND=Conformance
-            LOG_LINK=http://s3-us-west-2.amazonaws.com/{test_bucket}/conformance/${{BUILD_NUMBER}}/build-log.txt
-          condition: UNSTABLE_OR_WORSE
-      - junit:
-          results: output/**/junit*.xml
-          health-scale-factor: 1.0
-      - slack-publisher
+- project:
+    name: kraken-k8s-conformance
+    conformance-suffix:
+      - e2e-aws-k8s-conformance:
+          project-type: freestyle
+          description: 'build a kraken cluster, run kubernetes e2e conformance tests against it, destroy the kraken cluster'
+          parameters:
+            - kraken-fetch-kubernetes-params
+            - default-kraken-params
+          builders:
+            - inject:
+                properties-content: |
+                  KRAKEN_COMMIT=${{GIT_COMMIT}}
+                  KRAKEN_CLUSTER_NAME=${{JOB_NAME}}-${{BUILD_NUMBER}}
+                  KUBE_TESTS_DIR=${{KRAKEN_CLUSTER_NAME}}-kubernetes
+            - kraken-fetch-kubernetes-builder:
+                kubernetes_release_version: '${{KUBERNETES_RELEASE_VERSION}}'
+                kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+            - generate-started-json-builder:
+                version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
+                output_dir: output
+            - kraken-build-cluster-builder
+            - shell: 
+                !include-raw-escape: ../scripts/include-raw001-kraken-run-k8s-conformance-tests.sh
+          publishers:
+            - generate-finished-json-publisher:
+                output_dir: output
+            - postbuildscript:
+                builders:
+                  # - inject-jenkins-build-finished TODO: this is implicitly coming in from generate-finished-json-publisher
+                  - inject:
+                      properties-content: |
+                        S3_BUCKET=kraken-e2e-logs
+                        S3_PATH=${{S3_BUCKET}}/${{KRAKEN_CI_HOSTNAME}}/${{JOB_NAME}}/${{BUILD_NUMBER}}
+                        LOG_LINK=http://s3-us-west-2.amazonaws.com/${{S3_PATH}}/build-log.txt
+                  - kraken-update-github-pages-builder
+                  - upload-to-s3-builder:
+                      source: output
+                      destination: 's3://${{S3_PATH}}'
+                  - kraken-clean-kubernetes-builder:
+                      kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+                  - kraken-destroy-cluster-builder
+                script-only-if-succeeded: False
+                script-only-if-failed: False
+            - archive:
+                artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
+            - junit:
+                results: output/**/junit*.xml
+                health-scale-factor: 1.0
+            - slack-publisher
+      # deprecated
+      - k8s-conformance:
+          project-type: multijob
+          description: '[deprecated: prefer kraken-e2e-k8s-conformance] build a kraken cluster, invoke another job to run kubernetes conformance tests against it, destroy the kraken cluster'
+          parameters:
+            - kraken-fetch-kubernetes-params
+            - default-kraken-params
+          builders:
+            - inject:
+                properties-content: |
+                  KRAKEN_CLUSTER_NAME=kubernetes_conformance-${{BUILD_NUMBER}}
+                  KUBE_TESTS_DIR=kubernetes_conformance-${{BUILD_NUMBER}}
+            - kraken-fetch-kubernetes-builder:
+                kubernetes_release_version: '${{KUBERNETES_RELEASE_VERSION}}'
+                kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+            - kraken-build-cluster-builder
+            - trigger-builds:
+              - project: 'kraken-run-k8s-conformance-tests'
+                predefined-parameters: |
+                  KRAKEN_CLUSTER_NAME=${{KRAKEN_CLUSTER_NAME}}
+                  KRAKEN_REPO=${{KRAKEN_REPO}}
+                  KRAKEN_BRANCH=${{KRAKEN_BRANCH}}
+                  KUBE_TESTS_DIR=${{KUBE_TESTS_DIR}}
+                git-revision: true
+                block: true
+          publishers:
+            - postbuildscript:
+                builders:
+                  - kraken-clean-kubernetes-builder:
+                      kube_tests_dir: '${{KUBE_TESTS_DIR}}'
+                  - kraken-destroy-cluster-builder
+                script-only-if-succeeded: False
+                script-only-if-failed: False
+            - slack-publisher
+      # deprecated
+      - run-k8s-conformance-tests:
+          project-type: freestyle
+          description: '[deprecated: prefer kraken-e2e-aws-k8s-conformance] runs kuberntes conformance tests agains a parameter-named kraken cluster'
+          parameters:
+            - clustername-params
+            - kubetestdir-params
+          builders:
+            - inject:
+                properties-content: |
+                  KRAKEN_COMMIT=${{GIT_COMMIT}}
+            - generate-started-json-builder:
+                version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
+                output_dir: output
+            - shell: 
+                !include-raw-escape: ../scripts/include-raw001-kraken-run-k8s-conformance-tests.sh
+          publishers:
+            - generate-finished-json-publisher:
+                output_dir: output
+            - postbuildscript:
+                builders:
+                  # - inject-jenkins-build-finished TODO: this is implicitly coming in from generate-finished-json-publisher
+                  - inject:
+                      properties-content: |
+                        S3_BUCKET=kraken-e2e-logs
+                        S3_PATH=${{S3_BUCKET}}/${{KRAKEN_CI_HOSTNAME}}/conformance/${{BUILD_NUMBER}}
+                        LOG_LINK=http://s3-us-west-2.amazonaws.com/${{S3_PATH}}/build-log.txt
+                  - kraken-update-github-pages-builder
+                  - upload-to-s3-builder:
+                      source: output
+                      destination: 's3://${{S3_PATH}}'
+                script-only-if-succeeded: False
+                script-only-if-failed: False
+            - archive:
+                artifacts: output/build-log.txt, output/*.json, output/artifacts/**/*
+            - junit:
+                results: output/**/junit*.xml
+                health-scale-factor: 1.0
+            - slack-publisher
+    jobs:
+      - 'kraken-{conformance-suffix}'
+
