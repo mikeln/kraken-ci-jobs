@@ -39,6 +39,8 @@
             - sostheim
             - spiffxp
             - venezia
+            - DStorck
+            - leahnp
           github-hooks: true
           white-list-target-branches:
             - master
