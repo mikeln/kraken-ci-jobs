@@ -34,7 +34,7 @@
       - string:
           name: KUBERNETES_RELEASE_VERSION
           description: "released version of kubernetes to fetch, eg: v1.1.8, v1.3.1-beta.3, v1.4.0-alpha.0"
-          default: v1.3.6
+          default: v1.3.7
 
 - builder:
     name: kraken-fetch-kubernetes-builder
