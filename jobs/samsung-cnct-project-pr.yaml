@@ -24,6 +24,7 @@
           triggered-status: '--none--'
           status-context: '${{KRAKEN_CI_HOSTNAME}}/{samsung-cnct-project}-pr'
           admin-list:
+            - DStorck
             - Rick-Lindberg
             - SamsungAGJenkinsBot
             - alejandroEsc
@@ -31,16 +32,17 @@
             - countspongebob
             - cwazy1
             - davidewatson
+            - jfelten
             - jooyeong
+            - kmansel
             - l337ch
+            - leahnp
             - maratoid
             - mikeln
             - richardkaufmann
             - sostheim
             - spiffxp
             - venezia
-            - DStorck
-            - leahnp
           github-hooks: true
           white-list-target-branches:
             - master
@@ -80,11 +82,11 @@
       - shell: |
           #!/bin/bash
           git checkout origin/master
-          jenkins-jobs test --recursive . > jjb_output.master
+          jenkins-jobs test --recursive --exclude configs . > jjb_output.master
           master_result=$?
 
           git checkout ${ghprbActualCommit}
-          jenkins-jobs test --recursive . > jjb_output.pr
+          jenkins-jobs test --recursive --exclude configs . > jjb_output.pr
           pr_result=$?
 
           # don't fail if diff finds a difference
@@ -97,6 +99,23 @@
     name: kraken-ci-jobs-pr-publisher
     publishers: []
 
+- publisher:
+    name: k2-pr-publisher
+    publishers:
+      - postbuildscript:
+          builders:
+            - inject:
+                properties-content: |
+                  K2_CLUSTER_NAME=jenkins-pr-${ghprbPullId}
+                  DOWNRETRIES=10
+            - k2-destroy-cluster-builder
+          script-only-if-succeeded: False
+          script-only-if-failed: False
+
+- publisher:
+    name: k2-charts-pr-publisher
+    publishers: []
+
 - builder:
     name: kraken-services-pr-builder
     builders:
@@ -105,6 +124,25 @@
 - publisher:
     name: kraken-services-pr-publisher
     publishers: []
+
+- builder:
+    name: k2-pr-builder
+    builders:
+      - inject:
+          properties-content: |
+            K2_CLUSTER_NAME=jenkins-pr-${ghprbPullId}
+            K2_CONFIG_URI='https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/configs/default-pr.yaml'
+            K2_CONTAINER_IMAGE: quay.io/samsung_cnct/k2:donotpush
+      - shell: docker build -t quay.io/samsung_cnct/k2:donotpush ${WORKSPACE}/docker
+      - k2-build-cluster-builder
+      - shell:
+          !include-raw: ../scripts/include-raw001-k2-pr.sh
+
+- builder:
+    name: k2-charts-pr-builder
+    builders:
+      - shell: 
+          !include-raw: ../scripts/include-raw001-k2-charts-pr.sh
 
 - project:
     name: samsung-cnct-project-pr
@@ -115,5 +153,9 @@
           description: 'runs on PRs to kraken-ci-jobs, ensures job xml renders and displays diff from master'
       - kraken-services:
           description: 'runs on PRs to kraken-services, docker builds all Dockerfiles therein'
+      - k2:
+          description: 'runs on PRs to k2, builds a k2 cluster, checks some basic results, tears down k2 cluster'
+      - k2-charts:
+          description: 'runs on PRs to k2-charts, lints all charts'
     jobs:
       - '{samsung-cnct-project}-pr'

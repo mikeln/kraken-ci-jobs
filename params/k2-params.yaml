@@ -1,0 +1,39 @@
+---
+- parameter:
+    name: k2-params
+    parameters:
+      - text:
+          name: K2_CONFIG_TEXT
+          default: '{k2-config-text}'
+          description: "full multi-line text of k2 configuration"
+      - string:
+          name: K2_CONFIG_URI
+          default: '{k2-config-uri}'
+          description: "uri of config yaml. overrides K2_CONFIG_TEXT"
+      - string:
+          name: K2_CLUSTER_NAME
+          default: '{k2-cluster-name}'
+          description: "Name for the cluster. Needs to match the cluster name in K2_CONFIG_URI or K2_CONFIG_TEXT"
+      - string:
+          name: K2_CONTAINER_IMAGE
+          default: '{k2-container-image}'
+          description: "Image of the k2 container to use"
+      - string:
+          name: K2_REPO
+          default: '{k2-repo}'
+          description: "k2 github repository"
+      - string:
+          name: K2_REPO_BRANCH
+          default: '{k2-repo-branch}'
+          description: "k2 github repository branch"
+
+- parameter:
+    name: default-k2-params
+    parameters:
+      - k2-params:
+          k2-config-text: ''
+          k2-config-uri: 'https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/configs/default-e2e.yaml'
+          k2-cluster-name: 'jenkins-cluster'
+          k2-container-image: 'quay.io/samsung_cnct/k2:latest'
+          k2-repo: 'git@github.com:samsung-cnct/k2.git'
+          k2-repo-branch: 'master'

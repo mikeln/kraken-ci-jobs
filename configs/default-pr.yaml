@@ -1,0 +1,11 @@
+---
+deployment:
+  cluster: "{{ lookup('env','K2_CLUSTER_NAME') }}"
+  keypair:
+    -
+      name: krakenKey
+      publickeyFile: "/k2/generated-keys/id_rsa.pub"
+  readiness:
+    type: exact
+    value: 0
+    wait: 600

@@ -9,6 +9,7 @@ The layout is pretty ad-hoc right now
 Some key directories:
 
 - `excluded-on-jenkins`: dev copies of "secret" files that come from elsewhere on jenkins
+- `configs`: k2 cluster configuration files
 - `jobs`: job definitions go here
 - `params`: parameter defintions that are commonly used across multiple jobs
 - `scripts`: scripts that are too unwieldy to render inline in jobs
@@ -33,5 +34,5 @@ Some key files:
 Use the `test` command to lint the YAML, and generate XML locally
 
 ```sh
-jenkins-jobs test --recursive .
+jenkins-jobs test --recursive --exclude configs .
 ```
