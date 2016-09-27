@@ -41,6 +41,7 @@
             - venezia
             - DStorck
             - leahnp
+            - kmansel
           github-hooks: true
           white-list-target-branches:
             - master
