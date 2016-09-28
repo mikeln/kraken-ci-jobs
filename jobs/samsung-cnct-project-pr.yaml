@@ -106,7 +106,8 @@
           builders:
             - inject:
                 properties-content: |
-                  K2_CLUSTER_NAME=jenkins-pr-${ghprbPullId}
+                  K2_CLUSTER_NAME=jenkins-pr-${{ghprbPullId}}
+                  K2_KEY_LOCATION=${{WORKSPACE}}/jenkins-pr-${{ghprbPullId}}/generated-keys
                   DOWNRETRIES=10
             - k2-destroy-cluster-builder
           script-only-if-succeeded: False
@@ -130,7 +131,8 @@
     builders:
       - inject:
           properties-content: |
-            K2_CLUSTER_NAME=jenkins-pr-${ghprbPullId}
+            K2_CLUSTER_NAME=jenkins-pr-${{ghprbPullId}}
+            K2_KEY_LOCATION=${{WORKSPACE}}/jenkins-pr-${{ghprbPullId}}/generated-keys
             K2_CONFIG_URI=https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-pr.yaml
             K2_CONTAINER_IMAGE=quay.io/samsung_cnct/k2:donotpush
       - shell: docker build -t quay.io/samsung_cnct/k2:donotpush ${WORKSPACE}/docker
