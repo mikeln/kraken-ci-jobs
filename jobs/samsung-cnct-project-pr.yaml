@@ -82,11 +82,11 @@
       - shell: |
           #!/bin/bash
           git checkout origin/master
-          jenkins-jobs test --recursive --exclude configs . > jjb_output.master
+          jenkins-jobs test --recursive --exclude k2-configs . > jjb_output.master
           master_result=$?
 
           git checkout ${ghprbActualCommit}
-          jenkins-jobs test --recursive --exclude configs . > jjb_output.pr
+          jenkins-jobs test --recursive --exclude k2-configs . > jjb_output.pr
           pr_result=$?
 
           # don't fail if diff finds a difference
@@ -131,7 +131,7 @@
       - inject:
           properties-content: |
             K2_CLUSTER_NAME=jenkins-pr-${ghprbPullId}
-            K2_CONFIG_URI='https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/configs/default-pr.yaml'
+            K2_CONFIG_URI='https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-pr.yaml'
             K2_CONTAINER_IMAGE: quay.io/samsung_cnct/k2:donotpush
       - shell: docker build -t quay.io/samsung_cnct/k2:donotpush ${WORKSPACE}/docker
       - k2-build-cluster-builder
