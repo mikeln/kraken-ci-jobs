@@ -2,9 +2,10 @@ max_retries=${DOWNRETRIES}
 until docker run -e "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" \
   -e "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" \
   -e "K2_CLUSTER_NAME=${K2_CLUSTER_NAME}" \
-  -v ${WORKSPACE}/${K2_CLUSTER_NAME}:/k2 \
+  -e "K2_KEY_LOCATION=${K2_KEY_LOCATION}" \
+  --volumes-from=jenkins \
   ${K2_CONTAINER_IMAGE} \
-  /kraken/down.sh --output /k2 --config /k2/${K2_CLUSTER_NAME}.yaml
+  /kraken/down.sh --output ${WORKSPACE}/${K2_CLUSTER_NAME} --config ${WORKSPACE}/${K2_CLUSTER_NAME}/${K2_CLUSTER_NAME}.yaml
 do
   if [ ${max_retries} -gt 0 ]; then
     max_retries=$((max_retries-1))

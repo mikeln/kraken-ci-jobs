@@ -35,6 +35,7 @@
                 properties-content: |
                   K2_COMMIT=${{GIT_COMMIT}}
                   K2_CLUSTER_NAME=${{JOB_NAME}}-${{BUILD_NUMBER}}
+                  K2_KEY_LOCATION=${{WORKSPACE}}/${{K2_CLUSTER_NAME}}/generated-keys
                   KUBE_TESTS_DIR=${{K2_CLUSTER_NAME}}-kubernetes
             - kraken-fetch-kubernetes-builder:
                 kubernetes_release_version: '${{KUBERNETES_RELEASE_VERSION}}'

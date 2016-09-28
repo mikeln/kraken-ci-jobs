@@ -4,7 +4,7 @@ deployment:
   keypair:
     -
       name: krakenKey
-      publickeyFile: "/k2/generated-keys/id_rsa.pub"
+      publickeyFile: "{{ lookup('env','K2_KEY_LOCATION') }}/id_rsa.pub"
   readiness:
     type: exact
     value: 0
