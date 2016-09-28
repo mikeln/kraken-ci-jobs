@@ -24,6 +24,7 @@
           triggered-status: '--none--'
           status-context: '${{KRAKEN_CI_HOSTNAME}}/{samsung-cnct-project}-pr'
           admin-list:
+            - DStorck
             - Rick-Lindberg
             - SamsungAGJenkinsBot
             - alejandroEsc
@@ -31,17 +32,17 @@
             - countspongebob
             - cwazy1
             - davidewatson
+            - jfelten
             - jooyeong
+            - kmansel
             - l337ch
+            - leahnp
             - maratoid
             - mikeln
             - richardkaufmann
             - sostheim
             - spiffxp
             - venezia
-            - DStorck
-            - leahnp
-            - kmansel
           github-hooks: true
           white-list-target-branches:
             - master
