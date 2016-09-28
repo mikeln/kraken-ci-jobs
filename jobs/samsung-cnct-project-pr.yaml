@@ -131,8 +131,8 @@
       - inject:
           properties-content: |
             K2_CLUSTER_NAME=jenkins-pr-${ghprbPullId}
-            K2_CONFIG_URI='https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-pr.yaml'
-            K2_CONTAINER_IMAGE: quay.io/samsung_cnct/k2:donotpush
+            K2_CONFIG_URI=https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-pr.yaml
+            K2_CONTAINER_IMAGE=quay.io/samsung_cnct/k2:donotpush
       - shell: docker build -t quay.io/samsung_cnct/k2:donotpush ${WORKSPACE}/docker
       - k2-build-cluster-builder
       - shell:

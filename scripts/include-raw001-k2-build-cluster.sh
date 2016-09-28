@@ -9,7 +9,7 @@ ssh-keygen -q -t rsa -N '' -f ${WORKSPACE}/${K2_CLUSTER_NAME}/generated-keys/id_
 if [ -z "$K2_CONFIG_URI" ]; then
   echo ${K2_CONFIG_TEXT} > ${WORKSPACE}/${K2_CLUSTER_NAME}/${K2_CLUSTER_NAME}.yaml
 else
-  curl "${K2_CONFIG_URI}" > ${WORKSPACE}/${K2_CLUSTER_NAME}/${K2_CLUSTER_NAME}.yaml
+  wget ${K2_CONFIG_URI} -O ${WORKSPACE}/${K2_CLUSTER_NAME}/${K2_CLUSTER_NAME}.yaml
 fi
 
 # start k2
@@ -18,4 +18,4 @@ docker run -e "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" \
   -e "K2_CLUSTER_NAME=${K2_CLUSTER_NAME}" \
   -v ${WORKSPACE}/${K2_CLUSTER_NAME}:/k2 \
   ${K2_CONTAINER_IMAGE} \
-  /kraken/docker/up.sh --output /k2 --config /k2/${K2_CLUSTER_NAME}.yaml
+  /kraken/up.sh --output /k2 --config /k2/${K2_CLUSTER_NAME}.yaml
