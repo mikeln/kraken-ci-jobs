@@ -52,7 +52,7 @@
           docker push quay.io/samsung_cnct/k2:$(git rev-parse HEAD)
           docker push quay.io/samsung_cnct/k2:latest
       - trigger-builds:
-        - project: 'k2-k8s-conformance'
+        - project: 'k2-e2e-aws-k8s-conformance'
           block: true
 
 - builder:
