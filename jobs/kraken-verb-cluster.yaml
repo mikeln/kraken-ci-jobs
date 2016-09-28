@@ -28,6 +28,18 @@
           !include-raw: ../scripts/include-raw001-kraken-build-cluster.sh
 
 - builder:
+    name: k2-build-cluster-builder
+    builders:
+      - shell:
+          !include-raw: ../scripts/include-raw001-k2-build-cluster.sh
+
+- builder:
+    name: k2-destroy-cluster-builder
+    builders:
+      - shell:
+          !include-raw: ../scripts/include-raw001-k2-destroy-cluster.sh
+
+- builder:
     name: kraken-destroy-cluster-builder
     builders:
       - shell: |
