@@ -55,6 +55,7 @@
                         S3_BUCKET=kraken-e2e-logs
                         S3_PATH=${{S3_BUCKET}}/${{KRAKEN_CI_HOSTNAME}}/${{JOB_NAME}}/${{BUILD_NUMBER}}
                         LOG_LINK=http://s3-us-west-2.amazonaws.com/${{S3_PATH}}/build-log.txt
+                        DOWNRETRIES=10
                   - upload-to-s3-builder:
                       source: output
                       destination: 's3://${{S3_PATH}}'
