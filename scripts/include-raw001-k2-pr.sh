@@ -1,11 +1,5 @@
 # expected test data 
 NODECOUNT=8
-APISERVERCOUNT=3
-CONTROLLERCOUNT=3
-PROXYCOUNT=8
-SCHEDULERCOUNT=3
-DNSCOUNT=1
-TILLERCOUNT=1
 
 # make sure everything deployed ok
 docker run \
@@ -20,8 +14,13 @@ node_count=$(docker run \
   --volumes-from=jenkins \
   ${K2_CONTAINER_IMAGE} \
   kubectl get nodes --no-headers | wc -l)
-
 if [ "$node_count" -ne "${NODECOUNT}" ]; then echo 'node count is incorrect'; exit 1; fi
+
+docker run \
+  -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/admin.kubeconfig" \
+  --volumes-from=jenkins \
+  ${K2_CONTAINER_IMAGE} \
+  kubectl get pods --all-namespaces | grep tiller-deploy  || { echo 'tiller pod is not present'; exit 1; }
 
 docker run \
   -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/admin.kubeconfig" \
@@ -29,44 +28,8 @@ docker run \
   ${K2_CONTAINER_IMAGE} \
   kubectl get services --all-namespaces | grep 'kube-system[[:space:]]*kube-dns' || { echo 'kubedns service is not present'; exit 1; }
 
-api_count=$(docker run \
+docker run \
   -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/admin.kubeconfig" \
   --volumes-from=jenkins \
   ${K2_CONTAINER_IMAGE} \
-  kubectl get pods --all-namespaces | grep kube-apiserver-ip | wc -l)
-if [ "$api_count" -ne "${APISERVERCOUNT}" ]; then echo 'api server pod count is incorrect'; exit 1; fi
-
-controller_count=$(docker run \
-  -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/admin.kubeconfig" \
-  --volumes-from=jenkins \
-  ${K2_CONTAINER_IMAGE} \
-  kubectl get pods --all-namespaces | grep kube-controller-manager | wc -l)
-if [ "$controller_count" -ne "${CONTROLLERCOUNT}" ]; then echo 'controller manager pod count is incorrect'; exit 1; fi
-
-proxy_count=$(docker run \
-  -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/admin.kubeconfig" \
-  --volumes-from=jenkins \
-  ${K2_CONTAINER_IMAGE} \
-  kubectl get pods --all-namespaces | grep kube-proxy-ip | wc -l)
-if [ "$proxy_count" -ne "${PROXYCOUNT}" ]; then echo 'kube proxy pod count is incorrect'; exit 1; fi
-
-scheduler_count=$(docker run \
-  -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/admin.kubeconfig" \
-  --volumes-from=jenkins \
-  ${K2_CONTAINER_IMAGE} \
-  kubectl get pods --all-namespaces | grep kube-scheduler-ip | wc -l)
-if [ "$scheduler_count" -ne "${SCHEDULERCOUNT}" ]; then echo 'scheduler pod count is incorrect'; exit 1; fi
-
-dns_count=$(docker run \
-  -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/admin.kubeconfig" \
-  --volumes-from=jenkins \
-  ${K2_CONTAINER_IMAGE} \
-  kubectl get pods --all-namespaces | grep kube-dns | wc -l)
-if [ "$dns_count" -ne "${DNSCOUNT}" ]; then echo 'kube dns count is incorrect'; exit 1; fi
-
-tiller_count=$(docker run \
-  -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/admin.kubeconfig" \
-  --volumes-from=jenkins \
-  ${K2_CONTAINER_IMAGE} \
-  kubectl get pods --all-namespaces | grep tiller-deploy | wc -l)
-if [ "$tiller_count" -ne "${TILLERCOUNT}" ]; then echo 'tiller pod count is incorrect'; exit 1; fi
+  kubectl get pods --all-namespaces | grep kube-dns || { echo 'kube dns pod is not present'; exit 1; }
