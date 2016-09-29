@@ -135,7 +135,7 @@
             K2_KEY_LOCATION=${WORKSPACE}/jenkins-pr-${ghprbPullId}/generated-keys
             K2_CONFIG_URI=https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-pr.yaml
             K2_CONTAINER_IMAGE=quay.io/samsung_cnct/k2:donotpush
-      - shell: docker build -t quay.io/samsung_cnct/k2:donotpush --build-arg K2_REPO=${ghprbAuthorRepoGitUrl} K2_BRANCH=${ghprbSourceBranch} ${WORKSPACE}/docker
+      - shell: docker build -t quay.io/samsung_cnct/k2:donotpush --build-arg K2_REPO=${ghprbAuthorRepoGitUrl} --build-arg K2_BRANCH=${ghprbSourceBranch} ${WORKSPACE}/docker
       - k2-build-cluster-builder
       - shell:
           !include-raw: ../scripts/include-raw001-k2-pr.sh
