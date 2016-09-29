@@ -26,6 +26,10 @@
           name: K2_REPO_BRANCH
           default: '{k2-repo-branch}'
           description: "k2 github repository branch"
+      - string:
+          name: KUBERNETES_RELEASE_VERSION
+          default: '{kubernetes-release-version}'
+          description: "kubernetes release version (e.g. v1.1.8, v1.3.1-beta.3, v1.4.0-alpha.0)"
 
 - parameter:
     name: default-k2-params
@@ -33,7 +37,8 @@
       - k2-params:
           k2-config-text: ''
           k2-config-uri: 'https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-e2e.yaml'
-          k2-cluster-name: 'jenkins-cluster'
+          k2-cluster-name: '${{JOB_NAME}}-${{BUILD_NUMBER}}'
           k2-container-image: 'quay.io/samsung_cnct/k2:latest'
           k2-repo: 'git@github.com:samsung-cnct/k2.git'
           k2-repo-branch: 'master'
+          kubernetes-release-version: 'v1.3.7'

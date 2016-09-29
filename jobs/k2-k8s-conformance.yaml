@@ -15,7 +15,7 @@
           url: ${{K2_REPO}}
           credentials-id: jenkins-ssh
           branches:
-            - ${{K2_BRANCH}}
+            - ${{K2_REPO_BRANCH}}
           browser: auto
           wipe-workspace: false
           skip-tag: true
@@ -34,7 +34,6 @@
             - inject:
                 properties-content: |
                   K2_COMMIT=${{GIT_COMMIT}}
-                  K2_CLUSTER_NAME=${{JOB_NAME}}-${{BUILD_NUMBER}}
                   K2_KEY_LOCATION=${{WORKSPACE}}/${{K2_CLUSTER_NAME}}/generated-keys
                   KUBE_TESTS_DIR=${{K2_CLUSTER_NAME}}-kubernetes
             - kraken-fetch-kubernetes-builder:
