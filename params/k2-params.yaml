@@ -37,7 +37,7 @@
       - k2-params:
           k2-config-text: ''
           k2-config-uri: 'https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-e2e.yaml'
-          k2-cluster-name: 'k2-${{BUILD_NUMBER}}'
+          k2-cluster-name: 'k2-${BUILD_NUMBER}'
           k2-container-image: 'quay.io/samsung_cnct/k2:latest'
           k2-repo: 'git@github.com:samsung-cnct/k2.git'
           k2-repo-branch: 'master'
