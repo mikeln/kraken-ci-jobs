@@ -34,7 +34,7 @@ api_count=$(docker run \
   --volumes-from=jenkins \
   ${K2_CONTAINER_IMAGE} \
   kubectl get pods --all-namespaces | grep kube-apiserver-ip | wc -l)
-if [ "$api_count" -ne "${APICOUNT}" ]; then echo 'api server pod count is incorrect'; exit 1; fi
+if [ "$api_count" -ne "${APISERVERCOUNT}" ]; then echo 'api server pod count is incorrect'; exit 1; fi
 
 controller_count=$(docker run \
   -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/admin.kubeconfig" \
