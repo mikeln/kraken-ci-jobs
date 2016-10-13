@@ -307,6 +307,6 @@ deployment:
         repo: atlas
         chart: heapster-0.1.0
   readiness:
-    type: exact
-    value: 0
+    type: percent
+    value: 90
     wait: 600
