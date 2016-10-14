@@ -1,5 +1,5 @@
-# expected test data 
-NODECOUNT=8
+# expected test data (total is 8 but we are testing or percent readiness of 90 - rounds to 7)
+NODECOUNT=7
 
 # make sure everything deployed ok
 docker run \
