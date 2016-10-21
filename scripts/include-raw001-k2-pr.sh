@@ -7,7 +7,7 @@ docker run \
   -e "HELM_HOME=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/.helm" \
   --volumes-from=jenkins \
   ${K2_CONTAINER_IMAGE} \
-  helm status kubedns | grep "Status\: DEPLOYED" || { echo 'kubedns release did not deploy'; exit 1; }
+  helm status kubedns | grep "STATUS\: DEPLOYED" || { echo 'kubedns release did not deploy'; exit 1; }
 
 node_count=$(docker run \
   -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/admin.kubeconfig" \
