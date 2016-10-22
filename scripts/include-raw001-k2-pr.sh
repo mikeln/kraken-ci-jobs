@@ -14,7 +14,7 @@ node_count=$(docker run \
   --volumes-from=jenkins \
   ${K2_CONTAINER_IMAGE} \
   kubectl get nodes --no-headers | wc -l)
-if [ "$node_count" -ne "${NODECOUNT}" ]; then echo 'node count is incorrect'; exit 1; fi
+if [ "$node_count" -lt "${NODECOUNT}" ]; then echo 'node count ($node_count) is less than ${NODECOUNT}'; exit 1; fi
 
 docker run \
   -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/jenkins-pr-${ghprbPullId}/admin.kubeconfig" \
