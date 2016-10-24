@@ -62,7 +62,7 @@
           url: https://github.com/samsung-cnct/k2/
     scm:
       - git:
-          url: 'git@github.com:samsung-cnct/{samsung-cnct-project}.git'
+          url: 'git@github.com:samsung-cnct/k2.git'
           credentials-id: jenkins-ssh
           refspec: "+refs/pull/*:refs/remotes/origin/pr/*"
           branches:
@@ -112,10 +112,10 @@
     builders:
       - shell: docker build -t quay.io/samsung_cnct/k2:donotpush --build-arg K2_REPO=${ghprbAuthorRepoGitUrl} --build-arg K2_BRANCH=${ghprbSourceBranch} --pull ${WORKSPACE}/docker
       - trigger-builds:
-        - project: 'k2-pr-aws'
+        - project: 'k2-aws-pr'
           block: true
           current-parameters: true
-        - project: 'k2-pr-gke'
+        - project: 'k2-gke-pr'
           block: true
           current-parameters: true
 
