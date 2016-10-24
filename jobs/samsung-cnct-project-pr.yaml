@@ -112,10 +112,7 @@
     builders:
       - shell: docker build -t quay.io/samsung_cnct/k2:donotpush --build-arg K2_REPO=${ghprbAuthorRepoGitUrl} --build-arg K2_BRANCH=${ghprbSourceBranch} --pull ${WORKSPACE}/docker
       - trigger-builds:
-        - project: 'k2-aws-pr'
-          block: true
-          current-parameters: true
-        - project: 'k2-gke-pr'
+        - project: 'k2-aws-pr,k2-gke-pr'
           block: true
           current-parameters: true
 
@@ -125,7 +122,7 @@
       - inject:
           properties-content: |
             K2_CLUSTER_NAME=ci-pr-${ghprbPullId}-aws
-            K2_KEY_LOCATION=${WORKSPACE}/ci-pr-${ghprbPullId}/generated-keys
+            K2_KEY_LOCATION=${WORKSPACE}/ci-pr-${ghprbPullId}-aws/generated-keys
             K2_CONFIG_URI=https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-pr-aws.yaml
             K2_CONTAINER_IMAGE=quay.io/samsung_cnct/k2:donotpush
       - k2-build-cluster-builder-config
@@ -184,7 +181,7 @@
             - inject:
                 properties-content: |
                   K2_CLUSTER_NAME=ci-pr-${ghprbPullId}-aws
-                  K2_KEY_LOCATION=${WORKSPACE}/ci-pr-${ghprbPullId}/generated-keys
+                  K2_KEY_LOCATION=${WORKSPACE}/ci-pr-${ghprbPullId}-aws/generated-keys
             - k2-destroy-aws-cluster-builder
           script-only-if-succeeded: False
           script-only-if-failed: False
