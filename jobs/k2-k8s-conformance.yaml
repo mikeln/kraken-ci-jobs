@@ -42,7 +42,7 @@
             - generate-started-json-builder:
                 version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
                 output_dir: output
-            - k2-build-cluster-builder
+            - k2-build-cluster-builder-aws
             - shell: 
                 !include-raw-escape: ../scripts/include-raw001-k2-run-k8s-conformance-tests.sh
           publishers:
@@ -61,7 +61,7 @@
                       destination: 's3://${{S3_PATH}}'
                   - kraken-clean-kubernetes-builder:
                       kube_tests_dir: '${{KUBE_TESTS_DIR}}'
-                  - k2-destroy-cluster-builder
+                  - k2-destroy-aws-cluster-builder
                 script-only-if-succeeded: False
                 script-only-if-failed: False
             - archive:
