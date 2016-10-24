@@ -33,7 +33,6 @@
             - cwazy1
             - davidewatson
             - jfelten
-            - jooyeong
             - kmansel
             - l337ch
             - leahnp
@@ -52,6 +51,30 @@
       - '{samsung-cnct-project}-pr-publisher'
       - slack-publisher
 
+- job-template:
+    name: '{k2-cluster}-pr'
+    description: '{description}'
+    concurrent: true
+    logrotate:
+      numToKeep: 100
+    properties:
+      - github:
+          url: https://github.com/samsung-cnct/k2/
+    scm:
+      - git:
+          url: 'git@github.com:samsung-cnct/{samsung-cnct-project}.git'
+          credentials-id: jenkins-ssh
+          refspec: "+refs/pull/*:refs/remotes/origin/pr/*"
+          branches:
+            - ${{ghprbActualCommit}}
+          browser: auto
+          wipe-workspace: false
+          skip-tag: true
+    builders:
+      - '{k2-cluster}-pr-builder'
+    publishers:
+      - '{k2-cluster}-pr-publisher'
+
 - builder:
     name: kraken-pr-builder
     builders:
@@ -60,21 +83,10 @@
       - shell:
           !include-raw: ../scripts/include-raw001-kraken-pr.sh
 
-- publisher:
-    name: kraken-pr-publisher
-    publishers:
-      - junit:
-          results: output/cucumber/junit/*
-          health-scale-factor: 1.0
-      - postbuildscript:
-          builders:
-            - inject:
-                properties-content: |
-                  DESTROY_CLUSTER=true
-                  TERRAFORM_DESTROY_RETRIES=10
-            - kraken-destroy-cluster-builder
-          script-only-if-succeeded: False
-          script-only-if-failed: False
+- builder:
+    name: kraken-services-pr-builder
+    builders:
+      - shell: ./build.sh --repo quay.io/samsung_cnct --tag ${ghprbActualCommit} .
 
 - builder:
     name: kraken-ci-jobs-pr-builder
@@ -95,21 +107,97 @@
           # fail if either of the jjb runs failed
           exit $(( ${master_result} || ${pr_result} ))
 
+- builder:
+    name: k2-pr-builder
+    builders:
+      - shell: docker build -t quay.io/samsung_cnct/k2:donotpush --build-arg K2_REPO=${ghprbAuthorRepoGitUrl} --build-arg K2_BRANCH=${ghprbSourceBranch} --pull ${WORKSPACE}/docker
+      - trigger-builds:
+        - project: 'k2-pr-aws'
+          block: true
+          current-parameters: true
+        - project: 'k2-pr-gke'
+          block: true
+          current-parameters: true
+
+- builder:
+    name: k2-aws-pr-builder
+    builders:
+      - inject:
+          properties-content: |
+            K2_CLUSTER_NAME=ci-pr-${ghprbPullId}-aws
+            K2_KEY_LOCATION=${WORKSPACE}/jenkins-pr-${ghprbPullId}/generated-keys
+            K2_CONFIG_URI=https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-pr-aws.yaml
+            K2_CONTAINER_IMAGE=quay.io/samsung_cnct/k2:donotpush
+      - k2-build-cluster-builder-config
+      - k2-build-cluster-builder-aws
+      - shell:
+          !include-raw: ../scripts/include-raw001-k2-pr-aws.sh
+
+- builder:
+    name: k2-gke-pr-builder
+    builders:
+      - inject:
+          properties-content: |
+            K2_CLUSTER_NAME=ci-pr-${ghprbPullId}-gke
+            K2_CONFIG_URI=https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-pr-gke.yaml
+            K2_CONTAINER_IMAGE=quay.io/samsung_cnct/k2:donotpush
+      - k2-build-cluster-builder-config
+      - k2-build-cluster-builder-gke
+      - shell:
+          !include-raw: ../scripts/include-raw001-k2-pr-gke.sh
+
+- builder:
+    name: k2-charts-pr-builder
+    builders:
+      - shell: 
+          !include-raw: ../scripts/include-raw001-k2-charts-pr.sh
+
+- publisher:
+    name: kraken-pr-publisher
+    publishers:
+      - junit:
+          results: output/cucumber/junit/*
+          health-scale-factor: 1.0
+      - postbuildscript:
+          builders:
+            - inject:
+                properties-content: |
+                  DESTROY_CLUSTER=true
+                  TERRAFORM_DESTROY_RETRIES=10
+            - kraken-destroy-cluster-builder
+          script-only-if-succeeded: False
+          script-only-if-failed: False
+
 - publisher:
     name: kraken-ci-jobs-pr-publisher
     publishers: []
 
 - publisher:
     name: k2-pr-publisher
+    publishers: []
+
+- publisher:
+    name: k2-aws-pr-publisher
     publishers:
       - postbuildscript:
           builders:
             - inject:
                 properties-content: |
-                  K2_CLUSTER_NAME=jenkins-pr-${ghprbPullId}
+                  K2_CLUSTER_NAME=ci-pr-${ghprbPullId}-aws
                   K2_KEY_LOCATION=${WORKSPACE}/jenkins-pr-${ghprbPullId}/generated-keys
-                  DOWNRETRIES=10
-            - k2-destroy-cluster-builder
+            - k2-destroy-aws-cluster-builder
+          script-only-if-succeeded: False
+          script-only-if-failed: False
+
+- publisher:
+    name: k2-gke-pr-publisher
+    publishers:
+      - postbuildscript:
+          builders:
+            - inject:
+                properties-content: |
+                  K2_CLUSTER_NAME=ci-pr-${ghprbPullId}-gke
+            - k2-destroy-gke-cluster-builder
           script-only-if-succeeded: False
           script-only-if-failed: False
 
@@ -117,34 +205,9 @@
     name: k2-charts-pr-publisher
     publishers: []
 
-- builder:
-    name: kraken-services-pr-builder
-    builders:
-      - shell: ./build.sh --repo quay.io/samsung_cnct --tag ${ghprbActualCommit} .
-
 - publisher:
     name: kraken-services-pr-publisher
     publishers: []
-
-- builder:
-    name: k2-pr-builder
-    builders:
-      - inject:
-          properties-content: |
-            K2_CLUSTER_NAME=jenkins-pr-${ghprbPullId}
-            K2_KEY_LOCATION=${WORKSPACE}/jenkins-pr-${ghprbPullId}/generated-keys
-            K2_CONFIG_URI=https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-pr.yaml
-            K2_CONTAINER_IMAGE=quay.io/samsung_cnct/k2:donotpush
-      - shell: docker build -t quay.io/samsung_cnct/k2:donotpush --build-arg K2_REPO=${ghprbAuthorRepoGitUrl} --build-arg K2_BRANCH=${ghprbSourceBranch} --pull ${WORKSPACE}/docker
-      - k2-build-cluster-builder
-      - shell:
-          !include-raw: ../scripts/include-raw001-k2-pr.sh
-
-- builder:
-    name: k2-charts-pr-builder
-    builders:
-      - shell: 
-          !include-raw: ../scripts/include-raw001-k2-charts-pr.sh
 
 - project:
     name: samsung-cnct-project-pr
@@ -156,8 +219,14 @@
       - kraken-services:
           description: 'runs on PRs to kraken-services, docker builds all Dockerfiles therein'
       - k2:
-          description: 'runs on PRs to k2, builds a k2 cluster, checks some basic results, tears down k2 cluster'
+          description: 'runs on PRs to k2'
       - k2-charts:
           description: 'runs on PRs to k2-charts, lints all charts'
+    k2-cluster:
+      - k2-aws:
+          description: 'creates an AWS k2 cluster, runs tests on it, destroys it.'
+      - k2-gke:
+          description: 'creates a GKE k2 cluster, runs tests on it, destroys it.'
     jobs:
       - '{samsung-cnct-project}-pr'
+      - '{k2-cluster}-pr'

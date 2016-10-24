@@ -28,16 +28,34 @@
           !include-raw: ../scripts/include-raw001-kraken-build-cluster.sh
 
 - builder:
-    name: k2-build-cluster-builder
+    name: k2-build-cluster-builder-config
     builders:
       - shell:
-          !include-raw: ../scripts/include-raw001-k2-build-cluster.sh
+          !include-raw: ../scripts/include-raw001-k2-get-cluster-config.sh
 
 - builder:
-    name: k2-destroy-cluster-builder
+    name: k2-build-cluster-builder-aws
     builders:
       - shell:
-          !include-raw: ../scripts/include-raw001-k2-destroy-cluster.sh
+          !include-raw: ../scripts/include-raw001-k2-build-cluster-aws.sh
+
+- builder:
+    name: k2-build-cluster-builder-gke
+    builders:
+      - shell:
+          !include-raw: ../scripts/include-raw001-k2-build-cluster-gke.sh
+
+- builder:
+    name: k2-destroy-aws-cluster-builder
+    builders:
+      - shell:
+          !include-raw: ../scripts/include-raw001-k2-destroy-aws-cluster.sh
+
+- builder:
+    name: k2-destroy-gke-cluster-builder
+    builders:
+      - shell:
+          !include-raw: ../scripts/include-raw001-k2-destroy-gke-cluster.sh
 
 - builder:
     name: kraken-destroy-cluster-builder
