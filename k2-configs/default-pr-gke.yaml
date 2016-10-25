@@ -1,6 +1,6 @@
 ---
 deployment:
-  cluster: {{ lookup('env','K2_CLUSTER_NAME') }}
+  cluster: "{{ lookup('env','K2_CLUSTER_NAME') }}"
   keypair:
     -
       name: k2key
