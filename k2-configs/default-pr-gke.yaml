@@ -11,7 +11,7 @@ deployment:
   providerConfig:
     type: autonomous
     nodepool: default
-    project: cnct-productioncluster
+    project: k8s-work
     keypair: k2key
     zone:
       primaryZone: us-central1-a
