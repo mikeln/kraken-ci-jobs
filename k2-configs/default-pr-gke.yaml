@@ -5,13 +5,13 @@ deployment:
     -
       name: k2key
       providerConfig: 
-        serviceAccount: "atlas-cnct-io@cnct-productioncluster.iam.gserviceaccount.com"
-        serviceAccountKeyFile: "{{ lookup('env','JENKINS_HOME') }}/secrets/atlas.cnct.io.key.json"
+        serviceAccount: "{{ lookup('env','GCE_SERVICE_ACCOUNT_ID') }}"
+        serviceAccountKeyFile: "{{ lookup('env','GCE_SERVICE_ACCOUNT_KEY') }}"
   provider: gke
   providerConfig:
     type: autonomous
     nodepool: default
-    project: cnct-productioncluster
+    project: k8s-work
     keypair: k2key
     zone:
       primaryZone: us-central1-a

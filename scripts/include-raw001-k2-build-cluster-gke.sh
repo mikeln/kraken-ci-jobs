@@ -1,10 +1,9 @@
-# copy down the key
-aws s3 cp s3://sundry-automata/keys/atlas.cnct.io/atlas.cnct.io.key.json ${JENKINS_HOME}/secrets/
-
 # start k2
 docker run -e "K2_CLUSTER_NAME=${K2_CLUSTER_NAME}" \
-  -e "JENKINS_HOME=${JENKINS_HOME}" \
+  -e "GCE_SERVICE_ACCOUNT_ID=${GCE_SERVICE_ACCOUNT_ID}" \
+  -e "GCE_SERVICE_ACCOUNT_KEY=/gcloud/service-account.json" \
   --volumes-from=jenkins \
+  -v /gcloud:/gcloud \
   ${K2_CONTAINER_IMAGE} \
   ./up.sh --output ${WORKSPACE}/${K2_CLUSTER_NAME} --config ${WORKSPACE}/${K2_CLUSTER_NAME}/${K2_CLUSTER_NAME}.yaml
  
