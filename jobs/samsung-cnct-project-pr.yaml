@@ -110,7 +110,7 @@
 - builder:
     name: k2-pr-builder
     builders:
-      - shell: docker build -t quay.io/samsung_cnct/k2:donotpush --build-arg K2_REPO=${ghprbAuthorRepoGitUrl} --build-arg K2_BRANCH=${ghprbSourceBranch} --pull ${WORKSPACE}/docker
+      - shell: docker build -t quay.io/samsung_cnct/k2:donotpush --build-arg K2_SHA=${ghprbActualCommit} --pull ${WORKSPACE}/docker
       - trigger-builds:
         - project: 'k2-aws-pr,k2-gke-pr'
           block: true
