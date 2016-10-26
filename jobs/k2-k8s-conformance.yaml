@@ -36,7 +36,6 @@
                   K2_COMMIT=${{GIT_COMMIT}}
                   K2_KEY_LOCATION=${{WORKSPACE}}/${{K2_CLUSTER_NAME}}/generated-keys
                   KUBE_TESTS_DIR=${{K2_CLUSTER_NAME}}-kubernetes
-                  K2_CONFIG_URI=https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-e2e.yaml
             - kraken-fetch-kubernetes-builder:
                 kubernetes_release_version: '${{KUBERNETES_RELEASE_VERSION}}'
                 kube_tests_dir: '${{KUBE_TESTS_DIR}}'
