@@ -36,12 +36,14 @@
                   K2_COMMIT=${{GIT_COMMIT}}
                   K2_KEY_LOCATION=${{WORKSPACE}}/${{K2_CLUSTER_NAME}}/generated-keys
                   KUBE_TESTS_DIR=${{K2_CLUSTER_NAME}}-kubernetes
+                  K2_CONFIG_URI=https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-e2e.yaml
             - kraken-fetch-kubernetes-builder:
                 kubernetes_release_version: '${{KUBERNETES_RELEASE_VERSION}}'
                 kube_tests_dir: '${{KUBE_TESTS_DIR}}'
             - generate-started-json-builder:
                 version: $( cat /var/lib/docker/gobuild/${{KUBE_TESTS_DIR}}/version )
                 output_dir: output
+            - k2-build-cluster-builder-config
             - k2-build-cluster-builder-aws
             - shell: 
                 !include-raw-escape: ../scripts/include-raw001-k2-run-k8s-conformance-tests.sh
@@ -55,7 +57,6 @@
                         S3_BUCKET=kraken-e2e-logs
                         S3_PATH=${{S3_BUCKET}}/${{KRAKEN_CI_HOSTNAME}}/${{JOB_NAME}}/${{BUILD_NUMBER}}
                         LOG_LINK=http://s3-us-west-2.amazonaws.com/${{S3_PATH}}/build-log.txt
-                        DOWNRETRIES=10
                   - upload-to-s3-builder:
                       source: output
                       destination: 's3://${{S3_PATH}}'
