@@ -47,7 +47,7 @@
     builders:
       - shell: |
           #!/bin/bash
-          docker build -t quay.io/samsung_cnct/k2:$(git rev-parse HEAD) --pull ${WORKSPACE}/docker
+          docker build -t quay.io/samsung_cnct/k2:$(git rev-parse HEAD) --pull ${WORKSPACE}/docker --no-cache
           docker tag quay.io/samsung_cnct/k2:$(git rev-parse HEAD) quay.io/samsung_cnct/k2:latest
           docker push quay.io/samsung_cnct/k2:$(git rev-parse HEAD)
           docker push quay.io/samsung_cnct/k2:latest
