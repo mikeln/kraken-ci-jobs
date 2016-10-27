@@ -300,6 +300,7 @@ deployment:
         repo: atlas
         chart: kubedns
         version: 0.1.0
+        namespace: kube-system
         values:
           cluster_ip: 10.32.0.2
           dns_domain: cluster.local
@@ -307,6 +308,7 @@ deployment:
         name: heapster
         repo: atlas
         chart: heapster
+        namespace: kube-system
         version: 0.1.0
   readiness:
     type: percent
