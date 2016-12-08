@@ -219,7 +219,7 @@ deployment:
       coreos: allNodes
     -
       name: clusterNodes
-      count: 3
+      count: 5
       keypair: krakenKey
       mounts:
         -
@@ -227,7 +227,7 @@ deployment:
           path: /var/lib/docker
           forceFormat: true
       providerConfig:
-        type: c4.large
+        type: c4.xlarge
         subnet: ["uwswest2a", "uwswest2b", "uwswest2c"]
         tags:
           -
