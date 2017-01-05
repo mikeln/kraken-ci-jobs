@@ -42,6 +42,7 @@
             - sostheim
             - spiffxp
             - venezia
+            - joejulian
           github-hooks: true
           white-list-target-branches:
             - master
