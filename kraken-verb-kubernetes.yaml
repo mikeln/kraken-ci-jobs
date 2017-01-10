@@ -42,17 +42,23 @@
       - shell: |
           #!/bin/bash -l
           set -x
+          platform=linux
+          arch=amd64
           cache_dir="/var/lib/docker/gobuild/kubernetes/{kubernetes_release_version}"
-          if [[ -f "${{cache_dir}}/kubernetes.tar.gz" ]] && [[ -f "${{cache_dir}}/kubernetes-test.tar.gz" ]]; then
+          if   [[ -f "${{cache_dir}}/kubernetes.tar.gz" ]] \
+            && [[ -f "${{cache_dir}}/kubernetes-test.tar.gz" ]] \
+            && [[ -f "${{cache_dir}}/kubernetes-client-${{platform}}-${{arch}}.tar.gz" ]]; then
             echo "Skipping fetch from gs://kubernetes-release, using cached copy at ${{cache_dir}}"
           else
             mkdir -p "${{cache_dir}}"
             pushd "${{cache_dir}}"
             gsutil -mq cp "gs://kubernetes-release/release/{kubernetes_release_version}/kubernetes.tar.gz" .
             gsutil -mq cp "gs://kubernetes-release/release/{kubernetes_release_version}/kubernetes-test.tar.gz" .
+            gsutil -mq cp "gs://kubernetes-release/release/{kubernetes_release_version}/kubernetes-client-${{platform}}-${{arch}}.tar.gz" .
             popd
           fi
           target_dir="/var/lib/docker/gobuild/{kube_tests_dir}"
           mkdir -p "${{target_dir}}"
           tar --strip-components 1 -C "${{target_dir}}" -xzf "${{cache_dir}}/kubernetes.tar.gz"
           tar --strip-components 1 -C "${{target_dir}}" -xzf "${{cache_dir}}/kubernetes-test.tar.gz"
+          tar --strip-components 3 -C "${{target_dir}}/platforms/${{platform}}/${{arch}}" -xzf "${{cache_dir}}/kubernetes-client-${{platform}}-${{arch}}.tar.gz"
