@@ -60,15 +60,15 @@ deployment:
     subnet:
       -
         name: uwseast1b
-        az: us-east-2b
+        az: us-east-1b
         cidr: 10.0.0.0/18
       -
         name: uwseast1c
-        az: us-east-2c
+        az: us-east-1c
         cidr: 10.0.64.0/18
       -
         name: uwseast1d
-        az: us-east-2d
+        az: us-east-1d
         cidr: 10.0.128.0/17
     egressAcl:
       -
