@@ -56,19 +56,19 @@ deployment:
   providerConfig:
     resourcePrefix:
     vpc: 10.0.0.0/16
-    region: us-east-2
+    region: us-east-1
     subnet:
       -
-        name: uwseast2a
-        az: us-east-2a
+        name: uwseast1b
+        az: us-east-2b
         cidr: 10.0.0.0/18
       -
-        name: uwseast2b
-        az: us-east-2b
+        name: uwseast1c
+        az: us-east-2c
         cidr: 10.0.64.0/18
       -
-        name: uwseast2c
-        az: us-east-2c
+        name: uwseast1d
+        az: us-east-2d
         cidr: 10.0.128.0/17
     egressAcl:
       -
@@ -123,7 +123,7 @@ deployment:
           forceFormat: false
       providerConfig:
         type: t2.small
-        subnet: ["uwseast2a", "uwseast2b", "uwseast2c"]
+        subnet: ["uwseast1b", "uwseast1c", "uwseast1d"]
         tags:
           -
             key: comments
@@ -163,7 +163,7 @@ deployment:
           forceFormat: false
       providerConfig:
         type: t2.small
-        subnet: ["uwseast2a", "uwseast2b", "uwseast2c"]
+        subnet: ["uwseast1b", "uwseast1c", "uwseast1d"]
         tags:
           -
             key: comments
@@ -199,7 +199,7 @@ deployment:
           forceFormat: true
       providerConfig:
         type: m3.medium
-        subnet: ["uwseast2a", "uwseast2b", "uwseast2c"]
+        subnet: ["uwseast1b", "uwseast1c", "uwseast1d"]
         tags:
           -
             key: comments
@@ -228,7 +228,7 @@ deployment:
           forceFormat: true
       providerConfig:
         type: c4.xlarge
-        subnet: ["uwseast2a", "uwseast2b", "uwseast2c"]
+        subnet: ["uwseast1b", "uwseast1c", "uwseast1d"]
         tags:
           -
             key: comments
@@ -256,7 +256,7 @@ deployment:
       keypair: krakenKey
       providerConfig:
         type: m3.medium
-        subnet: ["uwseast2a", "uwseast2b", "uwseast2c"]
+        subnet: ["uwseast1b", "uwseast1c", "uwseast1d"]
         tags:
           -
             key: comments
