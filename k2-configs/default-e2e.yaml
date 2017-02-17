@@ -34,7 +34,7 @@ deployment:
           version: v0.5.1
           location: calico/kube-policy-controller
         etcd:
-          version: v3.0.9
+          version: v3.1.0
           location: quay.io/coreos/etcd
         calicoCni:
           version: v1.4.2
@@ -281,7 +281,7 @@ deployment:
       nodepool: etcd
       peerPorts: [2380]
       ssl: true
-      version: v3.0.3
+      version: v3.1.0
       containerConfig: dockerconfig
     -
       name: etcdEvents
@@ -290,7 +290,7 @@ deployment:
       nodepool: etcdEvents
       peerPorts: [2382]
       ssl: true
-      version: v3.0.3
+      version: v3.1.0
       containerConfig: dockerconfig
   master:
     nodepool: masterNodes

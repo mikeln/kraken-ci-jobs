@@ -26,7 +26,7 @@ deployment:
           version: v0.5.1
           location: calico/kube-policy-controller
         etcd:
-          version: v3.0.9
+          version: v3.1.0
           location: quay.io/coreos/etcd
         calicoCni:
           version: v1.4.2
