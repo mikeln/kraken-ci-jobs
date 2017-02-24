@@ -8,6 +8,10 @@ K2_ROOT=${K2_ROOT:-${WORKSPACE}}
 OUTPUT_DIR="${K2_ROOT}/output"
 mkdir -p "${OUTPUT_DIR}/artifacts"
 
+# setup gopath
+export GOPATH="${WORKSPACE}/go"
+mkdir -p "${GOPATH}"
+
 ## run
 export KUBE_ROOT=/var/lib/docker/gobuild/${KUBE_TESTS_DIR}
 export KUBE_CONFORMANCE_KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/${K2_CLUSTER_NAME}/admin.kubeconfig

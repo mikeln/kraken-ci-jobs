@@ -8,6 +8,10 @@ KRAKEN_ROOT=${KRAKEN_ROOT:-${WORKSPACE}}
 OUTPUT_DIR="${KRAKEN_ROOT}/output"
 mkdir -p "${OUTPUT_DIR}/artifacts"
 
+# setup gopath
+export GOPATH="${WORKSPACE}/go"
+mkdir -p "${GOPATH}"
+
 # ensure we have access to a kraken cluster
 ${KRAKEN_ROOT}/bin/kraken-connect.sh \
   --clustername "${KRAKEN_CLUSTER_NAME}" \
