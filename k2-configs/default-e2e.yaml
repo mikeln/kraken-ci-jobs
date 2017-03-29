@@ -199,7 +199,7 @@ deployment:
           path: /var/lib/docker
           forceFormat: true
       providerConfig:
-        type: m3.medium
+        type: m4.large
         subnet: ["az-1", "az-2", "az-3"]
         tags:
           -
@@ -258,7 +258,7 @@ deployment:
           forceFormat: true
       keypair: krakenKey
       providerConfig:
-        type: m3.medium
+        type: m4.large
         subnet: ["az-1", "az-2", "az-3"]
         tags:
           -
