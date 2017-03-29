@@ -18,7 +18,7 @@ deployment:
   kubeConfig:
     -
       name: krakenKubeConfig
-      version: v1.5.3
+      version: v1.5.6
       hyperkubeLocation: gcr.io/google_containers/hyperkube
   containerConfig:
     -
@@ -55,19 +55,19 @@ deployment:
   providerConfig:
     resourcePrefix:
     vpc: 10.0.0.0/16
-    region: us-west-2
+    region: us-east-2
     subnet:
       -
-        name: uwswest2a
-        az: us-west-2a
+        name: az-1
+        az: us-east-2a
         cidr: 10.0.0.0/18
       -
-        name: uwswest2b
-        az: us-west-2b
+        name: az-2
+        az: us-east-2b
         cidr: 10.0.64.0/18
       -
-        name: uwswest2c
-        az: us-west-2c
+        name: az-3
+        az: us-east-2c
         cidr: 10.0.128.0/17
     egressAcl:
       -
@@ -122,7 +122,7 @@ deployment:
           forceFormat: false
       providerConfig:
         type: t2.small
-        subnet: ["uwswest2a", "uwswest2b", "uwswest2c"]
+        subnet: ["az-1", "az-2", "az-3"]
         tags:
           -
             key: comments
@@ -163,7 +163,7 @@ deployment:
           forceFormat: false
       providerConfig:
         type: t2.small
-        subnet: ["uwswest2a", "uwswest2b", "uwswest2c"]
+        subnet: ["az-1", "az-2", "az-3"]
         tags:
           -
             key: comments
@@ -199,8 +199,8 @@ deployment:
           path: /var/lib/docker
           forceFormat: true
       providerConfig:
-        type: m3.medium
-        subnet: ["uwswest2a", "uwswest2b", "uwswest2c"]
+        type: m4.large
+        subnet: ["az-1", "az-2", "az-3"]
         tags:
           -
             key: comments
@@ -230,7 +230,7 @@ deployment:
           forceFormat: true
       providerConfig:
         type: c4.xlarge
-        subnet: ["uwswest2a", "uwswest2b", "uwswest2c"]
+        subnet: ["az-1", "az-2", "az-3"]
         tags:
           -
             key: comments
@@ -258,8 +258,8 @@ deployment:
           forceFormat: true
       keypair: krakenKey
       providerConfig:
-        type: m3.medium
-        subnet: ["uwswest2a", "uwswest2b", "uwswest2c"]
+        type: m4.large
+        subnet: ["az-1", "az-2", "az-3"]
         tags:
           -
             key: comments
