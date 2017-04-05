@@ -1,12 +1,17 @@
 ---
 deployment:
-  cluster: "{{ lookup('env','K2_CLUSTER_NAME') }}"
+  cluster: guingke2
   keypair:
     -
       name: k2key
-      providerConfig: 
-        serviceAccount: "{{ lookup('env','GCE_SERVICE_ACCOUNT_ID') }}"
-        serviceAccountKeyFile: "{{ lookup('env','GCE_SERVICE_ACCOUNT_KEY') }}"
+      providerConfig:
+        serviceAccount: "guinevere@k8s-work.iam.gserviceaccount.com"
+        serviceAccountKeyFile: "~/.gcloud/k8s-work-3d7b6bdc3a4f.json"
+  kubeConfig:
+    -
+      name: krakenKubeConfig
+      version: 1.5.6
+      hyperkubeLocation: gcr.io/google_containers/hyperkube
   provider: gke
   providerConfig:
     type: autonomous
@@ -15,7 +20,7 @@ deployment:
     keypair: k2key
     zone:
       primaryZone: us-central1-a
-      additionalZones: 
+      additionalZones:
         - us-central1-b
         - us-central1-c
   fabric:
@@ -48,6 +53,7 @@ deployment:
     -
       name: default
       count: 3
+      kubeConfig: krakenKubeConfig
       providerConfig:
         diskSize: 100
         machineType: n1-standard-1
@@ -59,6 +65,7 @@ deployment:
     -
       name: other
       count: 2
+      kubeConfig: krakenKubeConfig
       providerConfig:
         diskSize: 100
         machineType: n1-standard-2
