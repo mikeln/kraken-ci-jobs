@@ -1,12 +1,12 @@
 ---
 deployment:
-  cluster: guingke2
+  cluster: "{{ lookup('env','K2_CLUSTER_NAME') }}"
   keypair:
     -
       name: k2key
       providerConfig:
-        serviceAccount: "guinevere@k8s-work.iam.gserviceaccount.com"
-        serviceAccountKeyFile: "~/.gcloud/k8s-work-3d7b6bdc3a4f.json"
+        serviceAccount: "{{ lookup('env','GCE_SERVICE_ACCOUNT_ID') }}"
+        serviceAccountKeyFile: "{{ lookup('env','GCE_SERVICE_ACCOUNT_KEY') }}"
   kubeConfig:
     -
       name: krakenKubeConfig
