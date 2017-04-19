@@ -2,13 +2,6 @@
 NODECOUNT=7
 
 # make sure everything deployed ok
-docker run \
-  -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/ci-pr-${ghprbPullId}-aws/admin.kubeconfig" \
-  -e "HELM_HOME=${WORKSPACE}/${K2_CLUSTER_NAME}/ci-pr-${ghprbPullId}-aws/.helm" \
-  --volumes-from=jenkins \
-  ${K2_CONTAINER_IMAGE} \
-  helm status kubedns | grep "STATUS\: DEPLOYED" || { echo 'kubedns release did not deploy'; exit 1; }
-
 node_count=$(docker run \
   -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/ci-pr-${ghprbPullId}-aws/admin.kubeconfig" \
   --volumes-from=jenkins \
