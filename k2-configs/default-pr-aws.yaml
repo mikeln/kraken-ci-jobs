@@ -1,7 +1,4 @@
 ---
-deployment:
-  cluster: 
-  ---
 version: v1
 # These are the new definitions which are used throughout the configuration.
 definitions:
