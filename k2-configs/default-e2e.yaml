@@ -245,7 +245,6 @@ definitions:
           device: sdf
           path: /var/lib/docker
           forceFormat: true
-      keypair: krakenKey
       providerConfig:
         provider: aws
         type: m4.large
@@ -329,8 +328,8 @@ definitions:
    - &defaultKeyPair
       name: defaultKeyPair
       kind: keyPair
-      publickeyFile: "$HOME/.ssh/id_rsa.pub"
-      privatekeyFile: "$HOME/.ssh/id_rsa"
+      publickeyFile: "{{ lookup('env','K2_KEY_LOCATION') }}/id_rsa.pub"
+      privatekeyFile: "{{ lookup('env','K2_KEY_LOCATION') }}/id_rsa"
 
   kubeAuth:
    - &defaultKubeAuth
