@@ -1,116 +1,118 @@
 ---
 deployment:
-  cluster: "{{ lookup('env','K2_CLUSTER_NAME') }}"
-  serviceCidr: 10.32.0.0/12
-  serviceDNS: 10.32.0.2
-  clusterDomain: cluster.local
-  coreos:
-    -
-      name: allNodes
-      version: current
-      channel: stable
-      rebootStrategy: off
-  keypair:
-    -
-      name: krakenKey
-      publickeyFile: "{{ lookup('env','K2_KEY_LOCATION') }}/id_rsa.pub"
-      privatekeyFile: "{{ lookup('env','K2_KEY_LOCATION') }}/id_rsa"
-  kubeConfig:
-    -
-      name: krakenKubeConfig
+  cluster: 
+  ---
+version: v1
+# These are the new definitions which are used throughout the configuration.
+definitions:
+  dnsConfig:
+    - &defaultDns
+      name: defaultDns
+      kind: dns
+      kubedns:
+        cluster_ip: 10.32.0.2
+        dns_domain: cluster.local
+        namsepace: kube-system 
+  helmConfigs:
+    - &defaultHelm
+      name: defaultHelm
+      kind: helm
+      repos:
+        - name: atlas
+          url: http://atlas.cnct.io
+        - name: stable
+          url: https://kubernetes-charts.storage.googleapis.com
+      charts:
+        - name: heapster
+          repo: atlas
+          chart: heapster
+          version: 0.1.0
+          namespace: kube-system
+        - name: central-logging
+          repo: atlas
+          chart: central-logging
+          version: 0.2.0
+  fabricConfigs:
+    - &defaultCanalFabric
+      name: defaultCanalFabric
+      kind: fabric
+      type: canal
+      options:
+        containers:
+          kubePolicyController:
+            version: v0.5.1
+            location: calico/kube-policy-controller
+          etcd:
+            version: v3.0.9
+            location: quay.io/coreos/etcd
+          calicoCni:
+            version: v1.4.2
+            location: calico/cni
+          calicoNode:
+            version: v1.0.0-rc1
+            location: quay.io/calico/node
+          flannel:
+            version: v0.6.1
+            location: quay.io/coreos/flannel
+        network:
+          network: 10.128.0.0/10
+          subnetLen: 22
+          subnetMin: 10.128.0.0
+          subnetMax: 10.191.255.255
+          backend:
+            type: vxlan
+  kvStoreConfigs:
+    - &defaultEtcd
+      name: etcd
+      kind: kvStore
+      type: etcd
+      clientPorts: [2379, 4001]
+      clusterToken: espouse-monger-rarely
+      peerPorts: [2380]
+      ssl: true
+      version: v3.1.0
+    - &defaultEtcdEvents
+      name: etcdEvents
+      kind: kvStore
+      type: etcd
+      clientPorts: [2381]
+      clusterToken: animism-training-chastity
+      peerPorts: [2382]
+      ssl: true
+      version: v3.1.0
+  apiServerConfigs:
+    - &defaultApiServer
+      name: defaultApiServer
+      kind: apiServer
+      loadBalancer: cloud
+      state:
+        etcd: *defaultEtcd
+      events:
+        etcd: *defaultEtcdEvents
+  kubeConfigs:
+    - &defaultKube
+      name: defaultKube
+      kind: kubernetes
       version: v1.5.6
       hyperkubeLocation: gcr.io/google_containers/hyperkube
-  containerConfig:
-    -
-      name: dockerconfig
+  containerConfigs:
+    - &defaultDocker
+      name: defaultDocker
+      kind: container
       runtime: docker
       type: distro
-  fabric:
-    provider: flannel
-    options:
-      containers:
-        kubePolicyController:
-          version: v0.5.1
-          location: calico/kube-policy-controller
-        etcd:
-          version: v3.1.0
-          location: quay.io/coreos/etcd
-        calicoCni:
-          version: v1.4.2
-          location: calico/cni
-        calicoNode:
-          version: v1.0.0-rc1
-          location: quay.io/calico/node
-        flannel:
-          version: v0.6.1
-          location: quay.io/coreos/flannel
-      network:
-        network: 10.128.0.0/10
-        subnetLen: 22
-        subnetMin: 10.128.0.0
-        subnetMax: 10.191.255.255
-        backend:
-          type: vxlan
-  provider: aws
-  providerConfig:
-    resourcePrefix:
-    vpc: 10.0.0.0/16
-    region: us-east-2
-    subnet:
-      -
-        name: az-1
-        az: us-east-2a
-        cidr: 10.0.0.0/18
-      -
-        name: az-2
-        az: us-east-2b
-        cidr: 10.0.64.0/18
-      -
-        name: az-3
-        az: us-east-2c
-        cidr: 10.0.128.0/17
-    egressAcl:
-      -
-        protocol: "-1"
-        rule_no: 100
-        action: "allow"
-        cidr_block: "0.0.0.0/0"
-        from_port: 0
-        to_port: 0
-    ingressAcl:
-      -
-        protocol: "-1"
-        rule_no: 100
-        action: "allow"
-        cidr_block: "0.0.0.0/0"
-        from_port: 0
-        to_port: 0
-    authentication:
-      accessKey:
-      accessSecret:
-      credentialsFile:
-      credentialsProfile:
-    ingressSecurity:
-      -
-        from_port: 22
-        to_port: 22
-        protocol: "TCP"
-        cidr_blocks: ["0.0.0.0/0"]
-      -
-        from_port: 443
-        to_port: 443
-        protocol: "TCP"
-        cidr_blocks: ["0.0.0.0/0"]
-    egressSecurity:
-      -
-        from_port: 0
-        to_port: 0
-        protocol: "-1"
-        cidr_blocks: ["0.0.0.0/0"]
-  nodepool:
-    -
-      name: etcd
-      count: 5
+  osConfigs:
+    - &defaultCoreOs
+      name: defaultCoreOs
+      kind: os
+      type: coreOs
+      version: current
+      channel: stable
+      rebootStrategy: "off"
+  nodeConfigs:
+    - &defaultAwsEtcdNode
+      name: defaultAwsEtcdNode
+      kind: node
       mounts:
         -
           device: sdf
@@ -121,8 +123,9 @@ deployment:
           path: /ephemeral
           forceFormat: false
       providerConfig:
+        provider: aws
         type: t2.small
-        subnet: ["az-1", "az-2", "az-3"]
+        subnet: ["az1", "az2", "az3"]
         tags:
           -
             key: comments
@@ -146,12 +149,9 @@ deployment:
               delete_on_termination: true
               snapshot_id:
               encrypted: false
-      keypair: krakenKey
-      containerConfig: dockerconfig
-      coreos: allNodes
-    -
-      name: etcdEvents
-      count: 5
+    - &defaultAwsEtcdEventsNode
+      name: defaultAwsEtcdEventsNode 
+      kind: node
       mounts:
         -
           device: sdf
@@ -162,8 +162,9 @@ deployment:
           path: /ephemeral
           forceFormat: false
       providerConfig:
+        provider: aws
         type: t2.small
-        subnet: ["az-1", "az-2", "az-3"]
+        subnet: ["az1", "az2", "az3"]
         tags:
           -
             key: comments
@@ -187,20 +188,18 @@ deployment:
               delete_on_termination: true
               snapshot_id:
               encrypted: false
-      keypair: krakenKey
-      containerConfig: dockerconfig
-      coreos: allNodes
-    -
-      name: masterNodes
-      count: 3
+    - &defaultAwsMasterNode
+      name: defaultAwsMasterNode
+      kind: node
       mounts:
         -
           device: sdf
           path: /var/lib/docker
           forceFormat: true
       providerConfig:
+        provider: aws
         type: m4.large
-        subnet: ["az-1", "az-2", "az-3"]
+        subnet: ["az1", "az2", "az3"]
         tags:
           -
             key: comments
@@ -215,22 +214,18 @@ deployment:
               delete_on_termination: true
               snapshot_id:
               encrypted: false
-      keypair: krakenKey
-      kubeConfig: krakenKubeConfig
-      containerConfig: dockerconfig
-      coreos: allNodes
-    -
-      name: clusterNodes
-      count: 5
-      keypair: krakenKey
+    - &defaultAwsClusterNode
+      name: defaultAwsClusterNode
+      kind: node
       mounts:
         -
           device: sdf
           path: /var/lib/docker
           forceFormat: true
       providerConfig:
-        type: c4.xlarge
-        subnet: ["az-1", "az-2", "az-3"]
+        provider: aws
+        type: c4.large
+        subnet: ["az1", "az2", "az3"]
         tags:
           -
             key: comments
@@ -245,12 +240,9 @@ deployment:
               delete_on_termination: true
               snapshot_id:
               encrypted: false
-      kubeConfig: krakenKubeConfig
-      containerConfig: dockerconfig
-      coreos: allNodes
-    -
-      name: specialNodes
-      count: 2
+    - &defaultAwsSpecialNode
+      name: defaultAwsSpecialNode
+      kind: node
       mounts:
         -
           device: sdf
@@ -258,8 +250,9 @@ deployment:
           forceFormat: true
       keypair: krakenKey
       providerConfig:
+        provider: aws
         type: m4.large
-        subnet: ["az-1", "az-2", "az-3"]
+        subnet: ["az1", "az2", "az3"]
         tags:
           -
             key: comments
@@ -274,63 +267,135 @@ deployment:
               delete_on_termination: true
               snapshot_id:
               encrypted: false
-      kubeConfig: krakenKubeConfig
-      containerConfig: dockerconfig
-      coreos: allNodes
-  etcd:
-    -
-      name: etcd
-      clientPorts: [2379, 4001]
-      clusterToken: espouse-monger-rarely
-      nodepool: etcd
-      peerPorts: [2380]
-      ssl: true
-      version: v3.1.0
-    -
-      name: etcdEvents
-      clientPorts: [2381]
-      clusterToken: animism-training-chastity
-      nodepool: etcdEvents
-      peerPorts: [2382]
-      ssl: true
-      version: v3.1.0
-  master:
-    nodepool: masterNodes
-    loadbalancer: cloud
-    infra:
-      etcd: etcd
-    events:
-      etcd: etcdEvents
-  node:
-    -
-      name: clusterNodes
-      nodepool: clusterNodes
-    -
-      name: specialNodes
-      nodepool: specialNodes
-  clusterServices:
-    debug: true
-    repos:
-      -
-        name: atlas
-        url: http://atlas.cnct.io
-    services:
-      -
-        name: kubedns
-        repo: atlas
-        chart: kubedns
-        version: 0.1.0
-        namespace: kube-system
-        values:
-          cluster_ip: 10.32.0.2
-          dns_domain: cluster.local
-      -
-        name: heapster
-        repo: atlas
-        chart: heapster
-        version: 0.1.0
-        namespace: kube-system
+  providerConfigs:
+    - &defaultAws
+      name: defaultAws
+      kind: provider
+      provider: aws
+      type: cloudinit
+      resourcePrefix:
+      vpc: 10.0.0.0/16
+      region: us-east-2
+      subnet:
+        -
+          name: az1
+          az: us-east-2a
+          cidr: 10.0.0.0/18
+        -
+          name: az2
+          az: us-east-2b
+          cidr: 10.0.64.0/18
+        -
+          name: az3
+          az: us-east-2c
+          cidr: 10.0.128.0/17
+      egressAcl:
+        -
+          protocol: "-1"
+          rule_no: 100
+          action: "allow"
+          cidr_block: "0.0.0.0/0"
+          from_port: 0
+          to_port: 0
+      ingressAcl:
+        -
+          protocol: "-1"
+          rule_no: 100
+          action: "allow"
+          cidr_block: "0.0.0.0/0"
+          from_port: 0
+          to_port: 0
+      authentication:
+        accessKey:
+        accessSecret:
+        credentialsFile: "$HOME/.aws/credentials"
+        credentialsProfile:
+      ingressSecurity:
+        -
+          from_port: 22
+          to_port: 22
+          protocol: "TCP"
+          cidr_blocks: ["0.0.0.0/0"]
+        -
+          from_port: 443
+          to_port: 443
+          protocol: "TCP"
+          cidr_blocks: ["0.0.0.0/0"]
+      egressSecurity:
+        -
+          from_port: 0
+          to_port: 0
+          protocol: "-1"
+          cidr_blocks: ["0.0.0.0/0"]
+ 
+  keyPairs:
+   - &defaultKeyPair
+      name: defaultKeyPair
+      kind: keyPair
+      publickeyFile: "$HOME/.ssh/id_rsa.pub"
+      privatekeyFile: "$HOME/.ssh/id_rsa"
+
+  kubeAuth:
+   - &defaultKubeAuth
+      authz: {}
+      authn:
+        basic:
+          -
+            password: "ChangeMe"
+            user: "admin"
+        default_basic_user: "admin"
+
+# This is the core of the new configuration.
+
+deployment:
+  clusters:
+    - name: "{{ lookup('env','K2_CLUSTER_NAME') }}"
+      network: 10.32.0.0/12
+      dns: 10.32.0.2
+      domain: cluster.local
+      providerConfig: *defaultAws
+      nodePools:
+        - name: etcd
+          count: 5
+          etcdConfig: *defaultEtcd
+          containerConfig: *defaultDocker
+          osConfig: *defaultCoreOs
+          nodeConfig: *defaultAwsEtcdNode
+          keyPair: *defaultKeyPair
+        - name: etcdEvents
+          count: 5
+          etcdConfig: *defaultEtcdEvents
+          containerConfig: *defaultDocker
+          osConfig: *defaultCoreOs
+          nodeConfig: *defaultAwsEtcdEventsNode
+          keyPair: *defaultKeyPair
+        - name: master
+          count: 3
+          apiServerConfig: *defaultApiServer
+          kubeConfig: *defaultKube
+          containerConfig: *defaultDocker
+          osConfig: *defaultCoreOs
+          nodeConfig: *defaultAwsMasterNode
+          keyPair: *defaultKeyPair
+        - name: clusterNodes
+          count: 3
+          kubeConfig: *defaultKube
+          containerConfig: *defaultDocker
+          osConfig: *defaultCoreOs
+          nodeConfig: *defaultAwsClusterNode
+          keyPair: *defaultKeyPair
+        - name: specialNodes
+          count: 2
+          kubeConfig: *defaultKube
+          containerConfig: *defaultDocker
+          osConfig: *defaultCoreOs
+          nodeConfig: *defaultAwsSpecialNode
+          keyPair: *defaultKeyPair
+      fabricConfig: *defaultCanalFabric
+      kubeAuth: *defaultKubeAuth
+      helmConfig: *defaultHelm
+      dnsConfig: *defaultDns
   readiness:
-    type: percent
-    value: 90
+    type: exact
+    value: 0
     wait: 600
