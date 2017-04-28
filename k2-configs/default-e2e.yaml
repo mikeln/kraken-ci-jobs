@@ -352,14 +352,14 @@ deployment:
       providerConfig: *defaultAws
       nodePools:
         - name: etcd
-          count: 5
+          count: 1
           etcdConfig: *defaultEtcd
           containerConfig: *defaultDocker
           osConfig: *defaultCoreOs
           nodeConfig: *defaultAwsEtcdNode
           keyPair: *defaultKeyPair
         - name: etcdEvents
-          count: 5
+          count: 1
           etcdConfig: *defaultEtcdEvents
           containerConfig: *defaultDocker
           osConfig: *defaultCoreOs
