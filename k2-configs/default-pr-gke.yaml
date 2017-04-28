@@ -100,7 +100,6 @@ definitions:
       providerConfig:
         serviceAccount: "{{ lookup('env','GCE_SERVICE_ACCOUNT_ID') }}"
         serviceAccountKeyFile: "{{ lookup('env','GCE_SERVICE_ACCOUNT_KEY') }}"
- ---
   kubeAuth:
    - &defaultKubeAuth
       authz: {}
