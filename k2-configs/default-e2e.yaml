@@ -121,7 +121,7 @@ definitions:
           forceFormat: false
       providerConfig:
         provider: aws
-        type: m4.large
+        type: c4.large
         subnet: ["az1", "az2", "az3"]
         tags:
           -
@@ -160,7 +160,7 @@ definitions:
           forceFormat: false
       providerConfig:
         provider: aws
-        type: m4.large
+        type: c4.large
         subnet: ["az1", "az2", "az3"]
         tags:
           -
