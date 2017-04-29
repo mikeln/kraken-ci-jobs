@@ -13,15 +13,3 @@ docker run \
   --volumes-from=jenkins \
   ${K2_CONTAINER_IMAGE} \
   kubectl get pods --all-namespaces | grep tiller-deploy  || { echo 'tiller pod is not present'; exit 1; }
-
-docker run \
-  -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/ci-pr-${ghprbPullId}-gke/admin.kubeconfig" \
-  --volumes-from=jenkins \
-  ${K2_CONTAINER_IMAGE} \
-  kubectl get services --all-namespaces | grep 'default[[:space:]]*podpincher' || { echo 'podpincher service is not present'; exit 1; }
-
-docker run \
-  -e "KUBECONFIG=${WORKSPACE}/${K2_CLUSTER_NAME}/ci-pr-${ghprbPullId}-gke/admin.kubeconfig" \
-  --volumes-from=jenkins \
-  ${K2_CONTAINER_IMAGE} \
-  kubectl get pods --all-namespaces | grep podpincher || { echo 'podpincher pod is not present'; exit 1; }
