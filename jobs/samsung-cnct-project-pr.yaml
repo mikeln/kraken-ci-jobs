@@ -111,7 +111,7 @@
 - builder:
     name: k2-pr-builder
     builders:
-      - shell: docker build -t quay.io/samsung_cnct/k2:donotpush --build-arg K2_SHA=${ghprbActualCommit} --pull --no-cache ${WORKSPACE}/docker
+      - shell: docker build -t quay.io/samsung_cnct/k2:pr-${ghprbPullId} --build-arg K2_SHA=${ghprbActualCommit} --pull --no-cache ${WORKSPACE}/docker
       - trigger-builds:
         - project: 'k2-aws-pr,k2-gke-pr'
           block: true
@@ -125,7 +125,7 @@
             K2_CLUSTER_NAME=ci-pr-${ghprbPullId}-aws
             K2_KEY_LOCATION=${WORKSPACE}/ci-pr-${ghprbPullId}-aws/generated-keys
             K2_CONFIG_URI=https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-pr-aws.yaml
-            K2_CONTAINER_IMAGE=quay.io/samsung_cnct/k2:donotpush
+            K2_CONTAINER_IMAGE=quay.io/samsung_cnct/k2:pr-${ghprbPullId}
       - k2-build-cluster-builder-config
       - k2-build-cluster-builder-aws
       - shell:
@@ -138,7 +138,7 @@
           properties-content: |
             K2_CLUSTER_NAME=ci-pr-${ghprbPullId}-gke
             K2_CONFIG_URI=https://raw.githubusercontent.com/samsung-cnct/kraken-ci-jobs/master/k2-configs/default-pr-gke.yaml
-            K2_CONTAINER_IMAGE=quay.io/samsung_cnct/k2:donotpush
+            K2_CONTAINER_IMAGE=quay.io/samsung_cnct/k2:pr-${ghprbPullId}
       - k2-build-cluster-builder-config
       - k2-build-cluster-builder-gke
       - shell:
