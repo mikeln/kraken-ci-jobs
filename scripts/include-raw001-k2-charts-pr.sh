@@ -5,5 +5,5 @@ for chart in ${CHARTS};
 do 
   docker run \
     --volumes-from=jenkins \
-    quay.io/samsung_cnct/k2:latest helm lint ${WORKSPACE}/$chart || { echo "chart $chart failed linter"; exit 1; }
+    quay.io/samsung_cnct/k2-tools:latest helm lint ${WORKSPACE}/$chart || { echo "chart $chart failed linter"; exit 1; }
 done
