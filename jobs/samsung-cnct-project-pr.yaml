@@ -43,6 +43,11 @@
             - spiffxp
             - venezia
             - joejulian
+            - NathanZook
+            - yenicapote08
+            - guineveresaenger
+            - yenicapotediaz
+            - samsungbot
           github-hooks: true
           white-list-target-branches:
             - master
