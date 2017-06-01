@@ -43,19 +43,6 @@
       - shell: ./build.sh --repo quay.io/samsung_cnct --tag latest --push .
 
 - builder:
-    name: k2-postcommit-builder
-    builders:
-      - shell: |
-          #!/bin/bash
-          docker build -t quay.io/samsung_cnct/k2:$(git rev-parse HEAD) --pull --no-cache ${WORKSPACE}/docker
-          docker tag quay.io/samsung_cnct/k2:$(git rev-parse HEAD) quay.io/samsung_cnct/k2:latest
-          docker push quay.io/samsung_cnct/k2:$(git rev-parse HEAD)
-          docker push quay.io/samsung_cnct/k2:latest
-      - trigger-builds:
-        - project: 'k2-e2e-aws-k8s-conformance'
-          block: true
-
-- builder:
     name: k2-charts-postcommit-builder
     builders:
       - shell:
@@ -70,8 +57,6 @@
           description: 'runs on post-commit to kraken-ci-jobs, runs jenkins job builder to update the current jenkins jobs.'
       - kraken-services:
           description: 'runs on post-commit to kraken-services, docker builds/pushes all Dockerfiles therein'
-      - k2:
-          description: 'runs on post-commit to k2, builds the docker container, kicks off conformance tests, tags and pushes docker container'
       - k2-charts:
           description: 'runs on post-commit to k2-charts, builds and deploys atlas repo'
     jobs:
